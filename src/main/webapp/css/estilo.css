@@ -1,0 +1,514 @@
+@charset "UTF-8";
+
+/**Inicio index**/
+.carousel-item img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  .category-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+  }
+  body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    
+}
+
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 70px;
+  }
+
+  .navbar img {
+    height: 180px;
+    width: auto;
+  }
+
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    margin-left: auto;
+  }
+
+  .navbar ul li {
+    margin: 0 15px;
+    position: relative; 
+  }
+
+  .navbar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+
+  .navbar ul li a:hover {
+    color: #000;
+    background-color: #f0f0f0;
+  }
+
+  
+        /* Efecto de ampliación solo en las tarjetas de productos */
+  .product-card {
+    transition: transform 0.3s ease; /* Transición suave */
+  }
+
+  .product-card:hover {
+    transform: scale(1.05); /* Aumenta el tamaño de la tarjeta al pasar el ratón */
+  }
+/**Fin index css **/
+
+/**Inicio nosotros css **/
+   /* Estilos generales */
+   body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      
+  }
+
+      .container-fluid {
+          padding-top: 0; /* Ajuste el padding superior */
+      }
+
+      .imgContainer {
+          position: relative;
+          text-align: center;
+          margin-top: 0; /* Eliminar el margen superior */
+      }
+
+      .blueDots {
+          position: absolute;
+          top: 10%;
+          left: 10%;
+          width: 150px;
+          opacity: 0.2;
+      }
+
+      /* Imagen principal a la izquierda con mayor tamaño */
+      .mainImg {
+          width: 100%; /* Ocupa todo el ancho disponible */
+          height: 800px; /* Aumenta la altura de la imagen */
+          object-fit: cover; /* Asegura que la imagen cubra toda la sección */
+          border-radius: 10px;
+          margin-bottom: 0; /* Elimina el margen inferior */
+          box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15); /* Sombra suave para un toque elegante */
+      }
+
+      .textSide {
+          padding: 40px 20px;
+          background-color: #fff;
+          border-radius: 10px;
+          box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+          margin-top: -50px; /* Subimos el contenido hacia arriba para que no se solape con la imagen */
+      }
+
+      .heading {
+          font-size: 28px;
+          font-weight: bold;
+          color: #333;
+          margin-bottom: 20px;
+      }
+
+      .subHeading {
+          font-size: 15px;
+          color: #555;
+          line-height: 1.8;
+      }
+
+      .cardImgContainer {
+          text-align: center;
+          padding: 10px;
+      }
+
+      
+
+      .cardText {
+          text-align: center;
+          margin-top: 15px;
+      }
+
+      .cardHeading {
+          font-size: 22px;
+          font-weight: bold;
+          color: #0156FF;
+      }
+
+      .cardSubHeading {
+          font-size: 14px;
+          color: #777;
+      }
+
+      .explore {
+          display: block;
+          width: 100%;
+          padding: 12px;
+          font-size: 18px;
+          background-color: #0156FF;
+          color: white;
+          border: none;
+          text-align: center;
+          margin-top: 30px;
+          border-radius: 4px;
+          transition: background-color 0.3s ease;
+      }
+
+      .explore:hover {
+          background-color: #0156FF;
+      }
+
+      /* Estilos responsivos */
+      @media (max-width: 768px) {
+          .textSide {
+              padding: 20px;
+              margin-top: 0;
+          }
+
+          .heading {
+              
+              font-size: 28px;
+          }
+
+          .subHeading {
+              font-size: 16px;
+          }
+
+          .cardImg {
+              width: 70px;
+              height: 70px;
+          }
+
+          .mainImg {
+              height: 400px; /* Ajuste de tamaño en móviles */
+          }
+      }
+
+      .navbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: white;
+          padding: 10px 20px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          height: 70px;
+          margin-bottom: 0; /* Elimina el margen inferior del menú */
+      }
+
+      .navbar img {
+          height: 180px;
+          width: auto;
+          margin-bottom: 0; /* Elimina el margen inferior de la imagen del menú */
+      }
+
+      .navbar ul {
+          list-style: none;
+          display: flex;
+          margin: 0;
+          padding: 0;
+          margin-left: auto;
+      }
+
+      /* Estilos para las imágenes de las tarjetas */
+.cardImg {
+  width: 60px; /* Tamaño reducido de la imagen */
+  height: 60px; /* Ajuste de la altura */
+  object-fit: cover; /* Asegura que la imagen cubra el espacio sin distorsionarse */
+  border-radius: 50%; /* Mantiene las imágenes redondas */
+  border: 3px solid #0156FF; /* Borde azul */
+  display: block;
+  margin: 0 auto; /* Centra las imágenes dentro de las tarjetas */
+}
+
+/* Asegurarse que las tarjetas sean de un tamaño consistente */
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Asegurar que los elementos de la barra de navegación estén alineados correctamente */
+.navbar ul li {
+  display: flex;
+  align-items: center; /* Alineación vertical para los elementos del menú */
+  margin: 0 15px;
+}
+
+      .navbar ul li a {
+          text-decoration: none;
+          color: #333;
+          font-size: 16px;
+          padding: 5px 10px;
+          border-radius: 4px;
+      }
+
+      .navbar ul li a:hover {
+          color: #000;
+          background-color: #f0f0f0;
+      }
+/**Fin nosotros css**/
+
+/**Inicio productos css**/
+body {
+    background-color: #f8f9fa;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.sidebar {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.product-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    height: 180px;
+    object-fit: cover;
+}
+
+.price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #ff6600;
+}
+
+.old-price {
+    font-size: 0.9rem;
+    color: #888;
+    text-decoration: line-through;
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 70px;
+}
+
+.navbar img {
+    height: 180px;
+    width: auto;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    margin-left: auto;
+}
+
+.navbar ul li {
+    margin: 0 15px;
+    position: relative; 
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.navbar ul li a:hover {
+    color: #000;
+    background-color: #f0f0f0;
+}
+/**Fin productos css**/
+
+/**Inicio vistas css**/
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      
+  }
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 50px;
+}
+
+.navbar img {
+  height: 180px;  
+  width: auto;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  flex-grow: 1; 
+  justify-content: flex-end;
+}
+
+.navbar ul li {
+  display: flex;
+  align-items: center; /* Alineación vertical para los elementos del menú */
+  margin: 0 15px;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.navbar ul li a:hover {
+  color: #000;
+  background-color: #f0f0f0;
+}
+/** Fin vistas css**/
+
+/**Inicio carrito css**/
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+ .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 70px;
+}
+
+.navbar img {
+    height: 180px;
+    width: auto;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    margin-left: auto;
+}
+
+.navbar ul li {
+display: flex;
+align-items: center; /* Alineación vertical para los elementos del menú */
+margin: 0 15px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.navbar ul li a:hover {
+    color: #000;
+    background-color: #f0f0f0;
+}
+.bg-orange-600 {
+background-color: #0156FF; /* Color de fondo principal */
+}
+
+.hover\:bg-orange-500:hover {
+background-color: #0039aa; /* Color más oscuro para el hover */
+}
+
+.focus\:bg-orange-500:focus {
+background-color: #0039aa; /* Color más oscuro para el estado focus */
+}
+
+.text-white {
+color: #ffffff; /* Texto blanco */
+}
+
+.border-transparent {
+border-color: transparent;
+}
+
+.rounded-md {
+border-radius: 0.375rem; /* Bordes redondeados */
+}
+
+.px-5 {
+padding-left: 1.25rem;
+padding-right: 1.25rem;
+}
+
+.py-2 {
+padding-top: 0.5rem;
+padding-bottom: 0.5rem;
+}
+
+.font-semibold {
+font-weight: 600; /* Seminegrita */
+}
+
+.w-full {
+width: 100%;
+}
+
+.max-w-xs {
+max-width: 20rem; /* Ancho máximo del botón */
+}
+
+.mx-auto {
+margin-left: auto;
+margin-right: auto;
+}
+/**Fin carrito css**/
