@@ -36,7 +36,7 @@ public class PedidoControlador extends HttpServlet {
         String nombreTarjeta = request.getParameter("nombreTarjeta");
         String numeroTarjeta = request.getParameter("numeroTarjeta");
         String fechaExpiracion = request.getParameter("fechaExpiracionMes") + "/" + request.getParameter("fechaExpiracionAnio");
-        String cvc = request.getParameter("cvc");
+        String cvc = request.getParameter("cvv");
 
         // Crear el objeto PedidoDto con los datos recibidos
         PedidoDto pedidoDto = new PedidoDto();
@@ -49,23 +49,28 @@ public class PedidoControlador extends HttpServlet {
         pedidoDto.setCvc(cvc);
         pedidoDto.setIdUsuario(idUsuario);  // Usar el idUsuario de la sesión
 
+        String mensaje = null;
+        String tipoMensaje = "success"; // Variable para determinar el tipo de mensaje
+
         try {
             // Llamar al servicio para crear el pedido
-            String mensaje = pedidoServicio.crearPedido(pedidoDto);
+            mensaje = pedidoServicio.crearPedido(pedidoDto);
 
-            if (mensaje.equals("Pedido creado correctamente")) {
-                response.setStatus(HttpServletResponse.SC_CREATED);  // Código de éxito
-                response.getWriter().write(mensaje);
-            } else {
-                // En caso de error al crear el pedido
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.getWriter().write(mensaje);
+            if (!mensaje.equals("Pedido creado correctamente")) {
+                tipoMensaje = "error";  // Si el mensaje no es de éxito, asignar tipo de error
             }
 
         } catch (Exception e) {
-            e.printStackTrace();  // Imprimir detalles del error
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);  // Error en el servidor
-            response.getWriter().write("Error al crear el pedido: " + e.getMessage());  // Mensaje de error
+            tipoMensaje = "error";  // En caso de error en la excepción
+            mensaje = "Error al crear el pedido: " + e.getMessage();  // Mensaje de error
         }
+
+        // Agregar el mensaje y tipo de mensaje a la solicitud
+        request.setAttribute("mensaje", mensaje);
+        request.setAttribute("tipoMensaje", tipoMensaje);
+
+        // Redirigir a la página del carrito con el mensaje en la solicitud
+        RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
+        dispatcher.forward(request, response);
     }
 }

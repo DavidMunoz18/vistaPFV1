@@ -38,6 +38,24 @@
         </ul>
     </nav>
 
+    <% 
+        // Obtener el mensaje y el tipo de mensaje desde la solicitud
+        String mensaje = (String) request.getAttribute("mensaje");
+        String tipoMensaje = (String) request.getAttribute("tipoMensaje");
+
+        // Verificar si el mensaje y el tipo están presentes
+        if (mensaje != null && tipoMensaje != null) {
+    %>
+        <script type="text/javascript">
+            // Mostrar la alerta con el mensaje recibido desde el controlador
+            alert("<%= mensaje %>");
+        </script>
+    <%
+        }
+    %>
+    <!-- Resto del contenido de la página de carrito -->
+
+
     <div class="min-w-screen min-h-screen bg-gray-50 py-5">
         <div class="px-5">
             <div class="mb-2">
@@ -189,7 +207,7 @@
                                     <div class="mb-3">
                                         <label class="text-gray-600 font-semibold text-sm mb-2 ml-1">Número de tarjeta</label>
                                         <div>
-                                            <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors" placeholder="0000 0000 0000 0000" type="text" name="numeroTarjeta" required>
+                                            <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors" placeholder="0000 0000 0000 0000" type="text" id="numeroTarjeta" name="numeroTarjeta" required>
                                         </div>
                                     </div>
                                     <div class="mb-3 -mx-2 flex items-end">
@@ -215,7 +233,7 @@
                                         <div class="px-2 w-1/4">
                                             <label class="text-gray-600 font-semibold text-sm mb-2 ml-1">CVV</label>
                                             <div>
-                                                <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors" placeholder="000" type="text" name="cvv" required>
+                                                <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors" placeholder="000" type="text" id="cvv" name="cvv" required>
                                             </div>
                                         </div>
                                     </div>
