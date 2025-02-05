@@ -24,7 +24,7 @@ public class InicioControlador extends HttpServlet {
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         } else {
             request.setAttribute("mensaje", "No hay productos disponibles.");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }
 }

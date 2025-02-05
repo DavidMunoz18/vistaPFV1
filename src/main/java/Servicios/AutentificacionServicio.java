@@ -7,12 +7,15 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Dtos.LoginUsuarioDto;
+import Dtos.UsuarioDto;
 
 public class AutentificacionServicio {
 
@@ -243,8 +246,41 @@ public class AutentificacionServicio {
         }
     }
 
+    public List<UsuarioDto> obtenerUsuarios() {
+        List<UsuarioDto> usuarios = new ArrayList<>();
+        try {
+            URL url = new URL("http://localhost:8081/api/usuarios/listar"); // Cambia el puerto y ruta según tu configuración
+            HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
+            conexion.setRequestMethod("GET");
+            conexion.setRequestProperty("Content-Type", "application/json");
 
+            int responseCode = conexion.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(conexion.getInputStream()))) {
+                    StringBuilder response = new StringBuilder();
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
 
+                    System.out.println("Respuesta de la API: " + response.toString());
+
+                    // Mapeamos el JSON a la lista de objetos UsuarioDto
+                    ObjectMapper mapper = new ObjectMapper();
+                    UsuarioDto[] usuariosArray = mapper.readValue(response.toString(), UsuarioDto[].class);
+                    for (UsuarioDto usuario : usuariosArray) {
+                        usuarios.add(usuario);
+                    }
+                }
+            } else {
+                System.out.println("Error: Código de respuesta no OK. Código: " + responseCode);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR: " + e);
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
 
 
 

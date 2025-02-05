@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gestion.gestion_usuarios.dtos.ProductoDto;
+import Dtos.ProductoDto;
 import Servicios.ProductoServicio;
 
 import jakarta.servlet.ServletException;

@@ -33,7 +33,7 @@ public class EliminarProductosControlador extends HttpServlet {
                 // Llamar al servicio para eliminar el producto
                 productoServicio.eliminarProducto(productoId); // Pasamos el Long al servicio
 
-                response.sendRedirect("menuAdministrador.jsp"); // Redirigir si todo está bien
+                response.sendRedirect("admin"); // Redirigir si todo está bien
             } catch (NumberFormatException e) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "El ID del producto no es válido.");
             }

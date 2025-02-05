@@ -80,7 +80,7 @@ public class ProductoServicio {
         return producto;
     }
 
-    public boolean agregarProducto(com.gestion.gestion_usuarios.dtos.ProductoDto producto) {
+    public boolean agregarProducto(ProductoDto producto) {
         boolean resultado = false;
         try {
             URL url = new URL("http://localhost:8081/api/productos");
