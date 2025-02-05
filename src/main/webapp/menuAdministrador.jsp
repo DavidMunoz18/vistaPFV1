@@ -96,12 +96,13 @@
 							Producto</button>
 					</li>
 					<li class="nav-item">
-                        <button class="btn btn-link nav-link" onclick="mostrarSeccion('verProductos')">Ver Productos</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-link nav-link" onclick="mostrarSeccion('verUsuarios')">Ver Usuarios</button>
-                    </li>
-					
+						<button class="btn btn-link nav-link"
+							onclick="mostrarSeccion('verProductos')">Ver Productos</button>
+					</li>
+					<li class="nav-item">
+						<button class="btn btn-link nav-link"
+							onclick="mostrarSeccion('verUsuarios')">Ver Usuarios</button>
+					</li>
 
 
 
@@ -109,7 +110,8 @@
 
 
 
-					
+
+
 				</ul>
 			</div>
 			<!-- Contenido principal -->
@@ -152,17 +154,26 @@
 							id="nombreProducto" name="nombre" required> <label
 							for="descripcionProducto">Descripción:</label>
 						<textarea id="descripcionProducto" name="descripcion" required></textarea>
+
 						<label for="precioProducto">Precio:</label> <input type="number"
 							id="precioProducto" name="precio" step="0.01" required> <label
 							for="stockProducto">Stock:</label> <input type="number"
 							id="stockProducto" name="stock" required> <label
-							for="imagenProducto">Imagen:</label> <input type="file"
+							for="categoriaProducto">Categoría:</label> <select
+							id="categoriaProducto" name="categoria" required>
+							<option value="Ordenadores">Ordenadores</option>
+							<option value="Componentes">Componentes</option>
+							<option value="Periféricos">Periféricos</option>
+							<option value="Portátiles">Portátiles</option>
+							<option value="Ofertas">Ofertas</option>
+						</select> <label for="imagenProducto">Imagen:</label> <input type="file"
 							id="imagenProducto" name="imagen" accept="image/*" required>
+
 						<button type="submit" class="btn btn-success mt-3">Agregar
 							Producto</button>
 					</form>
-
 				</div>
+
 
 				<div id="eliminarProducto" class="seccion">
 					<h2>Eliminar Producto</h2>
@@ -214,7 +225,7 @@
 						</div>
 						<button type="submit" class="btn btn-warning mt-3">Modificar
 							Producto</button>
-							
+
 					</form>
 				</div>
 				<div id="verProductos" class="seccion" style="display: none;">

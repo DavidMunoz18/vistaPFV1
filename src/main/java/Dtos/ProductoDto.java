@@ -4,28 +4,27 @@ import java.util.Base64;
 
 public class ProductoDto {
 
-    private Long id; 
+    private Long id;
     private String nombre;
     private String descripcion;
     private double precio;
-    private byte[] imagen;  
+    private byte[] imagen;
     private int stock;
+    private String categoria;
 
-    // Constructor vacío (necesario para algunas bibliotecas de serialización/deserialización)
     public ProductoDto() {
     }
 
-    // Constructor completo
-    public ProductoDto(Long id, String nombre, String descripcion, double precio, byte[] imagen, int stock) {
+    public ProductoDto(Long id, String nombre, String descripcion, double precio, byte[] imagen, int stock, String categoria) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.imagen = imagen;
         this.stock = stock;
+        this.categoria = categoria;
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -73,7 +72,20 @@ public class ProductoDto {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    // Método para obtener la imagen en Base64
     public String getImagenBase64() {
-        return Base64.getEncoder().encodeToString(imagen);
+        if (imagen != null) {
+            return Base64.getEncoder().encodeToString(imagen);
+        }
+        return null;
     }
 }

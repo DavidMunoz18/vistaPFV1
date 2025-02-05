@@ -62,7 +62,8 @@
                             %>
                             <div class="w-full flex items-center mb-6">
                                 <div class="overflow-hidden rounded-lg w-16 h-16 bg-gray-50 border border-gray-200">
-                                    <img src="<%=producto.getImagen()%>" alt="Imagen producto">
+                                   <img src="data:image/jpeg;base64,<%= producto.getImagen() %>" alt="Imagen producto">
+
                                 </div>
                                 <div class="flex-grow pl-3">
                                 <h5>Producto ID: <%= producto.getId() %></h5>

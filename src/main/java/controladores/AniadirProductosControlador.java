@@ -37,10 +37,11 @@ public class AniadirProductosControlador extends HttpServlet {
             String descripcion = request.getParameter("descripcion");
             String precioStr = request.getParameter("precio");
             String stockStr = request.getParameter("stock");
+            String categoria = request.getParameter("categoria"); // Obtener la categoría seleccionada
 
             // Validar parámetros obligatorios
-            if (nombre == null || descripcion == null || precioStr == null || stockStr == null ||
-                nombre.isEmpty() || descripcion.isEmpty() || precioStr.isEmpty() || stockStr.isEmpty()) {
+            if (nombre == null || descripcion == null || precioStr == null || stockStr == null || categoria == null ||
+                nombre.isEmpty() || descripcion.isEmpty() || precioStr.isEmpty() || stockStr.isEmpty() || categoria.isEmpty()) {
                 response.sendRedirect("productos.jsp?error=Todos los campos son obligatorios");
                 return;
             }
@@ -59,24 +60,24 @@ public class AniadirProductosControlador extends HttpServlet {
                 }
             }
 
-            // Crear objeto DTO
-            ProductoDto producto = new ProductoDto(null, nombre, descripcion, precio, imagenBytes, stock);
+            // Crear objeto DTO incluyendo la categoría
+            ProductoDto producto = new ProductoDto(null, nombre, descripcion, precio, imagenBytes, stock, categoria);
 
             // Llamar al servicio para agregar el producto
             boolean exito = productoServicio.agregarProducto(producto);
 
             // Redirigir con mensaje según el resultado
             if (exito) {
-            	response.sendRedirect("productos");;
+                response.sendRedirect("productos");
             } else {
-            	response.sendRedirect("productos");;
+                response.sendRedirect("productos");
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            response.sendRedirect("productos");;
+            response.sendRedirect("productos");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("productos");;
+            response.sendRedirect("productos");
         }
     }
 }
