@@ -60,7 +60,7 @@ public class LoginUsuarioControlador extends HttpServlet {
 
                 // Redirigir según el rol
                 if ("admin".equals(rol)) {
-                    response.sendRedirect("admin.jsp");
+                    response.sendRedirect("admin");
                 } else if ("usuario".equals(rol)) {
                     response.sendRedirect("inicio");
                 } else {

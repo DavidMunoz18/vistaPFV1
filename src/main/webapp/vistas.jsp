@@ -20,10 +20,86 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="css/estilo.css">
+    <style>
+        /* Estilos personalizados */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .navbar {
+            background-color: #0073e6;
+        }
+
+        .navbar-brand img {
+            width: 150px;
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ff6600 !important;
+        }
+
+        .detalle-producto {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .detalle-producto img {
+            border-radius: 8px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .detalle-producto img:hover {
+            transform: scale(1.05);
+        }
+
+        .detalle-producto h1 {
+            color: #333;
+        }
+
+        .detalle-producto p {
+            font-size: 1.1em;
+        }
+
+        .btn-principal {
+            background-color: #ff6600;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-principal:hover {
+            background-color: #e65c00;
+        }
+
+        .reseñas-lista {
+            margin-top: 30px;
+        }
+
+        .reseñas-lista .list-group-item {
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .formulario-reseña {
+            margin-top: 30px;
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
           <img src="imagenes/Code components-Photoroom.png" alt="Logo">
@@ -44,7 +120,6 @@
             <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/inicio">Inicio</a></li>
             <li class="nav-item"><a class="nav-link" href="nosotros.jsp">Nosotros</a></li>
            <li class="nav-item"><a href="<%= request.getContextPath() %>/productos">Productos</a></li>
-
             <li class="nav-item"><a class="nav-link" href="login.jsp">Iniciar Sesión</a></li>
             <li class="nav-item"><a class="nav-link" href="registro.jsp">Registrarse</a></li>
             <li class="nav-item cart-container">
@@ -61,27 +136,27 @@
     <!-- Contenido principal -->
     <div class="container py-5">
         <%
-            String idProducto = request.getParameter("id");
+            String idDelProducto = request.getParameter("id");
             ProductoDto producto = null;
-            List<ReseniaDto> resenias = null;
+            List<ReseniaDto> reseñas = null;
 
-            // Comprobamos que el idProducto no sea nulo o vacío
-            if (idProducto != null && !idProducto.isEmpty()) {
+            // Comprobamos que el idDelProducto no sea nulo o vacío
+            if (idDelProducto != null && !idDelProducto.isEmpty()) {
                 // Llamamos al servicio para obtener el producto por su ID
-                ProductoServicio productoServicio = new ProductoServicio();
-                producto = productoServicio.obtenerProductoPorId(Integer.parseInt(idProducto));
+                ProductoServicio servicioProducto = new ProductoServicio();
+                producto = servicioProducto.obtenerProductoPorId(Integer.parseInt(idDelProducto));
 
                 if (producto != null) {
                     // Si el producto existe, obtenemos las reseñas relacionadas
-                    ResenaServicio resenaServicio = new ResenaServicio();
-                    resenias = resenaServicio.obtenerReseniasPorProducto(Long.parseLong(idProducto));
+                    ResenaServicio servicioResena = new ResenaServicio();
+                    reseñas = servicioResena.obtenerReseniasPorProducto(Long.parseLong(idDelProducto));
                 }
             }
         %>
 
         <% if (producto != null) { %>
         <!-- Detalles del producto -->
-        <div class="row product-detail">
+        <div class="row detalle-producto">
             <div class="col-md-6">
                 <img src="data:image/png;base64,<%= producto.getImagenBase64() %>" alt="<%= producto.getNombre() %>" class="img-fluid">
             </div>
@@ -89,17 +164,26 @@
                 <h1><%= producto.getNombre() %></h1>
                 <p><strong>Precio:</strong> $<%= producto.getPrecio() %></p>
                 <p><strong>Descripción:</strong> <%= producto.getDescripcion() %></p>
+                <form action="<%=request.getContextPath()%>/carrito" method="POST">
+                                    <input type="hidden" name="action" value="agregar">
+                                    <input type="hidden" name="id" value="<%=producto.getId()%>">
+                                    <input type="hidden" name="nombre" value="<%=producto.getNombre()%>">
+                                    <input type="hidden" name="precio" value="<%=producto.getPrecio()%>">
+                                    <input type="hidden" name="imagen" value="<%=producto.getImagen()%>">
+                                    <input type="number" name="cantidad" value="1" min="1" required>
+                                    <button type="submit">Agregar al carrito</button>
+                                </form>
             </div>
         </div>
 
         <!-- Reseñas del producto -->
         <h2 class="mt-4">Reseñas del Producto</h2>
-        <% if (resenias != null && !resenias.isEmpty()) { %>
-        <ul class="list-group">
-            <% for (ReseniaDto resenia : resenias) { %>
+        <% if (reseñas != null && !reseñas.isEmpty()) { %>
+        <ul class="list-group reseñas-lista">
+            <% for (ReseniaDto reseña : reseñas) { %>
             <li class="list-group-item">
-                <p><strong>Calificación:</strong> <%= resenia.getCalificacion() %> / 5</p>
-                <p><strong>Comentario:</strong> <%= resenia.getContenidoResena() %></p>
+                <p><strong>Calificación:</strong> <%= reseña.getCalificacion() %> / 5</p>
+                <p><strong>Comentario:</strong> <%= reseña.getContenidoResena() %></p>
             </li>
             <% } %>
         </ul>
@@ -109,7 +193,7 @@
 
         <!-- Formulario para agregar reseñas -->
         <h3 class="mt-4">Agregar una Nueva Reseña</h3>
-        <form action="resenas" method="POST" class="mt-3">
+        <form action="resenas" method="POST" class="formulario-reseña">
             <input type="hidden" name="idProducto" value="<%= producto.getId() %>">
             <div class="mb-3">
                 <label for="calificacion" class="form-label">Calificación (1-5):</label>
