@@ -16,6 +16,7 @@ public class RegistroUsuarioDto {
     private String emailUsuario;
     private String passwordUsuario;
     private String rol;
+    private String codigoVerificacion;
 
     // Getters & Setters
 
@@ -68,4 +69,13 @@ public class RegistroUsuarioDto {
     public void setRol(String rol) {
         this.rol = rol;
     }
+
+	public String getCodigoVerificacion() {
+		return codigoVerificacion;
+	}
+
+	public void setCodigoVerificacion(String codigoVerificacion) {
+		this.codigoVerificacion = codigoVerificacion;
+	}
+    
 }

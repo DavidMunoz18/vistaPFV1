@@ -1,7 +1,5 @@
 package controladores;
 
-import java.io.IOException;
-
 import Dtos.RegistroUsuarioDto;
 import Servicios.RegistroServicio;
 import jakarta.servlet.ServletException;
@@ -10,80 +8,81 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+
 /**
  * Controlador para manejar el registro de usuarios.
- * <p>
- * Este servlet procesa solicitudes HTTP POST para registrar un nuevo usuario,
- * utilizando un servicio específico para realizar la operación de registro.
- * </p>
- * <p>
- * Los datos del usuario se recogen desde un formulario y se encapsulan en un DTO
- * para ser procesados por el servicio.
- * </p>
+ * Este servlet procesa solicitudes HTTP POST tanto para enviar el código de verificación
+ * como para registrar al usuario, utilizando el servicio de registro.
  */
-@WebServlet("/registroUsuario")
+@WebServlet(urlPatterns = {"/registroUsuario", "/enviarCodigo"})
 public class RegistroUsuarioControlador extends HttpServlet {
 
-    /**
-     * Servicio encargado de manejar la lógica de registro del usuario.
-     */
     private RegistroServicio registroServicio;
 
-    /**
-     * Inicializa el controlador configurando el servicio de registro.
-     * 
-     * @throws ServletException si ocurre un error en la inicialización del servlet.
-     */
     @Override
     public void init() throws ServletException {
-        // Inicializar el servicio de registro de usuario
         this.registroServicio = new RegistroServicio();
     }
 
-    /**
-     * Procesa las solicitudes HTTP POST para registrar un usuario.
-     * <p>
-     * Este método recoge los datos enviados desde el formulario de registro,
-     * los encapsula en un DTO, y llama al servicio para registrar al usuario.
-     * Si el registro es exitoso, redirige al formulario de inicio de sesión;
-     * de lo contrario, muestra un mensaje de error.
-     * </p>
-     * 
-     * @param request  el objeto {@link HttpServletRequest} que contiene la solicitud
-     *                 del cliente.
-     * @param response el objeto {@link HttpServletResponse} que contiene la respuesta
-     *                 para el cliente.
-     * @throws ServletException si ocurre un error relacionado con el servlet.
-     * @throws IOException      si ocurre un error de entrada/salida.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Recoger los parámetros del formulario de registro
-        
+        // Se obtiene el path para diferenciar la acción según la URL utilizada
+        String path = request.getServletPath();
+        if ("/enviarCodigo".equals(path)) {
+            enviarCodigo(request, response);
+        } else if ("/registroUsuario".equals(path)) {
+            registrarUsuario(request, response);
+        }
+    }
+
+    private void enviarCodigo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String correo = request.getParameter("emailUsuario");
+
+        if (correo == null || correo.trim().isEmpty()) {
+            response.getWriter().write("El correo es obligatorio.");
+            return;
+        }
+
+        boolean enviado = registroServicio.enviarCodigoVerificacion(correo);
+
+        if (enviado) {
+            response.getWriter().write("Se ha enviado un código de verificación a tu correo.");
+        } else {
+            response.getWriter().write("No se pudo enviar el código. Verifica el correo ingresado.");
+        }
+    }
+
+    private void registrarUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         String nombre = request.getParameter("nombreUsuario");
-        
         String telefono = request.getParameter("telefonoUsuario");
         String correo = request.getParameter("emailUsuario");
         String password = request.getParameter("passwordUsuario");
+        String confirmPassword = request.getParameter("confirmPasswordUsuario");
+        String codigoVerificacion = request.getParameter("codigoVerificacion");
 
-        // Crear el objeto DTO con los datos del usuario
+        if (password == null || !password.equals(confirmPassword)) {
+            request.setAttribute("mensaje", "Las contraseñas no coinciden.");
+            request.getRequestDispatcher("registro.jsp").forward(request, response);
+            return;
+        }
+
         RegistroUsuarioDto registroDto = new RegistroUsuarioDto();
-        
         registroDto.setNombreUsuario(nombre);
         registroDto.setTelefonoUsuario(telefono);
         registroDto.setEmailUsuario(correo);
         registroDto.setPasswordUsuario(password);
+        registroDto.setCodigoVerificacion(codigoVerificacion);
 
-        // Llamar al servicio para registrar al usuario
         boolean registroExitoso = registroServicio.registrarUsuario(registroDto);
 
         if (registroExitoso) {
-            // Registro exitoso, redirigir a la página de inicio o login
             response.sendRedirect("login.jsp");
         } else {
-            // Si el registro falló (correo ya existente), mostrar un mensaje de error
-            request.setAttribute("errorMessage", "El correo ya está registrado.");
+            request.setAttribute("mensaje", "El código de verificación es incorrecto o el correo ya está registrado.");
             request.getRequestDispatcher("registro.jsp").forward(request, response);
         }
     }
