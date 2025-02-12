@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="java.util.List"%>
-<%@ page import="Dtos.CarritoDto"%>
+<%@ page import="dtos.CarritoDto"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -246,5 +246,6 @@
             </div>
         </div>
     </div>
+    
 </body>
 </html>

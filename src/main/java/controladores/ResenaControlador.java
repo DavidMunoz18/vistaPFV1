@@ -3,16 +3,16 @@ package controladores;
 import java.io.IOException;
 import java.util.List;
 
-import Dtos.ProductoDto;
-import Dtos.ReseniaDto;
-import Servicios.ProductoServicio;
-import Servicios.ResenaServicio;
+import dtos.ProductoDto;
+import dtos.ReseniaDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import servicios.ProductoServicio;
+import servicios.ResenaServicio;
 
 @WebServlet("/resenas")
 public class ResenaControlador extends HttpServlet {

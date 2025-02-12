@@ -1,4 +1,4 @@
-package Servicios;
+package servicios;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

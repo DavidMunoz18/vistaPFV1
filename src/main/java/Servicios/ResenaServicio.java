@@ -1,4 +1,4 @@
-package Servicios;
+package servicios;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,8 +11,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import Dtos.ProductoDto;
-import Dtos.ReseniaDto;
+import dtos.ProductoDto;
+import dtos.ReseniaDto;
 
 public class ResenaServicio {
 

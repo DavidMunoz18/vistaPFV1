@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="java.util.List"%>
-<%@ page import="Dtos.ProductoDto"%>
+<%@ page import="dtos.ProductoDto"%>
 <%@ page session="true"%>
 
 <!DOCTYPE html>

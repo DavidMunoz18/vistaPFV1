@@ -2,7 +2,6 @@ package controladores;
 
 import java.io.IOException;
 
-import Servicios.ModificarServicio;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import servicios.ModificarServicio;
 
 /**
  * Controlador para manejar la modificación de un usuario.

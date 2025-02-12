@@ -1,4 +1,6 @@
-package Dtos;
+package dtos;
+
+import java.util.List;
 
 public class PedidoDto {
     private Long idUsuario;
@@ -9,17 +11,37 @@ public class PedidoDto {
     private String numeroTarjeta;
     private String fechaExpiracion;
     private String cvc;
+    
+    // Nuevo campo para el detalle de productos
+    private List<PedidoProductoDto> productos;
 
-    // Constructor vacío (necesario para frameworks como Jackson)
     public PedidoDto() {}
 
-    // Getters y setters
+    
+    
+    public PedidoDto(Long idUsuario, String contacto, String direccion, String metodoPago, String nombreTarjeta,
+			String numeroTarjeta, String fechaExpiracion, String cvc, List<PedidoProductoDto> productos) {
+		super();
+		this.idUsuario = idUsuario;
+		this.contacto = contacto;
+		this.direccion = direccion;
+		this.metodoPago = metodoPago;
+		this.nombreTarjeta = nombreTarjeta;
+		this.numeroTarjeta = numeroTarjeta;
+		this.fechaExpiracion = fechaExpiracion;
+		this.cvc = cvc;
+		this.productos = productos;
+	}
+
+
+
+	// Getters y setters
     public Long getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(Long idUsuario2) {
-        this.idUsuario = idUsuario2;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getContacto() {
@@ -77,4 +99,14 @@ public class PedidoDto {
     public void setCvc(String cvc) {
         this.cvc = cvc;
     }
+
+    public List<PedidoProductoDto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<PedidoProductoDto> productos) {
+        this.productos = productos;
+    }
+    
+    
 }

@@ -1,4 +1,4 @@
-package Dtos;
+package dtos;
 
 /**
  * Clase DTO para representar las credenciales de un usuario al momento de iniciar sesión.

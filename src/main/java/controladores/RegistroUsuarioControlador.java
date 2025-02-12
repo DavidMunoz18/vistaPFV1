@@ -1,12 +1,12 @@
 package controladores;
 
-import Dtos.RegistroUsuarioDto;
-import Servicios.RegistroServicio;
+import dtos.RegistroUsuarioDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import servicios.RegistroServicio;
 
 import java.io.IOException;
 

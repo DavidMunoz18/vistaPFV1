@@ -1,4 +1,4 @@
-package Servicios;
+package servicios;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,8 +8,7 @@ import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-import Dtos.ModificarUsuarioDto;
+import dtos.ModificarUsuarioDto;
 
 /**
  * Servicio para manejar la modificación de usuarios y clubes.

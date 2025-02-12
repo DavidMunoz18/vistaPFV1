@@ -1,16 +1,18 @@
 package controladores;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import Dtos.CarritoDto;
-import Servicios.CarritoServicio;
+import dtos.CarritoDto;
+import servicios.CarritoServicio;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/carrito")
 public class CarritoControlador extends HttpServlet {
@@ -23,39 +25,38 @@ public class CarritoControlador extends HttpServlet {
 
         if ("agregar".equals(action)) {
             try {
-                // Cambio aquí: usar 'id' en lugar de 'productoId'
-                int id = Integer.parseInt(request.getParameter("id"));
-                System.out.println("Producto ID recibido: " + request.getParameter("id"));
-                
+                long id = Long.parseLong(request.getParameter("id"));
                 int cantidad = Integer.parseInt(request.getParameter("cantidad"));
 
-                // Obtener los detalles del producto (nombre, precio, imagen) desde la API
+                // Obtener los detalles del producto
                 CarritoDto productoDetalles = carritoServicio.obtenerProductoPorId(id);
                 
                 if (productoDetalles != null) {
-                    // Usamos el constructor completo de CarritoDto
                     CarritoDto carritoDto = new CarritoDto(
-                            productoDetalles.getId(),  // Ahora 'id' en lugar de 'productoId'
+                            productoDetalles.getId(),
                             productoDetalles.getNombre(),
                             cantidad,
                             productoDetalles.getPrecio(),
                             productoDetalles.getImagen()
                     );
-                    
-                    // Imprimir el carritoDto antes de insertarlo
-                    System.out.println("Antes de agregar al carrito: " + carritoDto);
 
-                    // Llamar al servicio para añadir el producto
-                    boolean agregado = carritoServicio.agregarProducto(carritoDto);
+                    // Obtener el carrito de la sesión
+                    HttpSession session = request.getSession();
+                    List<CarritoDto> carrito = (List<CarritoDto>) session.getAttribute("carrito");
 
-                    // Verificar la inserción
-                    if (agregado) {
-                        // Imprimir el carritoDto después de agregarlo (si el servicio devuelve el ID actualizado)
-                        System.out.println("Producto añadido al carrito correctamente: " + carritoDto);
-                        response.sendRedirect("carrito");
-                    } else {
-                        System.out.println("Error al añadir el producto al carrito.");
+                    // Si el carrito no existe, crear uno nuevo
+                    if (carrito == null) {
+                        carrito = new ArrayList<>();
                     }
+
+                    // Agregar el producto al carrito
+                    carrito.add(carritoDto);
+                    
+                    // Guardar el carrito actualizado en la sesión
+                    session.setAttribute("carrito", carrito);
+
+                    response.sendRedirect("carrito");  // Redirigir al carrito
+
                 } else {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Producto no encontrado");
                 }
@@ -69,20 +70,24 @@ public class CarritoControlador extends HttpServlet {
             String method = request.getParameter("_method");
             if ("DELETE".equals(method)) {
                 try {
-                    // Cambio aquí: usar 'id' en lugar de 'productoId'
-                    int id = Integer.parseInt(request.getParameter("id"));
+                    long id = Long.parseLong(request.getParameter("id"));
 
-                    // Llamar al servicio para eliminar el producto
-                    boolean eliminado = carritoServicio.eliminarProducto(id);
+                    // Obtener el carrito de la sesión
+                    HttpSession session = request.getSession();
+                    List<CarritoDto> carrito = (List<CarritoDto>) session.getAttribute("carrito");
 
-                    if (eliminado) {
-                        System.out.println("Producto eliminado del carrito.");
+                    // Si el carrito existe, proceder con la eliminación
+                    if (carrito != null) {
+                        // Buscar el producto por ID y eliminarlo
+                        carrito.removeIf(producto -> producto.getId() == id);
+
+                        // Guardar el carrito actualizado en la sesión
+                        session.setAttribute("carrito", carrito);
+
+                        response.sendRedirect("carrito");  // Redirigir al carrito
                     } else {
-                        System.out.println("Error al eliminar el producto.");
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Carrito no encontrado");
                     }
-
-                    // Redirigir al carrito
-                    response.sendRedirect("carrito");
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -96,15 +101,18 @@ public class CarritoControlador extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<CarritoDto> carrito = carritoServicio.obtenerCarrito();
-        
+        // Obtener el carrito de la sesión
+        HttpSession session = request.getSession();
+        List<CarritoDto> carrito = (List<CarritoDto>) session.getAttribute("carrito");
+
         // Imprimir datos recibidos para depuración
-        for (CarritoDto producto : carrito) {
-            System.out.println("Producto en carrito: " + producto.getNombre() + ", Precio: " + producto.getPrecio());
+        if (carrito != null) {
+            for (CarritoDto producto : carrito) {
+                System.out.println("Producto en carrito: " + producto.getNombre() + ", Precio: " + producto.getPrecio());
+            }
         }
 
-        request.setAttribute("carrito", carrito);  // Pasar los productos al JSP
-
+        request.setAttribute("carrito", carrito); // Pasar los productos al JSP
         RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
         dispatcher.forward(request, response);
     }

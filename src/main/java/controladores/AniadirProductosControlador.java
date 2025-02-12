@@ -5,9 +5,7 @@ import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import Dtos.ProductoDto;
-import Servicios.ProductoServicio;
-
+import dtos.ProductoDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import servicios.ProductoServicio;
 
 @WebServlet("/productosAniadir")
 @MultipartConfig

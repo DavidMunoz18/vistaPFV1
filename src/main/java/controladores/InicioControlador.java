@@ -3,13 +3,13 @@ package controladores;
 import java.io.IOException;
 import java.util.List;
 
-import Dtos.ProductoDto;
-import Servicios.ProductoServicio;
+import dtos.ProductoDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import servicios.ProductoServicio;
 
 @WebServlet("/inicio")
 public class InicioControlador extends HttpServlet {

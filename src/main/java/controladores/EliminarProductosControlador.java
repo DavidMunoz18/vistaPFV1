@@ -2,13 +2,12 @@ package controladores;
 
 import java.io.IOException;
 
-import Servicios.ProductoServicio;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import servicios.ProductoServicio;
 
 @WebServlet("/eliminarProducto")
 public class EliminarProductosControlador extends HttpServlet {

@@ -1,4 +1,4 @@
-package Servicios;
+package servicios;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import Dtos.RegistroUsuarioDto;
+import dtos.RegistroUsuarioDto;
 
 public class RegistroServicio {
 

@@ -1,4 +1,4 @@
-package Servicios;
+package servicios;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,9 +11,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import Dtos.ReseniaDto;
 
-import Dtos.ProductoDto;
+import dtos.ProductoDto;
+import dtos.ReseniaDto;
 
 public class ProductoServicio {
 

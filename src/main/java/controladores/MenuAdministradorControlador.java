@@ -3,16 +3,16 @@ package controladores;
 import java.io.IOException;
 import java.util.List;
 
-import Dtos.ProductoDto;
-import Dtos.UsuarioDto;
-import Servicios.AutentificacionServicio;
-import Servicios.ProductoServicio;
+import dtos.ProductoDto;
+import dtos.UsuarioDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import servicios.AutentificacionServicio;
+import servicios.ProductoServicio;
 
 @WebServlet("/admin")
 public class MenuAdministradorControlador extends HttpServlet {

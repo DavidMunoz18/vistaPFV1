@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ page import="Dtos.ProductoDto"%>
-<%@ page import="Dtos.ReseniaDto"%>
-<%@ page import="Servicios.ProductoServicio"%>
-<%@ page import="Servicios.ResenaServicio"%>
+<%@ page import="dtos.ProductoDto"%>
+<%@ page import="dtos.ReseniaDto"%>
+<%@ page import="servicios.ProductoServicio"%>
+<%@ page import="servicios.ResenaServicio"%>
 <%@ page import="java.util.List"%>
 <%@ page session="true"%>
 

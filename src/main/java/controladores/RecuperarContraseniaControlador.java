@@ -1,11 +1,12 @@
 package controladores;
 
-import Servicios.AutentificacionServicio;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import servicios.AutentificacionServicio;
+
 import java.io.IOException;
 
 @WebServlet("/recuperar-contrasenia")

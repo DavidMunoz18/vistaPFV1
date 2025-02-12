@@ -1,12 +1,13 @@
 package controladores;
 
 import java.io.IOException;
-import Servicios.AutentificacionServicio; // Asegúrate de tener el servicio adecuado
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import servicios.AutentificacionServicio;
 
 @WebServlet("/NuevaContrasenia")
 public class NuevaContraseniaControlador extends HttpServlet {

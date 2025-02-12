@@ -1,4 +1,4 @@
-package Dtos;
+package dtos;
 
 /**
  * Clase DTO para representar los datos de un usuario al momento de registrarse.

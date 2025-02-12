@@ -1,4 +1,4 @@
-package Servicios;
+package servicios;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +14,8 @@ import org.json.JSONObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import Dtos.LoginUsuarioDto;
-import Dtos.UsuarioDto;
+import dtos.LoginUsuarioDto;
+import dtos.UsuarioDto;
 
 public class AutentificacionServicio {
 

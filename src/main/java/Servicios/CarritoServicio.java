@@ -1,6 +1,6 @@
-package Servicios;
+package servicios;
 
-import Dtos.CarritoDto;
+import dtos.CarritoDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -46,7 +46,7 @@ public class CarritoServicio {
         return carrito;
     }
 
-    public CarritoDto obtenerProductoPorId(int id) {
+    public CarritoDto obtenerProductoPorId(long id) {
         try {
             // Verificar el ID recibido
             System.out.println("Buscando producto con ID: " + id);
@@ -124,7 +124,7 @@ public class CarritoServicio {
         return false;
     }
 
-    public boolean eliminarProducto(int id) {
+    public boolean eliminarProducto(long id) {
         try {
             URL url = new URL(API_URL + "/remove/" + id);
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
