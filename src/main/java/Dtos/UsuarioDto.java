@@ -8,6 +8,7 @@ public class UsuarioDto {
     private String nombreUsuario;
     private String telefonoUsuario;
     private String emailUsuario;
+    private String contrasena;
     private String rol;
     
     // ===========================
@@ -16,16 +17,22 @@ public class UsuarioDto {
 
     public UsuarioDto() {}
 
-    public UsuarioDto(long idUsuario, String nombreUsuario, String telefonoUsuario, String emailUsuario, String rol, List<Long> idPedidos, List<Long> idReseñas) {
-        this.idUsuario = idUsuario;
-        this.nombreUsuario = nombreUsuario;
-        this.telefonoUsuario = telefonoUsuario;
-        this.emailUsuario = emailUsuario;
-        this.rol = rol;
-       
-    }
+   
 
-    // Getters y Setters
+    public UsuarioDto(long idUsuario, String nombreUsuario, String telefonoUsuario, String emailUsuario,
+			String contrasena, String rol) {
+		super();
+		this.idUsuario = idUsuario;
+		this.nombreUsuario = nombreUsuario;
+		this.telefonoUsuario = telefonoUsuario;
+		this.emailUsuario = emailUsuario;
+		this.contrasena = contrasena;
+		this.rol = rol;
+	}
+
+
+
+	// Getters y Setters
 
     public long getIdUsuario() {
         return idUsuario;
@@ -66,9 +73,16 @@ public class UsuarioDto {
     public void setRol(String rol) {
         this.rol = rol;
     }
+	public String getContrasena() {
+		return contrasena;
+	}
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
+	}
 
-  
-    @Override
+
+
+	@Override
     public String toString() {
         return "UsuarioDto{" +
                 "idUsuario=" + idUsuario +

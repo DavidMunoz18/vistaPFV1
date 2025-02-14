@@ -99,12 +99,12 @@
     List<ProductoDto> productos = (List<ProductoDto>) request.getAttribute("productos");
 
     if (productos != null && !productos.isEmpty()) {
-        int count = 0; // Contador para limitar a 6 productos
+        int contador = 0; // Contador para limitar a 6 productos
         for (ProductoDto producto : productos) {
-            if (count >= 6) { // Mostrar solo los primeros 6 productos
+            if (contador >= 6) { // Mostrar solo los primeros 6 productos
                 break;
             }
-            count++;
+            contador++;
     %>
     <div class="col-md-2">
       <div class="card product-card">

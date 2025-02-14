@@ -1,7 +1,6 @@
 package controladores;
 
 import java.io.IOException;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import servicios.AutentificacionServicio;
+import dtos.UsuarioDto;
 
 /**
  * Controlador para manejar el inicio de sesión de un usuario.
@@ -38,38 +38,26 @@ public class LoginUsuarioControlador extends HttpServlet {
         System.out.println("Correo recibido: " + correo);
         System.out.println("Contraseña recibida: " + password);
 
-        // Llamar al servicio para verificar el usuario (devuelve boolean)
-        boolean isValidUser = servicio.verificarUsuario(correo, password);
+        // Llamar al servicio para verificar el usuario
+        UsuarioDto usuario = servicio.verificarUsuario(correo, password);
 
-        System.out.println("isValidUser: " + isValidUser);
+        if (usuario != null) {
+            // Guardar el idUsuario y rol en la sesión
+            HttpSession session = request.getSession();
+            session.setAttribute("idUsuario", usuario.getIdUsuario());
+            session.setAttribute("rol", usuario.getRol());
 
-        if (isValidUser) {
-            // Obtener el rol y el idUsuario desde el servicio
-            String rol = servicio.getRol();
-            Long idUsuario = servicio.getId();
+            // Log para verificar que se guarda correctamente
+            System.out.println("idUsuario guardado en la sesión: " + usuario.getIdUsuario());
+            System.out.println("Rol del usuario: " + usuario.getRol());
 
-            if (rol != null && idUsuario != null) {
-                // Guardar el idUsuario y rol en la sesión
-                HttpSession session = request.getSession();
-                session.setAttribute("idUsuario", idUsuario);
-                session.setAttribute("rol", rol);
-
-                // Log para verificar que se guarda correctamente
-                System.out.println("idUsuario guardado en la sesión: " + idUsuario);
-                System.out.println("Rol del usuario: " + rol);
-
-                // Redirigir según el rol
-                if ("admin".equals(rol)) {
-                    response.sendRedirect("admin");
-                } else if ("usuario".equals(rol)) {
-                    response.sendRedirect("inicio");
-                } else {
-                    request.setAttribute("errorMessage", "Rol desconocido.");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
-                }
+            // Redirigir según el rol
+            if ("admin".equals(usuario.getRol())) {
+                response.sendRedirect("admin");
+            } else if ("usuario".equals(usuario.getRol())) {
+                response.sendRedirect("inicio");
             } else {
-                // Si no se puede obtener el rol o ID
-                request.setAttribute("errorMessage", "Error en la autenticación. Respuesta vacía.");
+                request.setAttribute("errorMessage", "Rol desconocido.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
         } else {

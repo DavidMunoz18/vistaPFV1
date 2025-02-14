@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.json.JSONObject;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,28 +29,28 @@ public class AutentificacionServicio {
     private String rol = "";
     private Long idUsuario;
 
-    public boolean verificarUsuario(String correo, String password) {
-        boolean todoOk = false;
+    public UsuarioDto verificarUsuario(String correo, String password) {
+        UsuarioDto usuario = null;
 
         try {
             System.out.println("Verificando usuario con correo: " + correo);
 
-            // Crear la URL de la API para la verificación del usuario
-            URL url = new URL("http://localhost:8081/api/login/validarUsuario");
+            // Consultar el usuario completo desde la base de datos a través de la API
+            URL url = new URL("http://localhost:8081/api/login/consultarUsuario");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("POST");
             conexion.setRequestProperty("Content-Type", "application/json");
             conexion.setDoOutput(true);
 
-            // Crear el objeto DTO con las credenciales del usuario
+            // Crear el objeto DTO con el correo
             LoginUsuarioDto loginRequest = new LoginUsuarioDto();
             loginRequest.setEmail(correo);
-            loginRequest.setPassword(password);
 
             // Convertir el DTO a JSON
             ObjectMapper mapper = new ObjectMapper();
             String jsonInput = mapper.writeValueAsString(loginRequest);
-            System.out.println("Enviando solicitud: " + jsonInput);
+
+            System.out.println("Datos enviados a la API: " + jsonInput);
 
             // Enviar la solicitud al servidor
             try (OutputStream ot = conexion.getOutputStream()) {
@@ -59,7 +60,6 @@ public class AutentificacionServicio {
 
             // Procesar la respuesta del servidor
             int responseCode = conexion.getResponseCode();
-            System.out.println("Código de respuesta: " + responseCode);
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(conexion.getInputStream()))) {
                     StringBuilder response = new StringBuilder();
@@ -71,16 +71,18 @@ public class AutentificacionServicio {
                     String respuesta = response.toString();
                     System.out.println("Respuesta del servidor: " + respuesta);
 
-                    // Comprobar si la respuesta contiene el rol y el ID
-                    if (respuesta.contains(" - ID: ")) {
-                        String[] partes = respuesta.split(" - ID: ");
-                        if (partes.length == 2) {
-                            this.rol = partes[0].trim(); // "usuario" o "admin"
-                            this.idUsuario = Long.parseLong(partes[1].trim()); // "2"
-                            todoOk = true;
-                        }
+                    // Mapeamos la respuesta JSON al objeto UsuarioDto
+                    usuario = mapper.readValue(respuesta, UsuarioDto.class);
+
+                    // Verificar la contraseña encriptada
+                    if (usuario != null && BCrypt.checkpw(password, usuario.getContrasena())) {
+                        // Si las contraseñas coinciden, establecer el rol y el idUsuario
+                        this.rol = usuario.getRol();
+                        this.idUsuario = usuario.getIdUsuario();
+                        System.out.println("Usuario verificado correctamente. Rol: " + this.rol + ", ID: " + this.idUsuario);
                     } else {
-                        System.out.println("Rol desconocido o error en la respuesta.");
+                        System.out.println("Contraseña incorrecta.");
+                        usuario = null;  // Si no coincide, devolver null
                     }
                 }
             } else {
@@ -92,7 +94,7 @@ public class AutentificacionServicio {
             e.printStackTrace();
         }
 
-        return todoOk;
+        return usuario;  // Devuelve el usuario completo o null si no se verifica
     }
 
 
