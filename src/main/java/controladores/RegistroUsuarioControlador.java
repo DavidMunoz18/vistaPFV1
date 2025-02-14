@@ -65,10 +65,11 @@ public class RegistroUsuarioControlador extends HttpServlet {
         registroDto.setNombreUsuario(nombre);
         registroDto.setTelefonoUsuario(telefono);
         registroDto.setEmailUsuario(correo);
+        // En este Dynamic Web Project se encriptará la contraseña antes de enviarla a la API.
         registroDto.setPasswordUsuario(password);
         registroDto.setCodigoVerificacion(codigoVerificacion);
 
-        // Se invoca la API para registrar el usuario (la API se encargará de verificar el código)
+        // Se invoca la API para registrar el usuario.
         boolean registroExitoso = registroServicio.registrarUsuario(registroDto);
         if (registroExitoso) {
             response.sendRedirect("login.jsp");

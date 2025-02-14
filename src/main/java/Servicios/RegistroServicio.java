@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Random;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.RegistroUsuarioDto;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import utilidades.Utilidades;
 
 public class RegistroServicio {
@@ -30,8 +31,6 @@ public class RegistroServicio {
             }
             
             // Enviar el código generado a la API para almacenarlo.
-            // Se asume que la API tiene un endpoint para almacenar el código, por ejemplo:
-            // POST http://localhost:8081/api/registro/almacenarCodigo
             URL url = new URL("http://localhost:8081/api/registro/almacenarCodigo");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("POST");
@@ -47,7 +46,6 @@ public class RegistroServicio {
             }
             
             int responseCode = conexion.getResponseCode();
-            // Si la API responde correctamente (200 OK), se considera que el código se almacenó
             return responseCode == HttpURLConnection.HTTP_OK;
         } catch (Exception e) {
             System.out.println("Error en enviarCodigoVerificacion: " + e.getMessage());
@@ -63,6 +61,10 @@ public class RegistroServicio {
      */
     public boolean registrarUsuario(RegistroUsuarioDto registroDto) {
         try {
+            // Encriptar la contraseña en el Dynamic Web Project
+            String passwordEncriptada = BCrypt.hashpw(registroDto.getPasswordUsuario(), BCrypt.gensalt());
+            registroDto.setPasswordUsuario(passwordEncriptada);
+
             URL url = new URL("http://localhost:8081/api/registro/usuario");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("POST");
