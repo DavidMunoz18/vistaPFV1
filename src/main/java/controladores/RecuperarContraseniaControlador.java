@@ -6,8 +6,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import servicios.AutentificacionServicio;
-
 import java.io.IOException;
+import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet("/recuperar-contrasenia")
 public class RecuperarContraseniaControlador extends HttpServlet {
@@ -18,24 +20,38 @@ public class RecuperarContraseniaControlador extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String correo = request.getParameter("correo");
 
-        // Verificar si el correo está vacío o no tiene un formato válido
+        // Validación básica del correo
         if (correo == null || correo.trim().isEmpty()) {
-            request.setAttribute("mensaje", "Correo electrónico es necesario.");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);  // Redirigir al mismo JSP
+            request.setAttribute("mensaje", "El correo electrónico es obligatorio.");
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
 
-        // Llamada al servicio para iniciar la recuperación de contraseña
-        boolean exito = autentificacionServicio.recuperarContrasenia(correo);
+        // Validación más avanzada del correo (expresión regular)
+        if (!correo.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            request.setAttribute("mensaje", "El formato del correo electrónico no es válido.");
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            return;
+        }
 
-        // Redirigir con el mensaje adecuado
-        if (exito) {
-            request.setAttribute("mensaje", "Recuperación de contraseña exitosa, revisa tu correo.");
-        } else {
-            request.setAttribute("mensaje", "No se pudo recuperar la contraseña. Verifica el correo.");
+        try {
+            // Generar un token de recuperación único
+            String token = UUID.randomUUID().toString();
+
+           
+
+            // Este controlador solo maneja la parte de envío de correo y generación de token
+            boolean exito = autentificacionServicio.recuperarContrasenia(correo, token);
+            if (exito) {
+                request.setAttribute("mensaje", "Se ha enviado un enlace de recuperación a tu correo.");
+            } else {
+                request.setAttribute("mensaje", "No se pudo procesar la solicitud. Verifica que el correo exista en nuestro sistema.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // En producción, utiliza un framework de logging
+            request.setAttribute("mensaje", "Error interno al procesar la solicitud.");
         }
         
-        // Redirigir de nuevo al mismo JSP (login.jsp en este caso)
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 }

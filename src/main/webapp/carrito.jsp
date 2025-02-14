@@ -19,21 +19,21 @@
             <img src="imagenes/Code components-Photoroom.png" alt="Logo Code">
         </a>
         <ul>
-            <li><a href="index.jsp">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/inicio">Inicio</a></li>
             <li><a href="nosotros.jsp">Nosotros</a></li>
             <li class="nav-item"><a href="<%=request.getContextPath()%>/productos">Productos</a></li>
             <li><a href="login.jsp">Iniciar Sesión</a></li>
             <li><a href="registro.jsp">Registrarse</a></li>
             <li class="cart-container">
-                <a href="carrito.jsp">
-                    <i class="bi bi-cart"></i>
-                    <span class="cart-count">
+               <a href="<%= request.getContextPath() %>/carrito">
+                <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
+                  <span class="cart-count">
                         <%
                         List<CarritoDto> carrito = (List<CarritoDto>) request.getAttribute("carrito");
                         out.print(carrito != null ? carrito.size() : 0);
                         %>
-                    </span>
-                </a>
+                    </span> <!-- Número de productos en el carrito -->
+              </a>
             </li>
         </ul>
     </nav>

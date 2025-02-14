@@ -7,14 +7,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import servicios.RegistroServicio;
-
 import java.io.IOException;
 
-/**
- * Controlador para manejar el registro de usuarios.
- * Este servlet procesa solicitudes HTTP POST tanto para enviar el código de verificación
- * como para registrar al usuario, utilizando el servicio de registro.
- */
 @WebServlet(urlPatterns = {"/registroUsuario", "/enviarCodigo"})
 public class RegistroUsuarioControlador extends HttpServlet {
 
@@ -39,14 +33,12 @@ public class RegistroUsuarioControlador extends HttpServlet {
 
     private void enviarCodigo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String correo = request.getParameter("emailUsuario");
-
         if (correo == null || correo.trim().isEmpty()) {
             response.getWriter().write("El correo es obligatorio.");
             return;
         }
-
+        // El Dynamic Web Project genera el código, envía el correo y luego lo manda a la API para almacenar
         boolean enviado = registroServicio.enviarCodigoVerificacion(correo);
-
         if (enviado) {
             response.getWriter().write("Se ha enviado un código de verificación a tu correo.");
         } else {
@@ -56,7 +48,6 @@ public class RegistroUsuarioControlador extends HttpServlet {
 
     private void registrarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String nombre = request.getParameter("nombreUsuario");
         String telefono = request.getParameter("telefonoUsuario");
         String correo = request.getParameter("emailUsuario");
@@ -77,8 +68,8 @@ public class RegistroUsuarioControlador extends HttpServlet {
         registroDto.setPasswordUsuario(password);
         registroDto.setCodigoVerificacion(codigoVerificacion);
 
+        // Se invoca la API para registrar el usuario (la API se encargará de verificar el código)
         boolean registroExitoso = registroServicio.registrarUsuario(registroDto);
-
         if (registroExitoso) {
             response.sendRedirect("login.jsp");
         } else {

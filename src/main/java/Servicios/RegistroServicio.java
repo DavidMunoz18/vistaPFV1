@@ -3,53 +3,63 @@ package servicios;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
-
+import java.util.Random;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import dtos.RegistroUsuarioDto;
+import utilidades.Utilidades;
 
 public class RegistroServicio {
 
     /**
-     * Envía el código de verificación a través de la API.
-     * 
-     * @param correo el correo electrónico al que se enviará el código de verificación.
-     * @return {@code true} si el código fue enviado correctamente; {@code false} en caso contrario.
+     * Genera el código de verificación, envía el correo y lo transmite a la API para que lo almacene.
+     *
+     * @param correo el correo del usuario.
+     * @return true si el proceso fue exitoso, false en caso contrario.
      */
     public boolean enviarCodigoVerificacion(String correo) {
         try {
-            URL url = new URL("http://localhost:8081/api/registro/enviarCodigoVerificacion");
+            // Generar código aleatorio de 6 dígitos
+            String codigoVerificacion = String.valueOf(100000 + new Random().nextInt(900000));
+
+            // Enviar el correo con el código usando la clase Utilidades
+            String asunto = "Código de Verificación para Registro";
+            String mensaje = "Tu código de verificación es: " + codigoVerificacion;
+            boolean correoEnviado = Utilidades.enviarCorreo(correo, asunto, mensaje);
+            if (!correoEnviado) {
+                return false;
+            }
+            
+            // Enviar el código generado a la API para almacenarlo.
+            // Se asume que la API tiene un endpoint para almacenar el código, por ejemplo:
+            // POST http://localhost:8081/api/registro/almacenarCodigo
+            URL url = new URL("http://localhost:8081/api/registro/almacenarCodigo");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("POST");
             conexion.setRequestProperty("Content-Type", "application/json");
             conexion.setDoOutput(true);
-
-            // Convertimos el correo en formato JSON
-            ObjectMapper mapper = new ObjectMapper();
-            String jsonInput = mapper.writeValueAsString(Map.of("correo", correo));
-
-            // Enviamos la petición
+            
+            // Preparamos el JSON con el correo y el código generado
+            String jsonInput = "{\"emailUsuario\": \"" + correo + "\", \"codigoVerificacion\": \"" + codigoVerificacion + "\"}";
+            
             try (OutputStream os = conexion.getOutputStream()) {
-                os.write(jsonInput.getBytes());
+                os.write(jsonInput.getBytes("UTF-8"));
                 os.flush();
             }
-
-            // Verificamos si la respuesta fue exitosa (200 OK)
+            
             int responseCode = conexion.getResponseCode();
+            // Si la API responde correctamente (200 OK), se considera que el código se almacenó
             return responseCode == HttpURLConnection.HTTP_OK;
-
         } catch (Exception e) {
-            System.out.println("Error al enviar código: " + e.getMessage());
+            System.out.println("Error en enviarCodigoVerificacion: " + e.getMessage());
             return false;
         }
     }
 
     /**
-     * Registra un nuevo usuario tras validar el código de verificación.
-     * 
+     * Registra un nuevo usuario llamando al endpoint de la API.
+     *
      * @param registroDto el objeto DTO con los datos del usuario a registrar.
-     * @return {@code true} si el registro fue exitoso; {@code false} en caso contrario.
+     * @return true si el registro fue exitoso; false en caso contrario.
      */
     public boolean registrarUsuario(RegistroUsuarioDto registroDto) {
         try {
@@ -59,20 +69,16 @@ public class RegistroServicio {
             conexion.setRequestProperty("Content-Type", "application/json");
             conexion.setDoOutput(true);
 
-            // Convertir el objeto DTO a JSON
             ObjectMapper mapper = new ObjectMapper();
             String jsonInput = mapper.writeValueAsString(registroDto);
 
-            // Enviamos la petición
             try (OutputStream os = conexion.getOutputStream()) {
-                os.write(jsonInput.getBytes());
+                os.write(jsonInput.getBytes("UTF-8"));
                 os.flush();
             }
 
-            // Verificar el código de respuesta (201 Created)
             int responseCode = conexion.getResponseCode();
             return responseCode == HttpURLConnection.HTTP_CREATED;
-
         } catch (Exception e) {
             System.out.println("Error al registrar usuario: " + e.getMessage());
             return false;

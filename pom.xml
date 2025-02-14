@@ -74,15 +74,14 @@
         <version>5.3.21</version> <!-- Usa la versión que necesites -->
     </dependency>
     <dependency>
-    <groupId>org.json</groupId>
-    <artifactId>json</artifactId>
-    <version>20210307</version>  <!-- Puedes cambiar a la última versión disponible -->
-</dependency>
- <dependency>
-        <groupId>com.sun.mail</groupId>
-        <artifactId>javax.mail</artifactId>
-        <version>1.6.2</version>
-    </dependency>
+    	<groupId>org.json</groupId>
+    	<artifactId>json</artifactId>
+    	<version>20210307</version>  <!-- Puedes cambiar a la última versión disponible -->
+	</dependency>
+	
+	
+
+ 
 
 </dependencies>
 

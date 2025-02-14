@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List,dtos.ProductoDto"%>
+<%@ page import="dtos.CarritoDto"%>
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -48,7 +49,7 @@
             <li class="nav-item cart-container">
               <a href="<%= request.getContextPath() %>/carrito">
                 <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
-                <span class="cart-count">0</span> <!-- Número de productos en el carrito -->
+                 
               </a>
             </li>
           </ul>
@@ -62,13 +63,13 @@
     >
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="imagenes/carrusel.png" class="d-block w-100" alt="..." />
+          <img src="imagenes/freepik__the-style-is-candid-image-photography-with-natural__80280.jpg" class="d-block w-70" alt="..." />
         </div>
         <div class="carousel-item">
-          <img src="" class="d-block w-100" alt="..." />
+          <img src="imagenes/andrey-matveev-0Sdxy9Ev6oQ-unsplash.jpg" class="d-block w-100" alt="..." />
         </div>
         <div class="carousel-item">
-          <img src="..." class="d-block w-100" alt="..." />
+          <img src="imagenes/onur-binay-4Ykxp_t4i08-unsplash.jpg" class="d-block w-100" alt="" />
         </div>
       </div>
       <button

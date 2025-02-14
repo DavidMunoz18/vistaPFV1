@@ -13,34 +13,43 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="imagenes/Code components-Photoroom.png" alt="Logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/inicio">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="nosotros.jsp">Nosotros</a></li>
-                    <li class="nav-item"><a href="<%= request.getContextPath() %>/productos">Productos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="login.jsp">Iniciar Sesión</a></li>
-                    <li class="nav-item"><a class="nav-link" href="registro.jsp">Registrarse</a></li>
-                    <li class="nav-item cart-container">
-                        <a href="<%= request.getContextPath() %>/carrito">
-                            <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
-                            <span class="cart-count">0</span> <!-- Número de productos en el carrito -->
-                        </a>
-                    </li>
-                </ul>
-            </div>
+     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="imagenes/Code components-Photoroom.png" alt="Logo">
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/inicio">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="nosotros.jsp">Nosotros</a></li>
+           <li class="nav-item"><a href="<%= request.getContextPath() %>/productos">Productos</a></li>
+
+            <li class="nav-item"><a class="nav-link" href="login.jsp">Iniciar Sesión</a></li>
+            <li class="nav-item"><a class="nav-link" href="registro.jsp">Registrarse</a></li>
+            <li class="nav-item cart-container">
+              <a href="<%= request.getContextPath() %>/carrito">
+                <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
+                 
+              </a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container-fluid py-4">
@@ -117,6 +126,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	
 </body>
 
 </html>
