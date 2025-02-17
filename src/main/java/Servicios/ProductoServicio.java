@@ -185,7 +185,7 @@ public class ProductoServicio {
     public boolean eliminarProducto(Long productoId) {
         boolean resultado = false;
         try {
-            String API_BASE_URLEliminar = "http://localhost:8081/api/productos/eliminar/";
+            String API_BASE_URLEliminar = "http://localhost:8081/api/eliminar/";
             // Crear la URL completa para la solicitud DELETE
             URL url = new URL(API_BASE_URLEliminar + productoId);
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();

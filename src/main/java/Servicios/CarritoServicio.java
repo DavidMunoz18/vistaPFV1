@@ -94,7 +94,7 @@ public class CarritoServicio {
             // Verificar que el producto tiene el id correcto antes de enviarlo
             System.out.println("Producto a agregar: ID = " + producto.getId() + ", Nombre = " + producto.getNombre());
 
-            URL url = new URL(API_URL + "/add");
+            URL url = new URL(API_URL + "/agregar");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("POST");
             conexion.setRequestProperty("Content-Type", "application/json");
@@ -126,7 +126,7 @@ public class CarritoServicio {
 
     public boolean eliminarProducto(long id) {
         try {
-            URL url = new URL(API_URL + "/remove/" + id);
+            URL url = new URL(API_URL + "/eliminar/" + id);
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("DELETE");
             conexion.setRequestProperty("Content-Type", "application/json");
