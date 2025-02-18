@@ -11,6 +11,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="css/estilo.css">
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 <body>
     <!-- Barra de navegación -->
@@ -19,21 +23,21 @@
             <img src="imagenes/Code components-Photoroom.png" alt="Logo Code">
         </a>
         <ul>
-            <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/inicio">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/inicio">Inicio</a></li>
             <li><a href="nosotros.jsp">Nosotros</a></li>
             <li class="nav-item"><a href="<%=request.getContextPath()%>/productos">Productos</a></li>
             <li><a href="login.jsp">Iniciar Sesión</a></li>
             <li><a href="registro.jsp">Registrarse</a></li>
             <li class="cart-container">
-               <a href="<%= request.getContextPath() %>/carrito">
-                <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
-                  <span class="cart-count">
+                <a href="<%=request.getContextPath()%>/carrito">
+                    <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
+                    <span class="cart-count">
                         <%
                         List<CarritoDto> carrito = (List<CarritoDto>) request.getAttribute("carrito");
                         out.print(carrito != null ? carrito.size() : 0);
                         %>
                     </span> <!-- Número de productos en el carrito -->
-              </a>
+                </a>
             </li>
         </ul>
     </nav>
@@ -42,20 +46,23 @@
         // Obtener el mensaje y el tipo de mensaje desde la solicitud
         String mensaje = (String) request.getAttribute("mensaje");
         String tipoMensaje = (String) request.getAttribute("tipoMensaje");
-
-        // Verificar si el mensaje y el tipo están presentes
-        if (mensaje != null && tipoMensaje != null) {
+        if(mensaje != null && tipoMensaje != null) {
     %>
-        <script type="text/javascript">
-            // Mostrar la alerta con el mensaje recibido desde el controlador
-            alert("<%= mensaje %>");
-        </script>
-    <%
+    <script type="text/javascript">
+        Toastify({
+            text: "<%= mensaje %>",
+            duration: 3000, // Duración en milisegundos
+            gravity: "top", // "top" o "bottom"
+            position: "right", // "left", "center" o "right"
+            backgroundColor: "<%= tipoMensaje.equals("success") ? "#4CAF50" : "#FF5733" %>",
+            close: true
+        }).showToast();
+    </script>
+    <% 
         }
     %>
+
     <!-- Resto del contenido de la página de carrito -->
-
-
     <div class="min-w-screen min-h-screen bg-gray-50 py-5">
         <div class="px-5">
             <div class="mb-2">
@@ -80,26 +87,22 @@
                             %>
                             <div class="w-full flex items-center mb-6">
                                 <div class="overflow-hidden rounded-lg w-16 h-16 bg-gray-50 border border-gray-200">
-                                   <img src="data:image/jpeg;base64,<%= producto.getImagen() %>" alt="Imagen producto">
-
+                                    <img src="data:image/jpeg;base64,<%=producto.getImagen()%>" alt="Imagen producto">
                                 </div>
                                 <div class="flex-grow pl-3">
-                                <h5>Producto ID: <%= producto.getId() %></h5>
+                                    <h5>Producto ID: <%=producto.getId()%></h5>
                                     <h6 class="font-semibold uppercase text-gray-600"><%=producto.getNombre()%></h6>
                                     <p class="text-gray-400">x <%=producto.getCantidad()%></p>
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <span class="font-semibold text-gray-600 text-xl"><%="$" + producto.getPrecio()%></span>
                                     <!-- Botón para eliminar producto -->
-                                   <form action="carrito" method="POST">
-    <input type="hidden" name="_method" value="DELETE">
-    <input type="hidden" name="action" value="eliminar">
-    <input type="hidden" name="id" value="<%= producto.getId() %>">
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-</form>
-
-
-
+                                    <form action="carrito" method="POST">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="action" value="eliminar">
+                                        <input type="hidden" name="id" value="<%=producto.getId()%>">
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
                                 </div>
                             </div>
                             <%
@@ -175,7 +178,8 @@
                                     <span class="text-gray-600 font-semibold">Contacto</span>
                                 </div>
                                 <div class="flex-grow pl-3">
-                                    <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors" placeholder="Contacto" name="contacto" required>
+                                    <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
+                                        placeholder="Contacto" name="contacto" required>
                                 </div>
                             </div>
                             <div class="w-full flex items-center">
@@ -183,7 +187,8 @@
                                     <span class="text-gray-600 font-semibold">Dirección de facturación</span>
                                 </div>
                                 <div class="flex-grow pl-3">
-                                    <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors" placeholder="Dirección facturación" name="direccion" required>
+                                    <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
+                                        placeholder="Dirección facturación" name="direccion" required>
                                 </div>
                             </div>
                         </div>
@@ -201,13 +206,15 @@
                                     <div class="mb-3">
                                         <label class="text-gray-600 font-semibold text-sm mb-2 ml-1">Nombre en la tarjeta</label>
                                         <div>
-                                            <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors" placeholder="Nombre" type="text" name="nombreTarjeta" required>
+                                            <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
+                                                placeholder="Nombre" type="text" name="nombreTarjeta" required>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="text-gray-600 font-semibold text-sm mb-2 ml-1">Número de tarjeta</label>
                                         <div>
-                                            <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors" placeholder="0000 0000 0000 0000" type="text" id="numeroTarjeta" name="numeroTarjeta" required>
+                                            <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
+                                                placeholder="0000 0000 0000 0000" type="text" id="numeroTarjeta" name="numeroTarjeta" required>
                                         </div>
                                     </div>
                                     <div class="mb-3 -mx-2 flex items-end">
@@ -218,7 +225,15 @@
                                                     <option value="01">01 - Enero</option>
                                                     <option value="02">02 - Febrero</option>
                                                     <option value="03">03 - Marzo</option>
-                                                    <!-- Otros meses -->
+                                                    <option value="04">04 - Abril</option>
+                                                    <option value="05">05 - Mayo</option>
+                                                    <option value="06">06 - Junio</option>
+                                                    <option value="07">07 - Julio</option>
+                                                    <option value="08">08 - Agosto</option>
+                                                    <option value="09">09 - Septiembre</option>
+                                                    <option value="10">10 - Octubre</option>
+                                                    <option value="11">11 - Noviembre</option>
+                                                    <option value="12">12 - Diciembre</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -227,13 +242,15 @@
                                                 <option value="2025">2025</option>
                                                 <option value="2026">2026</option>
                                                 <option value="2027">2027</option>
-                                                <!-- Otros años -->
+                                                <option value="2028">2028</option>
+                                                <option value="2029">2029</option>
                                             </select>
                                         </div>
                                         <div class="px-2 w-1/4">
                                             <label class="text-gray-600 font-semibold text-sm mb-2 ml-1">CVV</label>
                                             <div>
-                                                <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors" placeholder="000" type="text" id="cvv" name="cvv" required>
+                                                <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
+                                                    placeholder="000" type="text" id="cvv" name="cvv" required>
                                             </div>
                                         </div>
                                     </div>
@@ -241,11 +258,12 @@
                             </div>
                         </div>
                         <button class="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-2 font-semibold">Pagar ahora</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
 </body>
 </html>

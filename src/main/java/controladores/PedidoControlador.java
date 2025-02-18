@@ -39,27 +39,33 @@ public class PedidoControlador extends HttpServlet {
         String metodoPago = request.getParameter("metodoPago");
         String nombreTarjeta = request.getParameter("nombreTarjeta");
         String numeroTarjeta = request.getParameter("numeroTarjeta");
-        String fechaExpiracion = request.getParameter("fechaExpiracionMes") + "/" + request.getParameter("fechaExpiracionAnio");
+        // Construir la fecha de expiración a partir de mes y año
+        String fechaExpiracion = request.getParameter("mesExpiracion") + "/" + request.getParameter("anioExpiracion");
         String cvc = request.getParameter("cvv");
+
+        // Validar el número de tarjeta
+        if (!validarNumeroTarjeta(numeroTarjeta)) {
+            request.setAttribute("mensaje", "El número de tarjeta no es válido. Debe contener entre 13 y 19 dígitos numéricos.");
+            request.setAttribute("tipoMensaje", "error");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+
+        // Validar el CVV
+        if (!validarCvc(cvc)) {
+            request.setAttribute("mensaje", "El código de seguridad (CVV) no es válido. Debe contener 3 o 4 dígitos.");
+            request.setAttribute("tipoMensaje", "error");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+
+        // Encriptar el número de tarjeta (opcional, según tu requerimiento)
+        numeroTarjeta = encriptarDatos(numeroTarjeta);
 
         // Obtener el carrito de la sesión (CarritoDto)
         List<CarritoDto> carrito = (List<CarritoDto>) session.getAttribute("carrito");
-
-       
-        session.setAttribute("carrito", carrito);  // carrito es la lista de productos en el carrito
-
-        // Imprimir el contenido del carrito en consola para depuración
-        if (carrito == null) {
-            System.out.println("Carrito en sesión: null");
-        } else if (carrito.isEmpty()) {
-            System.out.println("Carrito en sesión: vacío");
-        } else {
-            System.out.println("Contenido del carrito:");
-            for (CarritoDto item : carrito) {
-                System.out.println("- ID: " + item.getId() + ", Nombre: " + item.getNombre() + 
-                                   ", Cantidad: " + item.getCantidad() + ", Precio: " + item.getPrecio());
-            }
-        }
 
         // Verificar que el carrito no esté vacío
         if (carrito == null || carrito.isEmpty()) {
@@ -100,7 +106,10 @@ public class PedidoControlador extends HttpServlet {
         try {
             // Llamar al servicio para crear el pedido
             mensaje = pedidoServicio.crearPedido(pedidoDto);
-
+            
+            // Imprimir en consola el mensaje
+            System.out.println("Respuesta del servicio: " + mensaje);
+            
             if (!mensaje.equals("Pedido creado correctamente")) {
                 tipoMensaje = "error";
             } else {
@@ -111,6 +120,7 @@ public class PedidoControlador extends HttpServlet {
         } catch (Exception e) {
             tipoMensaje = "error";
             mensaje = "Error al crear el pedido: " + e.getMessage();
+            e.printStackTrace(); // Mostrar en consola la traza de la excepción
         }
 
         // Agregar el mensaje y tipo de mensaje a la solicitud
@@ -120,5 +130,20 @@ public class PedidoControlador extends HttpServlet {
         // Redirigir a la página del carrito con el mensaje en la solicitud
         RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
         dispatcher.forward(request, response);
+    }
+
+    private boolean validarNumeroTarjeta(String numeroTarjeta) {
+        // Validar que el número de tarjeta tenga entre 13 y 19 dígitos numéricos
+        return numeroTarjeta != null && numeroTarjeta.matches("\\d{13,19}");
+    }
+
+    private boolean validarCvc(String cvc) {
+        // Validar que el CVV tenga 3 o 4 dígitos numéricos
+        return cvc != null && cvc.matches("\\d{3,4}");
+    }
+
+    private String encriptarDatos(String datos) {
+        // Ejemplo de encriptación simplificada usando Base64
+        return new String(java.util.Base64.getEncoder().encode(datos.getBytes()));
     }
 }
