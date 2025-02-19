@@ -1,19 +1,15 @@
 package servicios;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.json.JSONObject;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -24,11 +20,21 @@ import dtos.LoginUsuarioDto;
 import dtos.UsuarioDto;
 import utilidades.Utilidades;
 
+/**
+ * Servicio encargado de gestionar la autenticación de usuarios, recuperación de contraseñas y actualización de las mismas.
+ */
 public class AutentificacionServicio {
 
     private String rol = "";
     private Long idUsuario;
 
+    /**
+     * Verifica si el usuario existe en la base de datos y si la contraseña es correcta.
+     * 
+     * @param correo    El correo electrónico del usuario a verificar.
+     * @param password  La contraseña que se quiere verificar.
+     * @return Un objeto {@link UsuarioDto} con los datos del usuario si la autenticación es correcta, o null si la autenticación falla.
+     */
     public UsuarioDto verificarUsuario(String correo, String password) {
         UsuarioDto usuario = null;
 
@@ -97,7 +103,14 @@ public class AutentificacionServicio {
         return usuario;  // Devuelve el usuario completo o null si no se verifica
     }
 
-   // Método para solicitar la recuperación de contraseña
+   /**
+    * Solicita la recuperación de la contraseña del usuario enviando un token al correo electrónico.
+    * 
+    * @param correo          El correo electrónico del usuario.
+    * @param token           El token de recuperación de contraseña.
+    * @param fechaExpiracion La fecha de expiración del token en milisegundos.
+    * @return true si el correo se envió correctamente, false en caso contrario.
+    */
     public boolean recuperarContrasenia(String correo, String token, long fechaExpiracion) {
         // Parametros para la API
         Map<String, String> params = new HashMap<>();
@@ -139,6 +152,12 @@ public class AutentificacionServicio {
         }
     }
 
+    /**
+     * Obtiene la fecha de expiración de un token.
+     * 
+     * @param token El token del cual se quiere obtener la fecha de expiración.
+     * @return La fecha de expiración del token en milisegundos, o null si ocurre un error.
+     */
     public Long obtenerFechaExpiracionDelToken(String token) {
         try {
             // Usar la nueva ruta que devuelve la fecha de expiración
@@ -178,9 +197,13 @@ public class AutentificacionServicio {
         return null;
     }
 
-
-
- // Método para actualizar la contraseña
+    /**
+     * Actualiza la contraseña de un usuario utilizando el token de recuperación.
+     * 
+     * @param nuevaContraseniaEncriptada La nueva contraseña encriptada.
+     * @param token                      El token de recuperación de la contraseña.
+     * @return true si la actualización fue exitosa, false en caso contrario.
+     */
     public boolean actualizarContrasenia(String nuevaContraseniaEncriptada, String token) {
         try {
             // Llamar a la API para actualizar la contraseña
@@ -211,7 +234,11 @@ public class AutentificacionServicio {
         }
     }
 
-
+    /**
+     * Obtiene la lista de todos los usuarios registrados en el sistema.
+     * 
+     * @return Una lista de objetos {@link UsuarioDto} con todos los usuarios.
+     */
     public List<UsuarioDto> obtenerUsuarios() {
         List<UsuarioDto> usuarios = new ArrayList<>();
         try {
@@ -248,10 +275,20 @@ public class AutentificacionServicio {
         return usuarios;
     }
 
+    /**
+     * Obtiene el rol del usuario autenticado.
+     * 
+     * @return El rol del usuario.
+     */
     public String getRol() {
         return rol;
     }
 
+    /**
+     * Obtiene el ID del usuario autenticado.
+     * 
+     * @return El ID del usuario.
+     */
     public Long getId() {
         return idUsuario;
     }

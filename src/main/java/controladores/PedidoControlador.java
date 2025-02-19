@@ -16,11 +16,30 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Controlador que maneja la creación de pedidos de los usuarios.
+ * <p>
+ * Este servlet procesa solicitudes POST para permitir que un usuario realice un pedido.
+ * Recoge los datos del pedido, valida la información de la tarjeta, encripta el número de tarjeta
+ * y crea un nuevo pedido en el sistema utilizando los servicios de PedidoServicio.
+ * </p>
+ */
 @WebServlet("/pedidos")
 public class PedidoControlador extends HttpServlet {
 
     private PedidoServicio pedidoServicio = new PedidoServicio();  // Instancia del servicio
 
+    /**
+     * Método que maneja la solicitud POST para crear un nuevo pedido.
+     * Recibe los parámetros del formulario, valida los datos y crea un pedido en la base de datos.
+     * Si el pedido se crea correctamente, elimina el carrito de la sesión.
+     * Si ocurre un error, muestra un mensaje de error en la página del carrito.
+     * 
+     * @param request La solicitud HTTP recibida.
+     * @param response La respuesta HTTP que será enviada al cliente.
+     * @throws ServletException Si ocurre un error durante el procesamiento de la solicitud.
+     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Obtener el idUsuario de la sesión
@@ -132,16 +151,39 @@ public class PedidoControlador extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
+    /**
+     * Método para validar el número de tarjeta de crédito.
+     * 
+     * @param numeroTarjeta El número de tarjeta a validar.
+     * @return {@code true} si el número de tarjeta es válido (13 a 19 dígitos numéricos), 
+     *         {@code false} en caso contrario.
+     */
     private boolean validarNumeroTarjeta(String numeroTarjeta) {
         // Validar que el número de tarjeta tenga entre 13 y 19 dígitos numéricos
         return numeroTarjeta != null && numeroTarjeta.matches("\\d{13,19}");
     }
 
+    /**
+     * Método para validar el código de seguridad (CVV) de la tarjeta de crédito.
+     * 
+     * @param cvc El código de seguridad (CVV) a validar.
+     * @return {@code true} si el CVV es válido (3 o 4 dígitos numéricos), 
+     *         {@code false} en caso contrario.
+     */
     private boolean validarCvc(String cvc) {
         // Validar que el CVV tenga 3 o 4 dígitos numéricos
         return cvc != null && cvc.matches("\\d{3,4}");
     }
 
+    /**
+     * Método para encriptar los datos de la tarjeta (en este caso, el número de tarjeta).
+     * <p>
+     * Este método es solo un ejemplo y puede ser modificado según el tipo de encriptación que se requiera.
+     * </p>
+     * 
+     * @param datos Los datos a encriptar (en este caso, el número de tarjeta).
+     * @return El dato encriptado.
+     */
     private String encriptarDatos(String datos) {
         // Ejemplo de encriptación simplificada usando Base64
         return new String(java.util.Base64.getEncoder().encode(datos.getBytes()));

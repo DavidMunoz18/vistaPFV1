@@ -10,16 +10,38 @@ import java.io.IOException;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+/**
+ * Controlador para manejar el restablecimiento de la contraseña de un usuario.
+ * <p>
+ * Este servlet procesa solicitudes GET y POST para permitir que un usuario
+ * restablezca su contraseña, validando el token de recuperación y asegurándose
+ * de que las contraseñas coincidan antes de actualizar la contraseña en la base de datos.
+ * </p>
+ */
 @WebServlet("/NuevaContrasenia")
 public class NuevaContraseniaControlador extends HttpServlet {
 
-    private AutentificacionServicio autentificacionServicio; 
+    private AutentificacionServicio autentificacionServicio;
 
+    /**
+     * Inicializa el servicio de autenticación.
+     * Este método se llama cuando el servlet se inicializa, y configura
+     * el servicio que gestiona la autenticación y el cambio de contraseñas.
+     */
     @Override
     public void init() throws ServletException {
         autentificacionServicio = new AutentificacionServicio();
     }
 
+    /**
+     * Maneja las solicitudes HTTP GET para verificar el token y redirigir
+     * al usuario a la página de restablecimiento de contraseña.
+     * 
+     * @param request La solicitud HTTP recibida.
+     * @param response La respuesta HTTP que será enviada al cliente.
+     * @throws ServletException Si ocurre un error durante el procesamiento de la solicitud.
+     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -41,6 +63,15 @@ public class NuevaContraseniaControlador extends HttpServlet {
         }
     }
 
+    /**
+     * Maneja las solicitudes HTTP POST para actualizar la contraseña del usuario
+     * si las contraseñas coinciden, encriptándola antes de almacenarla en la base de datos.
+     * 
+     * @param request La solicitud HTTP recibida.
+     * @param response La respuesta HTTP que será enviada al cliente.
+     * @throws ServletException Si ocurre un error durante el procesamiento de la solicitud.
+     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

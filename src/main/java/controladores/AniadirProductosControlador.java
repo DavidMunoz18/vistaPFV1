@@ -15,18 +15,35 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import servicios.ProductoServicio;
 
+/**
+ * Servlet encargado de manejar la adición de nuevos productos al sistema.
+ * Recibe los datos del formulario de productos y los envía al servicio correspondiente.
+ */
 @WebServlet("/productosAniadir")
 @MultipartConfig
 public class AniadirProductosControlador extends HttpServlet {
 
     private ProductoServicio productoServicio;
 
+    /**
+     * Inicializa el servlet y el servicio de productos.
+     * @throws ServletException si ocurre un error durante la inicialización.
+     */
     @Override
     public void init() throws ServletException {
         // Inicializar manualmente el servicio aquí
         productoServicio = new ProductoServicio(); // Suponiendo que el servicio tiene un constructor sin parámetros
     }
 
+    /**
+     * Maneja las solicitudes POST para agregar un nuevo producto.
+     * Recoge los datos del formulario, los valida y los envía al servicio.
+     * 
+     * @param request  Objeto {@link HttpServletRequest} con la solicitud del cliente.
+     * @param response Objeto {@link HttpServletResponse} para enviar la respuesta al cliente.
+     * @throws ServletException si ocurre un error en la ejecución del servlet.
+     * @throws IOException si ocurre un error en la lectura o escritura de datos.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -9,16 +9,43 @@ import jakarta.servlet.http.HttpServletResponse;
 import servicios.RegistroServicio;
 import java.io.IOException;
 
+/**
+ * Controlador para manejar el registro de usuarios y el envío de códigos de verificación.
+ * <p>
+ * Este servlet gestiona las solicitudes para el registro de usuarios y el envío de códigos de verificación.
+ * Maneja dos rutas: "/registroUsuario" para registrar al usuario y "/enviarCodigo" para enviar el código de verificación.
+ * </p>
+ */
 @WebServlet(urlPatterns = {"/registroUsuario", "/enviarCodigo"})
 public class RegistroUsuarioControlador extends HttpServlet {
 
     private RegistroServicio registroServicio;
 
+    /**
+     * Inicializa el servicio de registro.
+     * <p>
+     * Este método se ejecuta una vez cuando se inicia el servlet y prepara el servicio para manejar las solicitudes.
+     * </p>
+     * 
+     * @throws ServletException Si ocurre un error durante la inicialización del servlet.
+     */
     @Override
     public void init() throws ServletException {
         this.registroServicio = new RegistroServicio();
     }
 
+    /**
+     * Maneja las solicitudes POST para las rutas "/registroUsuario" y "/enviarCodigo".
+     * <p>
+     * Este método determina qué acción tomar dependiendo de la ruta solicitada, ya sea enviar un código de verificación
+     * o registrar al usuario.
+     * </p>
+     * 
+     * @param request La solicitud HTTP recibida.
+     * @param response La respuesta HTTP que será enviada al cliente.
+     * @throws ServletException Si ocurre un error durante el procesamiento de la solicitud.
+     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -31,6 +58,17 @@ public class RegistroUsuarioControlador extends HttpServlet {
         }
     }
 
+    /**
+     * Maneja la solicitud para enviar el código de verificación al correo del usuario.
+     * <p>
+     * Este método valida el correo electrónico y, si es válido, solicita al servicio que envíe un código de verificación
+     * al correo proporcionado.
+     * </p>
+     * 
+     * @param request La solicitud HTTP recibida.
+     * @param response La respuesta HTTP que será enviada al cliente.
+     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
+     */
     private void enviarCodigo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String correo = request.getParameter("emailUsuario");
         if (correo == null || correo.trim().isEmpty()) {
@@ -46,6 +84,18 @@ public class RegistroUsuarioControlador extends HttpServlet {
         }
     }
 
+    /**
+     * Maneja la solicitud para registrar un nuevo usuario.
+     * <p>
+     * Este método valida los datos del formulario de registro, incluyendo la verificación de las contraseñas y el código
+     * de verificación, y luego invoca el servicio para registrar al usuario en la base de datos.
+     * </p>
+     * 
+     * @param request La solicitud HTTP recibida.
+     * @param response La respuesta HTTP que será enviada al cliente.
+     * @throws ServletException Si ocurre un error durante el procesamiento de la solicitud.
+     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
+     */
     private void registrarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String nombre = request.getParameter("nombreUsuario");

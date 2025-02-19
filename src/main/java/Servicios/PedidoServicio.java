@@ -11,11 +11,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.PedidoDto;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servicio para gestionar los pedidos en el sistema.
+ * Permite crear pedidos a través de la API del servidor.
+ */
 @Service
 public class PedidoServicio {
 
+    /**
+     * URL de la API donde se gestionan los pedidos.
+     */
     private static final String API_URL = "http://localhost:8081/api/pedidos";  // Asegúrate de usar la URL correcta de tu API
 
+    /**
+     * Crea un nuevo pedido a través de la API.
+     * 
+     * @param pedidoDto El objeto {@link PedidoDto} que contiene los detalles del pedido.
+     * @return Un mensaje indicando si el pedido fue creado correctamente o si hubo un error.
+     * @throws Exception Si ocurre un error durante la creación del pedido.
+     */
     public String crearPedido(dtos.PedidoDto pedidoDto) throws Exception {
         HttpURLConnection connection = null;
 

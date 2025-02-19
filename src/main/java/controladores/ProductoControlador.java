@@ -12,11 +12,31 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import servicios.ProductoServicio;
 
+/**
+ * Controlador que maneja la visualización de productos en el ecommerce.
+ * <p>
+ * Este servlet procesa las solicitudes GET para mostrar los productos.
+ * Puede mostrar una lista de productos o el detalle de un producto específico
+ * dependiendo de los parámetros pasados en la solicitud.
+ * </p>
+ */
 @WebServlet("/productos")
 public class ProductoControlador extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    // Método para manejar la lista de productos
+    /**
+     * Método que maneja la solicitud GET para mostrar productos.
+     * Dependiendo de los parámetros en la solicitud, puede mostrar:
+     * <ul>
+     * <li>Un producto específico si se pasa un ID de producto.</li>
+     * <li>Una lista de productos filtrados por categoría o precio.</li>
+     * </ul>
+     * 
+     * @param request La solicitud HTTP recibida.
+     * @param response La respuesta HTTP que será enviada al cliente.
+     * @throws ServletException Si ocurre un error durante el procesamiento de la solicitud.
+     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idProducto = request.getParameter("id");
 

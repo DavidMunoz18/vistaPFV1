@@ -9,10 +9,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Servicio encargado de manejar las operaciones relacionadas con el carrito de compras.
+ * Permite obtener los productos del carrito, agregar productos, eliminar productos y 
+ * obtener detalles de un producto por su ID.
+ */
 public class CarritoServicio {
 
     private static final String API_URL = "http://localhost:8081/api/carrito";
 
+    /**
+     * Obtiene todos los productos que están actualmente en el carrito.
+     * Realiza una petición HTTP GET a la API y mapea la respuesta a una lista de CarritoDto.
+     *
+     * @return Lista de productos en el carrito.
+     */
     public List<CarritoDto> obtenerCarrito() {
         List<CarritoDto> carrito = new ArrayList<>();
         try {
@@ -46,6 +57,13 @@ public class CarritoServicio {
         return carrito;
     }
 
+    /**
+     * Obtiene un producto del carrito dado su ID.
+     * Realiza una petición HTTP GET a la API para obtener los detalles del producto.
+     *
+     * @param id El ID del producto a buscar.
+     * @return El producto encontrado o null si no se encuentra.
+     */
     public CarritoDto obtenerProductoPorId(long id) {
         try {
             // Verificar el ID recibido
@@ -89,6 +107,13 @@ public class CarritoServicio {
         }
     }
 
+    /**
+     * Agrega un producto al carrito.
+     * Realiza una petición HTTP POST a la API para agregar el producto al carrito.
+     *
+     * @param producto El producto a agregar al carrito.
+     * @return true si el producto se agregó correctamente, false en caso contrario.
+     */
     public boolean agregarProducto(CarritoDto producto) {
         try {
             // Verificar que el producto tiene el id correcto antes de enviarlo
@@ -124,6 +149,13 @@ public class CarritoServicio {
         return false;
     }
 
+    /**
+     * Elimina un producto del carrito.
+     * Realiza una petición HTTP DELETE a la API para eliminar el producto del carrito.
+     *
+     * @param id El ID del producto a eliminar.
+     * @return true si el producto fue eliminado correctamente, false en caso contrario.
+     */
     public boolean eliminarProducto(long id) {
         try {
             URL url = new URL(API_URL + "/eliminar/" + id);

@@ -14,11 +14,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.ProductoDto;
 import dtos.ReseniaDto;
 
+/**
+ * Servicio encargado de gestionar las operaciones relacionadas con las reseñas de productos.
+ * Permite obtener reseñas de productos y agregar nuevas reseñas.
+ */
 public class ResenaServicio {
 
     private static final String API_URL_RESENIAS = "http://localhost:8081/api/resenias";
 
-    // Método para obtener las reseñas de un producto usando su ID
+    /**
+     * Obtiene las reseñas de un producto dado su ID.
+     * 
+     * @param idProducto El ID del producto para obtener sus reseñas.
+     * @return Lista de reseñas del producto.
+     */
     public List<ReseniaDto> obtenerReseniasPorProducto(Long idProducto) {
         List<ReseniaDto> resenias = new ArrayList<>();
         try {
@@ -52,7 +61,14 @@ public class ResenaServicio {
         return resenias;
     }
 
-    // Método para agregar una nueva reseña usando un ProductoDto
+    /**
+     * Agrega una nueva reseña a un producto dado su ID de usuario.
+     * 
+     * @param reseniaDto El objeto de la reseña a agregar.
+     * @param productoDto El producto al cual se agrega la reseña.
+     * @param idUsuario El ID del usuario que está agregando la reseña.
+     * @return true si la reseña fue agregada exitosamente, false en caso contrario.
+     */
     public boolean agregarResenia(ReseniaDto reseniaDto, ProductoDto productoDto, Long idUsuario) {
         boolean resultado = false;
         try {

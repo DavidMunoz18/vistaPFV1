@@ -13,6 +13,11 @@ import java.io.IOException;
 
 /**
  * Controlador para manejar la modificación de productos con datos multipart.
+ * <p>
+ * Este servlet procesa solicitudes HTTP POST para modificar los datos de un producto,
+ * incluyendo su nombre, descripción, precio, stock y una imagen. Los datos se reciben
+ * en formato multipart para permitir la carga de archivos.
+ * </p>
  */
 @WebServlet("/modificarProducto")
 @MultipartConfig(
@@ -24,11 +29,27 @@ public class ModificarProductoControlador extends HttpServlet {
 
     private ProductoServicio productoServicio;
 
+    /**
+     * Inicializa el servicio de productos.
+     * Este método se llama cuando el servlet se inicializa, y configura
+     * el servicio para modificar productos.
+     */
     @Override
     public void init() throws ServletException {
         productoServicio = new ProductoServicio();
     }
 
+    /**
+     * Maneja las solicitudes HTTP POST para modificar un producto.
+     * Recibe los datos del formulario en formato multipart, valida y procesa
+     * la información y luego llama al servicio correspondiente para realizar
+     * la modificación en la base de datos.
+     * 
+     * @param request La solicitud HTTP recibida.
+     * @param response La respuesta HTTP que será enviada al cliente.
+     * @throws ServletException Si ocurre un error durante el procesamiento de la solicitud.
+     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -40,6 +61,7 @@ public class ModificarProductoControlador extends HttpServlet {
             String nuevoStockStr = request.getParameter("stock");
             Part nuevaImagenPart = request.getPart("imagen");
 
+            // Convertir los parámetros a tipos adecuados
             Double nuevoPrecio = nuevoPrecioStr != null && !nuevoPrecioStr.isEmpty() ? Double.parseDouble(nuevoPrecioStr) : null;
             Integer nuevoStock = nuevoStockStr != null && !nuevoStockStr.isEmpty() ? Integer.parseInt(nuevoStockStr) : null;
 

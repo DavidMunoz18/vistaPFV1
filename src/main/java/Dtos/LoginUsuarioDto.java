@@ -9,19 +9,23 @@ package dtos;
  */
 public class LoginUsuarioDto {
 
-
     private String email;
-   
 
-   
-
+    /**
+     * Obtiene el correo electrónico del usuario.
+     * 
+     * @return El correo electrónico del usuario.
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Establece el correo electrónico del usuario.
+     * 
+     * @param email El correo electrónico del usuario.
+     */
     public void setEmail(String email) {
         this.email = email;
     }
-
-  
 }

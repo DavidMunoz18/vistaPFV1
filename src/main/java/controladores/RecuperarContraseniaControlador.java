@@ -10,11 +10,30 @@ import servicios.AutentificacionServicio;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * Controlador para gestionar la recuperación de contraseñas.
+ * <p>
+ * Este servlet maneja la solicitud de recuperación de contraseña mediante el correo electrónico.
+ * Valida el correo, genera un token único y lo almacena en la sesión para su uso posterior en el proceso de recuperación.
+ * </p>
+ */
 @WebServlet("/recuperar-contrasenia")
 public class RecuperarContraseniaControlador extends HttpServlet {
 
     private AutentificacionServicio autentificacionServicio = new AutentificacionServicio();
 
+    /**
+     * Maneja la solicitud POST para la recuperación de la contraseña.
+     * <p>
+     * Este método valida el correo electrónico proporcionado, genera un token único y almacena el token en la sesión
+     * para que el usuario pueda usarlo en la recuperación de su contraseña.
+     * </p>
+     * 
+     * @param request La solicitud HTTP recibida.
+     * @param response La respuesta HTTP que será enviada al cliente.
+     * @throws ServletException Si ocurre un error durante el procesamiento de la solicitud.
+     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {

@@ -15,8 +15,17 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import dtos.ProductoDto;
 import dtos.ReseniaDto;
 
+/**
+ * Servicio que gestiona las operaciones relacionadas con los productos en el sistema.
+ * Permite obtener, agregar, modificar, eliminar productos, así como obtener reseñas de productos.
+ */
 public class ProductoServicio {
 
+    /**
+     * Obtiene la lista completa de productos desde la API.
+     * 
+     * @return Lista de productos.
+     */
     public List<ProductoDto> obtenerProductos() {
         List<ProductoDto> productos = new ArrayList<>();
         try {
@@ -50,6 +59,12 @@ public class ProductoServicio {
         return productos;
     }
 
+    /**
+     * Obtiene un producto específico desde la API, dado su ID.
+     * 
+     * @param id El ID del producto.
+     * @return El producto correspondiente o null si no se encuentra.
+     */
     public ProductoDto obtenerProductoPorId(int id) {
         ProductoDto producto = null;
         try {
@@ -80,6 +95,12 @@ public class ProductoServicio {
         return producto;
     }
 
+    /**
+     * Agrega un nuevo producto a través de la API.
+     * 
+     * @param producto El producto que se desea agregar.
+     * @return true si el producto fue agregado exitosamente, false en caso contrario.
+     */
     public boolean agregarProducto(ProductoDto producto) {
         boolean resultado = false;
         try {
@@ -110,11 +131,21 @@ public class ProductoServicio {
         }
         return resultado;
     }
-  
 
+    /**
+     * Modifica un producto existente a través de la API.
+     * 
+     * @param id El ID del producto a modificar.
+     * @param nombre Nuevo nombre del producto.
+     * @param descripcion Nueva descripción del producto.
+     * @param precio Nuevo precio del producto.
+     * @param stock Nuevo stock del producto.
+     * @param imagen Nueva imagen del producto en formato byte array.
+     * @return true si el producto fue modificado exitosamente, false en caso contrario.
+     */
     public boolean modificarProducto(Long id, String nombre, String descripcion, Double precio, Integer stock, byte[] imagen) {
-    	  String API_URL_MODIFICAR = "http://localhost:8081/api/modificar/modificarProducto/";
-    	try {
+        String API_URL_MODIFICAR = "http://localhost:8081/api/modificar/modificarProducto/";
+        try {
             // Crear URL para la API de modificación
             URL url = new URL(API_URL_MODIFICAR + id);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -182,6 +213,13 @@ public class ProductoServicio {
             return false;
         }
     }
+
+    /**
+     * Elimina un producto a través de la API.
+     * 
+     * @param productoId El ID del producto a eliminar.
+     * @return true si el producto fue eliminado exitosamente, false en caso contrario.
+     */
     public boolean eliminarProducto(Long productoId) {
         boolean resultado = false;
         try {
@@ -206,17 +244,23 @@ public class ProductoServicio {
         }
         return resultado;
     }
+
+    /**
+     * Obtiene las reseñas de un producto específico desde la API.
+     * 
+     * @param productoId El ID del producto para obtener sus reseñas.
+     * @return Lista de reseñas del producto.
+     */
     public List<ReseniaDto> obtenerReseniasPorProducto(int productoId) {
         List<ReseniaDto> resenias = new ArrayList<>();
         try {
-            // URL de la API para obtener las reseñas de un producto
-            String API_URL_RESENIAS = "http://localhost:8081/api/productos/" + productoId + "/resenias";
-            URL url = new URL(API_URL_RESENIAS);
+            // URL de la API para obtener reseñas del producto
+            URL url = new URL("http://localhost:8081/api/productos/" + productoId + "/resenias");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("GET");
             conexion.setRequestProperty("Content-Type", "application/json");
 
-            // Comprobar el código de respuesta de la API
+            // Leer la respuesta de la API
             int responseCode = conexion.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(conexion.getInputStream()))) {
@@ -226,7 +270,6 @@ public class ProductoServicio {
                         response.append(inputLine);
                     }
 
-                    // Mapear la respuesta JSON a una lista de ReseniaDto
                     ObjectMapper mapper = new ObjectMapper();
                     ReseniaDto[] reseniasArray = mapper.readValue(response.toString(), ReseniaDto[].class);
                     for (ReseniaDto resenia : reseniasArray) {
@@ -242,5 +285,4 @@ public class ProductoServicio {
         }
         return resenias;
     }
-
 }

@@ -13,6 +13,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * Clase utilitaria para enviar correos electrónicos utilizando JavaMail.
+ */
 public class Utilidades {
 
     static {
@@ -32,7 +35,8 @@ public class Utilidades {
      * @param correoDestino Dirección de correo del destinatario.
      * @param asunto Asunto del mensaje.
      * @param contenido Contenido del mensaje.
-     * @throws MessagingException Si ocurre un error durante el envío.
+     * @return true si el correo fue enviado exitosamente, false en caso contrario.
+     * @throws MessagingException Si ocurre un error durante el envío del correo.
      */
     public static boolean enviarCorreo(String correoDestino, String asunto, String contenido) {
         boolean correoEnviado = false;
