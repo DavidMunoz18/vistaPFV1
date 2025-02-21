@@ -3,8 +3,6 @@ package controladores;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import dtos.ProductoDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
