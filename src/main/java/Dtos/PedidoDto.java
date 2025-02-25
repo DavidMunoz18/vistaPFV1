@@ -1,12 +1,14 @@
 package dtos;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Clase DTO que representa un pedido realizado por un usuario en el sistema.
  * <p>
  * Este objeto se utiliza para enviar y recibir los detalles de un pedido, incluyendo la información
- * del usuario, el contacto, la dirección, el método de pago, y los productos asociados al pedido.
+ * del usuario, el contacto, la dirección, el método de pago, los productos asociados, y los campos
+ * calculados en la lógica de negocio como fecha del pedido, estado y total.
  * </p>
  */
 public class PedidoDto {
@@ -22,6 +24,11 @@ public class PedidoDto {
     
     // Nuevo campo para el detalle de productos
     private List<PedidoProductoDto> productos;
+    
+    // Campos agregados para la lógica de negocio (se establecerán en el Dynamic Web Project)
+    private LocalDate fechaPedido;
+    private String estado;
+    private double total;
 
     /**
      * Constructor por defecto necesario para la deserialización.
@@ -29,7 +36,7 @@ public class PedidoDto {
     public PedidoDto() {}
 
     /**
-     * Constructor con parámetros para inicializar un objeto PedidoDto con los detalles de un pedido.
+     * Constructor con parámetros para inicializar un objeto PedidoDto con todos los detalles del pedido.
      * 
      * @param idUsuario El ID del usuario que realiza el pedido.
      * @param contacto El contacto del usuario.
@@ -40,10 +47,13 @@ public class PedidoDto {
      * @param fechaExpiracion La fecha de expiración de la tarjeta de crédito.
      * @param cvc El código de seguridad de la tarjeta de crédito.
      * @param productos La lista de productos asociados al pedido.
+     * @param fechaPedido La fecha en que se realizó el pedido.
+     * @param estado El estado del pedido.
+     * @param total El total calculado del pedido.
      */
     public PedidoDto(Long idUsuario, String contacto, String direccion, String metodoPago, String nombreTarjeta,
-                     String numeroTarjeta, String fechaExpiracion, String cvc, List<PedidoProductoDto> productos) {
-        super();
+                     String numeroTarjeta, String fechaExpiracion, String cvc, List<PedidoProductoDto> productos,
+                     LocalDate fechaPedido, String estado, double total) {
         this.idUsuario = idUsuario;
         this.contacto = contacto;
         this.direccion = direccion;
@@ -53,169 +63,106 @@ public class PedidoDto {
         this.fechaExpiracion = fechaExpiracion;
         this.cvc = cvc;
         this.productos = productos;
+        this.fechaPedido = fechaPedido;
+        this.estado = estado;
+        this.total = total;
     }
 
     // Getters y setters
-    
-    /**
-     * Obtiene el ID del usuario que realiza el pedido.
-     * 
-     * @return El ID del usuario.
-     */
+
     public Long getIdUsuario() {
         return idUsuario;
     }
 
-    /**
-     * Establece el ID del usuario que realiza el pedido.
-     * 
-     * @param idUsuario El ID del usuario.
-     */
     public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    /**
-     * Obtiene el contacto del usuario para el pedido.
-     * 
-     * @return El contacto del usuario.
-     */
     public String getContacto() {
         return contacto;
     }
 
-    /**
-     * Establece el contacto del usuario para el pedido.
-     * 
-     * @param contacto El contacto del usuario.
-     */
     public void setContacto(String contacto) {
         this.contacto = contacto;
     }
 
-    /**
-     * Obtiene la dirección de envío del pedido.
-     * 
-     * @return La dirección de envío del pedido.
-     */
     public String getDireccion() {
         return direccion;
     }
 
-    /**
-     * Establece la dirección de envío del pedido.
-     * 
-     * @param direccion La dirección de envío del pedido.
-     */
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
 
-    /**
-     * Obtiene el método de pago utilizado para el pedido.
-     * 
-     * @return El método de pago utilizado.
-     */
     public String getMetodoPago() {
         return metodoPago;
     }
 
-    /**
-     * Establece el método de pago utilizado para el pedido.
-     * 
-     * @param metodoPago El método de pago utilizado.
-     */
     public void setMetodoPago(String metodoPago) {
         this.metodoPago = metodoPago;
     }
 
-    /**
-     * Obtiene el nombre de la tarjeta de crédito utilizada para el pago.
-     * 
-     * @return El nombre de la tarjeta de crédito.
-     */
     public String getNombreTarjeta() {
         return nombreTarjeta;
     }
 
-    /**
-     * Establece el nombre de la tarjeta de crédito utilizada para el pago.
-     * 
-     * @param nombreTarjeta El nombre de la tarjeta de crédito.
-     */
     public void setNombreTarjeta(String nombreTarjeta) {
         this.nombreTarjeta = nombreTarjeta;
     }
 
-    /**
-     * Obtiene el número de la tarjeta de crédito utilizada para el pago.
-     * 
-     * @return El número de la tarjeta de crédito.
-     */
     public String getNumeroTarjeta() {
         return numeroTarjeta;
     }
 
-    /**
-     * Establece el número de la tarjeta de crédito utilizada para el pago.
-     * 
-     * @param numeroTarjeta El número de la tarjeta de crédito.
-     */
     public void setNumeroTarjeta(String numeroTarjeta) {
         this.numeroTarjeta = numeroTarjeta;
     }
 
-    /**
-     * Obtiene la fecha de expiración de la tarjeta de crédito utilizada para el pago.
-     * 
-     * @return La fecha de expiración de la tarjeta de crédito.
-     */
     public String getFechaExpiracion() {
         return fechaExpiracion;
     }
 
-    /**
-     * Establece la fecha de expiración de la tarjeta de crédito utilizada para el pago.
-     * 
-     * @param fechaExpiracion La fecha de expiración de la tarjeta de crédito.
-     */
     public void setFechaExpiracion(String fechaExpiracion) {
         this.fechaExpiracion = fechaExpiracion;
     }
 
-    /**
-     * Obtiene el código de seguridad (CVC) de la tarjeta de crédito utilizada para el pago.
-     * 
-     * @return El código de seguridad (CVC) de la tarjeta de crédito.
-     */
     public String getCvc() {
         return cvc;
     }
 
-    /**
-     * Establece el código de seguridad (CVC) de la tarjeta de crédito utilizada para el pago.
-     * 
-     * @param cvc El código de seguridad (CVC) de la tarjeta de crédito.
-     */
     public void setCvc(String cvc) {
         this.cvc = cvc;
     }
 
-    /**
-     * Obtiene la lista de productos asociados al pedido.
-     * 
-     * @return La lista de productos asociados al pedido.
-     */
     public List<PedidoProductoDto> getProductos() {
         return productos;
     }
 
-    /**
-     * Establece la lista de productos asociados al pedido.
-     * 
-     * @param productos La lista de productos asociados al pedido.
-     */
     public void setProductos(List<PedidoProductoDto> productos) {
         this.productos = productos;
+    }
+
+    public LocalDate getFechaPedido() {
+        return fechaPedido;
+    }
+
+    public void setFechaPedido(LocalDate fechaPedido) {
+        this.fechaPedido = fechaPedido;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 }

@@ -512,3 +512,8 @@ margin-left: auto;
 margin-right: auto;
 }
 /**Fin carrito css**/
+.button-center {
+        display: flex;
+        justify-content: center; /* Centra horizontalmente */
+        margin-top: 10px; /* Margen superior para separación */
+    }

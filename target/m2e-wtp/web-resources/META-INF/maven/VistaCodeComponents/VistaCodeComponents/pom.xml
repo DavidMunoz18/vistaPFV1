@@ -8,83 +8,100 @@
 	<packaging>war</packaging>
 
 	<dependencies>
-    <!-- Dependencia de Jakarta Servlet -->
-    <dependency>
-        <groupId>jakarta.servlet</groupId>
-        <artifactId>jakarta.servlet-api</artifactId>
-        <version>6.0.0</version>
-        <scope>provided</scope>
-    </dependency>
+		<!-- Dependencia de Jakarta Servlet -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.0.0</version>
+			<scope>provided</scope>
+		</dependency>
 
-    <!-- Dependencia de Jersey (JAX-RS) -->
-    <dependency>
-        <groupId>org.glassfish.jersey.core</groupId>
-        <artifactId>jersey-server</artifactId>
-        <version>3.1.0</version>
-    </dependency>
+		<!-- Dependencia de Jersey (JAX-RS) -->
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 
-    <dependency>
-        <groupId>org.glassfish.jersey.core</groupId>
-        <artifactId>jersey-client</artifactId>
-        <version>3.1.0</version>
-    </dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 
-    <!-- Dependencia para la serialización de objetos en JSON -->
-    <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>2.15.2</version>
-    </dependency>
+		<!-- Dependencia para la serialización de objetos en JSON -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.15.2</version>
+		</dependency>
 
-    <dependency>
-        <groupId>com.gestion</groupId>
-        <artifactId>gestion-usuarios</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+		<dependency>
+			<groupId>com.gestion</groupId>
+			<artifactId>gestion-usuarios</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
-    <!-- Spring Web y Context -->
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-web</artifactId>
-        <version>5.3.24</version>
-    </dependency>
+		<!-- Spring Web y Context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>5.3.24</version>
+		</dependency>
 
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>5.3.24</version>
-    </dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>5.3.24</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.15.0</version> <!-- Asegúrate de usar la versión que
+			corresponda a tu proyecto -->
+		</dependency>
 
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>5.3.24</version>
-    </dependency>
-    
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>5.3.21</version> <!-- Usa la versión que necesites -->
-    </dependency>
 
-    <!-- Spring Web (para acceder a WebApplicationContextUtils) -->
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-web</artifactId>
-        <version>5.3.21</version> <!-- Usa la versión que necesites -->
-    </dependency>
-    <dependency>
-    	<groupId>org.json</groupId>
-    	<artifactId>json</artifactId>
-    	<version>20210307</version>  <!-- Puedes cambiar a la última versión disponible -->
-	</dependency>
-	
-	
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>5.3.24</version>
+		</dependency>
 
- 
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>5.3.21</version> <!-- Usa la versión que necesites -->
+		</dependency>
 
-</dependencies>
+		<!-- Spring Web (para acceder a WebApplicationContextUtils) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>5.3.21</version> <!-- Usa la versión que necesites -->
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20210307</version>  <!-- Puedes cambiar a la última versión
+			disponible -->
+		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.15.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.15.2</version> <!-- Cambiado a la misma versión que
+			jackson-databind -->
+		</dependency>
+
+
+	</dependencies>
 
 
 	<build>

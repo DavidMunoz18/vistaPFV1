@@ -47,10 +47,10 @@
           <!-- Botón de Google -->
           <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
 
-          <div class="divider">
-            <span>O bien</span>
-          </div>
-
+          <div class="divider"></div>
+          
+           
+          
           <input type="email" name="email" id="email" placeholder="Email o número de teléfono" required>
           <input type="password" name="password" id="password" placeholder="Contraseña" required>
           <div class="link">

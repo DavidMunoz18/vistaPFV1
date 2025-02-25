@@ -128,7 +128,9 @@
             <input type="hidden" name="nombre" value="<%=producto.getNombre()%>">
             <input type="hidden" name="precio" value="<%=producto.getPrecio()%>">
             <input type="hidden" name="imagen" value="<%=producto.getImagen()%>">
-            <input type="number" name="cantidad" value="1" min="1" required>
+            <div class="input-group mb-3">
+                    <input type="number" name="cantidad" value="1" min="1" required class="form-control" style="width: 60px; text-align: center;">
+                </div>
             <button type="submit" class="btn btn-primary">Agregar al carrito</button>
           </form>
         </div>
@@ -146,7 +148,7 @@
     %>
   </div>
   <div class="text-end mt-3">
-    <a class="btn btn-link" href="#"> Ver Más Productos </a>
+    <a class="btn btn-link" href="<%= request.getContextPath() %>/productos"> Ver Más Productos </a>
   </div>
 </div>
      <div class="container my-5">
@@ -163,7 +165,7 @@
                   />
                   <div class="card-body text-center">
                     
-                    <a class="btn btn-link" href="#"> Ver todos </a>
+                    <a class="btn btn-link" href="http://localhost:8080/VistaCodeComponents/productos?categoria=Componentes"> Ver todos </a>
                   </div>
                 </div>
               </div>
@@ -177,7 +179,7 @@
                     width="300"
                   />
                   <div class="card-body text-center">                    
-                    <a class="btn btn-link" href="#"> Ver todos </a>
+                    <a class="btn btn-link" href="http://localhost:8080/VistaCodeComponents/productos?categoria=Port%C3%A1tiles"> Ver todos </a>
                   </div>
                 </div>
               </div>
@@ -191,7 +193,7 @@
                     width="300"
                   />
                   <div class="card-body text-center">                    
-                    <a class="btn btn-link" href="#"> Ver todos </a>
+                    <a class="btn btn-link" href="http://localhost:8080/VistaCodeComponents/productos?categoria=Ordenadores"> Ver todos </a>
                   </div>
                 </div>
               </div>
@@ -205,7 +207,7 @@
                     width="300"
                   />
                   <div class="card-body text-center">
-                    <a class="btn btn-link" href="#"> Ver todos </a>
+                    <a class="btn btn-link" href="http://localhost:8080/VistaCodeComponents/productos?categoria=Ofertas"> Ver todos </a>
                   </div>
                 </div>
               </div>
