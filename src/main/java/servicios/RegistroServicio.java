@@ -60,6 +60,11 @@ public class RegistroServicio {
      * @return true si el registro fue exitoso; false en caso contrario.
      */
     public boolean registrarUsuario(RegistroUsuarioDto registroDto) {
+        // Validación: el email es obligatorio.
+        if (registroDto.getEmailUsuario() == null || registroDto.getEmailUsuario().isEmpty()) {
+            throw new IllegalArgumentException("El email es obligatorio.");
+        }
+        
         try {
             // Encriptar la contraseña en el Dynamic Web Project
             String passwordEncriptada = BCrypt.hashpw(registroDto.getPasswordUsuario(), BCrypt.gensalt());

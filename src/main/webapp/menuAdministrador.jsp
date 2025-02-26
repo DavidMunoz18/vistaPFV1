@@ -87,7 +87,7 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav">
-					<li class="nav-item"><a class="nav-link" href="index.jsp">Inicio</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/inicio">Inicio</a></li>
 					<li class="nav-item"><a class="nav-link" href="nosotros.jsp">Nosotros</a></li>
 					<li class="nav-item"><a href="<%=request.getContextPath()%>/productos" class="nav-link">Productos</a></li>
 					<li class="nav-item"><a class="nav-link" href="login.jsp">Iniciar Sesión</a></li>

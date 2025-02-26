@@ -6,9 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeComponents</title>
     <link rel="stylesheet" href="css/login.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
       .modal {
-        display: none; /* Inicialmente oculto */
+        display: none;
         position: fixed;
         top: 0;
         left: 0;
@@ -42,15 +45,22 @@
           <p>de tus productos favoritos</p>
         </div>
 
+        <!-- Toast de notificación -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+          <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+              <strong class="me-auto" id="toastHeader">Notificación</strong>
+              <small class="text-muted">Ahora</small>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+              <!-- Aquí se insertará el mensaje dinámico -->
+            </div>
+          </div>
+        </div>
+
         <!-- Formulario de Login -->
         <form id="loginForm" action="loginUsuario" method="post">
-          <!-- Botón de Google -->
-          <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-
-          <div class="divider"></div>
-          
-           
-          
           <input type="email" name="email" id="email" placeholder="Email o número de teléfono" required>
           <input type="password" name="password" id="password" placeholder="Contraseña" required>
           <div class="link">
@@ -61,8 +71,6 @@
           <div class="button">
             <a href="registro.jsp">Crear nueva cuenta</a>
           </div>
-          <!-- Campo oculto para el token de Google -->
-          <input type="hidden" name="tokenGoogle" id="tokenGoogle" />
         </form>
 
         <!-- Formulario para recuperación de contraseña -->
@@ -72,39 +80,53 @@
               <span class="close" onclick="closeModal()">&times;</span>
               <h2>Recuperar Contraseña</h2>
               <input type="email" name="correo" id="forgotEmail" placeholder="Ingresa tu correo" required>
-              <button type="submit" id="submitForgotPassword">Recuperar Contraseña</button>
-              <p id="forgotPasswordMessage">
-                <% 
-                  // Mostrar el mensaje desde el servlet
-                  String mensaje = (String) request.getAttribute("mensaje");
-                  if (mensaje != null) {
-                %>
-                    <script>
-                      alert("<%= mensaje %>");
-                    </script>
-                <% 
-                  }
-                %>
-              </p>
+              <button type="submit">Recuperar Contraseña</button>
             </div>
           </form>
         </div>
-
       </div>
     </div>
 
     <script>
-      // Mostrar el formulario de recuperación de contraseña al hacer clic en el enlace
+      // Mostrar modal de recuperación de contraseña al hacer clic en el enlace
       document.getElementById("forgotPasswordLink").addEventListener("click", function(event) {
-        event.preventDefault(); // Prevenir la acción por defecto del enlace
-        document.getElementById("forgotPasswordModal").style.display = "flex"; // Mostrar el modal
+        event.preventDefault();
+        document.getElementById("forgotPasswordModal").style.display = "flex";
       });
 
-      // Cerrar el modal al hacer clic en la "X"
+      // Función para cerrar el modal
       function closeModal() {
-        document.getElementById("forgotPasswordModal").style.display = "none"; // Ocultar el modal
+        document.getElementById("forgotPasswordModal").style.display = "none";
       }
-    </script>
 
+      // Mostrar el Toast si hay mensaje enviado desde el servidor
+      window.addEventListener('load', function() {
+        // Se utiliza "errorMessage" enviado en caso de error; si no, se podría usar "mensaje"
+        var mensaje = '<%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : (request.getAttribute("mensaje") != null ? request.getAttribute("mensaje") : "") %>';
+        // Si se desea distinguir, se puede enviar "tipoMensaje" (por ejemplo, "exito" o "error") desde el Servlet
+        var tipoMensaje = '<%= request.getAttribute("tipoMensaje") != null ? request.getAttribute("tipoMensaje") : "error" %>';
+        
+        if (mensaje.trim().length > 0) {
+          var toastElement = document.getElementById('liveToast');
+          var toastMessage = document.getElementById('toastMessage');
+          var toastHeader = document.getElementById('toastHeader');
+
+          toastMessage.innerText = mensaje;
+
+          if (tipoMensaje === "exito") {
+            // Asignar fondo verde para éxito
+            toastElement.classList.add("bg-success", "text-white");
+            toastHeader.innerText = "Éxito";
+          } else {
+            // Fondo rojo para error
+            toastElement.classList.add("bg-danger", "text-white");
+            toastHeader.innerText = "Error";
+          }
+
+          var toast = new bootstrap.Toast(toastElement);
+          toast.show();
+        }
+      });
+    </script>
   </body>
 </html>

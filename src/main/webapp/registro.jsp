@@ -6,11 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario</title>
     <link rel="stylesheet" href="css/login.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       /**
        * Función que se ejecuta al enviar el formulario de datos de registro.
        * Copia los datos ingresados en campos ocultos del formulario de verificación,
-       * muestra la alerta y oculta/visualiza los formularios.
+       * muestra un Toast informativo y oculta/visualiza los formularios.
        */
       function procesarRegistroForm() {
         // Copiamos los valores de los campos visibles a los ocultos del formulario de verificación
@@ -20,8 +23,11 @@
         document.getElementById("hiddenPassword").value = document.getElementById("passwordUsuario").value;
         document.getElementById("hiddenConfirmPassword").value = document.getElementById("confirmPasswordUsuario").value;
         
-        // Se muestra la alerta al usuario
-        alert("Revisa tu correo, te hemos enviado el código de verificación");
+        // Mostrar Toast informando que se ha enviado el código de verificación
+        var toastElement = document.getElementById('liveToast');
+        document.getElementById('toastMessage').innerText = "Revisa tu correo, te hemos enviado el código de verificación.";
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
         
         // Se oculta el formulario de registro y se muestra el de verificación
         document.getElementById("registroForm").style.display = "none";
@@ -44,6 +50,20 @@
           <h1>Components</h1>
           <p>Recibe ofertas increíbles</p>
           <p>de tus productos favoritos</p>
+        </div>
+        
+        <!-- Toast container para mensajes dinámicos -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+          <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+              <strong class="me-auto" id="toastHeader">Información</strong>
+              <small class="text-muted">Ahora</small>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+              <!-- Aquí se insertará el mensaje dinámico -->
+            </div>
+          </div>
         </div>
         
         <!-- Formulario 1: Datos de registro -->
@@ -87,5 +107,18 @@
         
       </div>
     </div>
+    
+    <!-- Script para mostrar el Toast si el controlador envía un mensaje -->
+    <script>
+      window.addEventListener('load', function(){
+        var mensaje = '<%= request.getAttribute("mensaje") != null ? request.getAttribute("mensaje") : "" %>';
+        if(mensaje.trim().length > 0) {
+          document.getElementById('toastMessage').innerText = mensaje;
+          var toastElement = document.getElementById('liveToast');
+          var toast = new bootstrap.Toast(toastElement);
+          toast.show();
+        }
+      });
+    </script>
   </body>
 </html>
