@@ -75,7 +75,7 @@ public class ModificarProductoControlador extends HttpServlet {
 
             // Redirigir dependiendo del resultado
             if (resultado) {
-                response.sendRedirect("exito.jsp");
+                response.sendRedirect("admin");
             } else {
                 request.setAttribute("error", "No se encontró el producto o no se pudo modificar.");
                 request.getRequestDispatcher("error.jsp").forward(request, response);
