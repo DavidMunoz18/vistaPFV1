@@ -29,41 +29,19 @@ import servicios.ModificarServicio;
 )
 public class ModificarUsuarioControlador extends HttpServlet {
 
-    /**
-     * Servicio encargado de manejar la lógica de modificación del usuario.
-     */
     private ModificarServicio modificarServicio;
 
-    /**
-     * Inicializa el controlador configurando el servicio de modificación.
-     * 
-     * @throws ServletException si ocurre un error en la inicialización del servlet.
-     */
     @Override
     public void init() throws ServletException {
-        this.modificarServicio = new ModificarServicio(); // Inicializa el servicio aquí
+        this.modificarServicio = new ModificarServicio(); 
     }
 
-    /**
-     * Procesa las solicitudes HTTP POST para modificar un usuario.
-     * <p>
-     * Este método recoge los datos enviados desde el formulario, incluyendo el ID del usuario,
-     * el nuevo nombre, DNI, teléfono, rol y foto. Llama al servicio para realizar la
-     * modificación y redirige al usuario a la página de menú del administrador
-     * con un mensaje de resultado.
-     * </p>
-     * 
-     * @param request  el objeto {@link HttpServletRequest} que contiene la solicitud
-     *                 del cliente.
-     * @param response el objeto {@link HttpServletResponse} que contiene la respuesta
-     *                 para el cliente.
-     * @throws ServletException si ocurre un error relacionado con el servlet.
-     * @throws IOException      si ocurre un error de entrada/salida.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            System.out.println("Iniciando modificación de usuario...");
+
             // Recuperar parámetros del formulario
             long idUsuario = Long.parseLong(request.getParameter("idUsuario"));
             String nuevoNombre = request.getParameter("nuevoNombre");
@@ -71,24 +49,33 @@ public class ModificarUsuarioControlador extends HttpServlet {
             String nuevoTelefono = request.getParameter("nuevoTelefono");
             String nuevoRol = request.getParameter("nuevoRol");
 
+            System.out.println("Recibidos datos: ID: " + idUsuario + ", Nombre: " + nuevoNombre + ", DNI: " + nuevoDni);
+
             // Procesar el archivo de la foto
             Part fotoPart = request.getPart("nuevaFoto");
             byte[] nuevaFoto = null;
 
             if (fotoPart != null && fotoPart.getSize() > 0) {
                 nuevaFoto = fotoPart.getInputStream().readAllBytes();
+                System.out.println("Foto recibida: " + fotoPart.getSubmittedFileName());
+            } else {
+                System.out.println("No se recibió foto, continuará sin foto.");
             }
 
             // Llamar al servicio API
             String resultado = modificarServicio.modificarUsuario(
                     idUsuario, nuevoNombre, nuevoDni, nuevoTelefono, nuevoRol, nuevaFoto);
 
-            // Redirigir con el resultado
-            request.setAttribute("resultado", resultado);
-            request.getRequestDispatcher("menuAdministrador.jsp").forward(request, response);
+            if (resultado != null && resultado.toLowerCase().contains("actualizado")) {
+                response.sendRedirect("admin?modificado=true");
+            } else {
+                response.sendRedirect("admin?modificado=false");
+            }
+
 
         } catch (Exception e) {
-            // Manejo de errores durante la ejecución
+            // Manejo de errores
+            System.out.println("Error en el proceso de modificación de usuario: " + e.getMessage());
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "Error al procesar la solicitud: " + e.getMessage());
