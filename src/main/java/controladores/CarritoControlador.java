@@ -13,16 +13,32 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Controlador que maneja las operaciones del carrito de compras.
+ * Permite agregar y eliminar productos del carrito en la sesión.
+ * La lógica de negocio se maneja en el servicio {@link CarritoServicio}.
+ * 
+ * @author dmp
+ */
 @WebServlet("/carrito")
 public class CarritoControlador extends HttpServlet {
 
     // Se asume que este servicio es el de la API (solo persistencia)
     private CarritoServicio carritoServicio = new CarritoServicio();
 
+    /**
+     * Maneja la solicitud POST para agregar o eliminar productos del carrito.
+     * 
+     * @param request La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en la ejecución del servlet.
+     * @throws IOException Si ocurre un error en la entrada o salida de datos.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
+        // Acción para agregar un producto al carrito
         if ("agregar".equals(action)) {
             try {
                 // Obtener parámetros enviados en el request
@@ -36,7 +52,6 @@ public class CarritoControlador extends HttpServlet {
                 }
 
                 // Lógica de negocio: Obtener los detalles completos del producto.
-                // Este método debe estar implementado en la capa de negocio del Dynamic Web.
                 CarritoDto productoDetalles = carritoServicio.obtenerProductoPorId(id);
                 if (productoDetalles == null) {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Producto no encontrado");
@@ -76,10 +91,8 @@ public class CarritoControlador extends HttpServlet {
                 // Llamada a la API para persistir el producto (sin validación interna)
                 carritoServicio.agregarProducto(carritoDto);
 
-                
                 session.setAttribute("productoAgregado", true);
                 response.sendRedirect("productos");
-
 
             } catch (NumberFormatException e) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Datos inválidos");
@@ -87,6 +100,7 @@ public class CarritoControlador extends HttpServlet {
                 e.printStackTrace();
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error interno del servidor");
             }
+        // Acción para eliminar un producto del carrito
         } else if ("eliminar".equals(action)) {
             String method = request.getParameter("_method");
             if ("DELETE".equals(method)) {
@@ -115,6 +129,14 @@ public class CarritoControlador extends HttpServlet {
         }
     }
 
+    /**
+     * Maneja la solicitud GET para mostrar el carrito de compras.
+     * 
+     * @param request La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en la ejecución del servlet.
+     * @throws IOException Si ocurre un error en la entrada o salida de datos.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

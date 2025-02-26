@@ -154,7 +154,7 @@
 <!-- Toast -->
 <div id="toast" class="toast position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1050; background-color: #4CAF50;" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
-        <strong class="me-auto">Notificación</strong>
+        <strong class="me-auto">Exito</strong>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
     <div class="toast-body text-white">
