@@ -150,6 +150,37 @@
 			</div>
 		</div>
 	</div>
+	<!-- Toast -->
+<!-- Toast -->
+<div id="toast" class="toast position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1050; background-color: #4CAF50;" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <strong class="me-auto">Notificación</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body text-white">
+        Producto agregado al carrito exitosamente.
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        <% 
+        // Verificar si el atributo está presente en la sesión
+        Boolean productoAgregado = (Boolean) session.getAttribute("productoAgregado");
+        if (productoAgregado != null && productoAgregado) {
+            // Limpia el atributo después de mostrar el toast
+            session.removeAttribute("productoAgregado"); 
+        %>
+            var toastEl = document.getElementById('toast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show(); // Muestra el toast si el producto fue agregado
+        <% } %>
+    });
+</script>
+
+	
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

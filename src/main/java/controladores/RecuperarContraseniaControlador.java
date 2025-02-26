@@ -67,8 +67,10 @@ public class RecuperarContraseniaControlador extends HttpServlet {
             boolean exito = autentificacionServicio.recuperarContrasenia(correo, token, fechaExpiracion);
             if (exito) {
                 request.setAttribute("mensaje", "Se ha enviado un enlace de recuperación a tu correo.");
+                request.setAttribute("tipoMensaje", "exito");
             } else {
                 request.setAttribute("mensaje", "No se pudo procesar la solicitud. Verifica que el correo exista en nuestro sistema.");
+                request.setAttribute("tipoMensaje", "error");
             }
         } catch (Exception e) {
             e.printStackTrace();

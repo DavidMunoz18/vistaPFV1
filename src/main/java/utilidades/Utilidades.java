@@ -50,7 +50,7 @@ public class Utilidades {
 
         // Credenciales de la cuenta (utiliza variables de entorno en producción)
         final String username = "codecomponents123@gmail.com";
-        final String password = "vbap ljmz ycki qboa";
+        final String password = "kjqk daka ayor jplg";
 
         // Crear la sesión de correo con autenticación
         Session session = Session.getInstance(props, new Authenticator() {

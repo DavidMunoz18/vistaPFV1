@@ -76,8 +76,10 @@ public class CarritoControlador extends HttpServlet {
                 // Llamada a la API para persistir el producto (sin validación interna)
                 carritoServicio.agregarProducto(carritoDto);
 
-                // Redirigir a la vista del carrito
-                response.sendRedirect("carrito");
+                
+                session.setAttribute("productoAgregado", true);
+                response.sendRedirect("productos");
+
 
             } catch (NumberFormatException e) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Datos inválidos");

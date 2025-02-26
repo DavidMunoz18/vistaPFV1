@@ -87,46 +87,50 @@
       </div>
     </div>
 
-    <script>
-      // Mostrar modal de recuperación de contraseña al hacer clic en el enlace
-      document.getElementById("forgotPasswordLink").addEventListener("click", function(event) {
-        event.preventDefault();
-        document.getElementById("forgotPasswordModal").style.display = "flex";
-      });
+   <script>
+  // Mostrar modal de recuperación de contraseña al hacer clic en el enlace
+  document.getElementById("forgotPasswordLink").addEventListener("click", function(event) {
+    event.preventDefault();
+    document.getElementById("forgotPasswordModal").style.display = "flex";
+  });
 
-      // Función para cerrar el modal
-      function closeModal() {
-        document.getElementById("forgotPasswordModal").style.display = "none";
+  // Función para cerrar el modal
+  function closeModal() {
+    document.getElementById("forgotPasswordModal").style.display = "none";
+  }
+
+  // Mostrar el Toast si hay mensaje enviado desde el servidor
+  window.addEventListener('load', function() {
+    // Se utiliza "errorMessage" enviado en caso de error; si no, se podría usar "mensaje"
+    var mensaje = '<%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : (request.getAttribute("mensaje") != null ? request.getAttribute("mensaje") : "") %>';
+    // Si se desea distinguir, se puede enviar "tipoMensaje" (por ejemplo, "exito" o "error") desde el Servlet
+    var tipoMensaje = '<%= request.getAttribute("tipoMensaje") != null ? request.getAttribute("tipoMensaje") : "error" %>';
+    
+    if (mensaje.trim().length > 0) {
+      var toastElement = document.getElementById('liveToast');
+      var toastMessage = document.getElementById('toastMessage');
+      var toastHeader = document.getElementById('toastHeader');
+
+      toastMessage.innerText = mensaje;
+
+      // Limpiar las clases anteriores
+      toastElement.classList.remove("bg-success", "bg-danger", "text-white");
+
+      if (tipoMensaje === "exito") {
+        // Asignar fondo verde para éxito
+        toastElement.classList.add("bg-success", "text-white");
+        toastHeader.innerText = "Éxito";
+      } else {
+        // Fondo rojo para error
+        toastElement.classList.add("bg-danger", "text-white");
+        toastHeader.innerText = "Error";
       }
 
-      // Mostrar el Toast si hay mensaje enviado desde el servidor
-      window.addEventListener('load', function() {
-        // Se utiliza "errorMessage" enviado en caso de error; si no, se podría usar "mensaje"
-        var mensaje = '<%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : (request.getAttribute("mensaje") != null ? request.getAttribute("mensaje") : "") %>';
-        // Si se desea distinguir, se puede enviar "tipoMensaje" (por ejemplo, "exito" o "error") desde el Servlet
-        var tipoMensaje = '<%= request.getAttribute("tipoMensaje") != null ? request.getAttribute("tipoMensaje") : "error" %>';
-        
-        if (mensaje.trim().length > 0) {
-          var toastElement = document.getElementById('liveToast');
-          var toastMessage = document.getElementById('toastMessage');
-          var toastHeader = document.getElementById('toastHeader');
+      var toast = new bootstrap.Toast(toastElement);
+      toast.show();
+    }
+  });
+</script>
 
-          toastMessage.innerText = mensaje;
-
-          if (tipoMensaje === "exito") {
-            // Asignar fondo verde para éxito
-            toastElement.classList.add("bg-success", "text-white");
-            toastHeader.innerText = "Éxito";
-          } else {
-            // Fondo rojo para error
-            toastElement.classList.add("bg-danger", "text-white");
-            toastHeader.innerText = "Error";
-          }
-
-          var toast = new bootstrap.Toast(toastElement);
-          toast.show();
-        }
-      });
-    </script>
   </body>
 </html>
