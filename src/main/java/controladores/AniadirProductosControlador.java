@@ -10,8 +10,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import servicios.ProductoServicio;
+import utilidades.Utilidades; 
 
 /**
  * Servlet encargado de manejar la adición de nuevos productos al sistema.
@@ -45,6 +47,10 @@ public class AniadirProductosControlador extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        // Log de inicio del proceso
+        Utilidades.escribirLog(session, "[INFO]", "AniadirProductosControlador", "doPost", "Inicio del proceso de agregar producto");
+
         try {
             // Obtener datos del formulario
             String nombre = request.getParameter("nombre");
@@ -80,16 +86,20 @@ public class AniadirProductosControlador extends HttpServlet {
             // Llamar al servicio para agregar el producto
             boolean exito = productoServicio.agregarProducto(producto);
 
-            // Redirigir con mensaje según el resultado
+            // Redirigir con mensaje según el resultado y registrar log correspondiente
             if (exito) {
+                Utilidades.escribirLog(session, "[INFO]", "AniadirProductosControlador", "doPost", "Producto agregado exitosamente.");
                 response.sendRedirect("productos");
             } else {
+                Utilidades.escribirLog(session, "[INFO]", "AniadirProductosControlador", "doPost", "Fallo al agregar producto (resultado falso).");
                 response.sendRedirect("productos");
             }
         } catch (NumberFormatException e) {
+            Utilidades.escribirLog(session, "[ERROR]", "AniadirProductosControlador", "doPost", "Error al convertir número: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect("productos");
         } catch (Exception e) {
+            Utilidades.escribirLog(session, "[ERROR]", "AniadirProductosControlador", "doPost", "Error general: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect("productos");
         }

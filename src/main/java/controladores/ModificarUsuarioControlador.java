@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import servicios.ModificarServicio;
+import utilidades.Utilidades;
 
 /**
  * Controlador para manejar la modificación de un usuario.
@@ -40,7 +41,8 @@ public class ModificarUsuarioControlador extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            System.out.println("Iniciando modificación de usuario...");
+            // Log de inicio de proceso
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "ModificarUsuarioControlador", "doPost", "Iniciando modificación de usuario...");
 
             // Recuperar parámetros del formulario
             long idUsuario = Long.parseLong(request.getParameter("idUsuario"));
@@ -49,7 +51,8 @@ public class ModificarUsuarioControlador extends HttpServlet {
             String nuevoTelefono = request.getParameter("nuevoTelefono");
             String nuevoRol = request.getParameter("nuevoRol");
 
-            System.out.println("Recibidos datos: ID: " + idUsuario + ", Nombre: " + nuevoNombre + ", DNI: " + nuevoDni);
+            // Log de datos recibidos
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "ModificarUsuarioControlador", "doPost", "Recibidos datos: ID: " + idUsuario + ", Nombre: " + nuevoNombre + ", DNI: " + nuevoDni);
 
             // Procesar el archivo de la foto
             Part fotoPart = request.getPart("nuevaFoto");
@@ -57,9 +60,11 @@ public class ModificarUsuarioControlador extends HttpServlet {
 
             if (fotoPart != null && fotoPart.getSize() > 0) {
                 nuevaFoto = fotoPart.getInputStream().readAllBytes();
-                System.out.println("Foto recibida: " + fotoPart.getSubmittedFileName());
+                // Log de foto recibida
+                Utilidades.escribirLog(request.getSession(), "[INFO]", "ModificarUsuarioControlador", "doPost", "Foto recibida: " + fotoPart.getSubmittedFileName());
             } else {
-                System.out.println("No se recibió foto, continuará sin foto.");
+                // Log de no foto recibida
+                Utilidades.escribirLog(request.getSession(), "[INFO]", "ModificarUsuarioControlador", "doPost", "No se recibió foto, continuará sin foto.");
             }
 
             // Llamar al servicio API
@@ -67,15 +72,19 @@ public class ModificarUsuarioControlador extends HttpServlet {
                     idUsuario, nuevoNombre, nuevoDni, nuevoTelefono, nuevoRol, nuevaFoto);
 
             if (resultado != null && resultado.toLowerCase().contains("actualizado")) {
+                // Log de éxito
+                Utilidades.escribirLog(request.getSession(), "[INFO]", "ModificarUsuarioControlador", "doPost", "Usuario con ID " + idUsuario + " modificado con éxito.");
                 response.sendRedirect("admin?modificado=true");
             } else {
+                // Log de fallo
+                Utilidades.escribirLog(request.getSession(), "[ERROR]", "ModificarUsuarioControlador", "doPost", "No se pudo modificar el usuario con ID " + idUsuario);
                 response.sendRedirect("admin?modificado=false");
             }
 
 
         } catch (Exception e) {
-            // Manejo de errores
-            System.out.println("Error en el proceso de modificación de usuario: " + e.getMessage());
+            // Log del error
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "ModificarUsuarioControlador", "doPost", "Error en el proceso de modificación de usuario: " + e.getMessage());
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "Error al procesar la solicitud: " + e.getMessage());

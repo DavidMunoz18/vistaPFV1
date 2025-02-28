@@ -9,7 +9,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import servicios.ProductoServicio;
+import utilidades.Utilidades; // Import para usar el método escribirLog
 
 /**
  * Controlador que maneja las solicitudes para la página de inicio del ecommerce.
@@ -29,20 +31,38 @@ public class InicioControlador extends HttpServlet {
      * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        
+        // Log: Inicio del proceso de obtención de productos
+        Utilidades.escribirLog(session, "[INFO]", "InicioControlador", "doGet", "Inicio del proceso de obtención de productos");
+
         // Crear una instancia del servicio de productos
         ProductoServicio productoServicio = new ProductoServicio();
-        
-        // Obtener la lista de productos desde el servicio
-        List<ProductoDto> productos = productoServicio.obtenerProductos();
 
-        if (productos != null && !productos.isEmpty()) {
-            // Si hay productos disponibles, pasarlos a la vista
-            request.setAttribute("productos", productos);
+        try {
+            // Obtener la lista de productos desde el servicio
+            List<ProductoDto> productos = productoServicio.obtenerProductos();
+
+            if (productos != null && !productos.isEmpty()) {
+                // Si hay productos disponibles, pasarlos a la vista
+                request.setAttribute("productos", productos);
+                // Log: Productos disponibles
+                Utilidades.escribirLog(session, "[INFO]", "InicioControlador", "doGet", "Productos obtenidos: " + productos.size());
+            } else {
+                // Si no hay productos disponibles, mostrar un mensaje en la vista
+                request.setAttribute("mensaje", "No hay productos disponibles.");
+                // Log: No hay productos disponibles
+                Utilidades.escribirLog(session, "[INFO]", "InicioControlador", "doGet", "No hay productos disponibles.");
+            }
+
             request.getRequestDispatcher("/index.jsp").forward(request, response);
-        } else {
-            // Si no hay productos disponibles, mostrar un mensaje en la vista
-            request.setAttribute("mensaje", "No hay productos disponibles.");
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            
+        } catch (Exception e) {
+            // Log: Error en la obtención de productos
+            Utilidades.escribirLog(session, "[ERROR]", "InicioControlador", "doGet", "Error al obtener los productos: " + e.getMessage());
+            // Manejo de errores en la obtención de productos
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al obtener los productos.");
         }
     }
 }

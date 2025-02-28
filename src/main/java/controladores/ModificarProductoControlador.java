@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import servicios.ProductoServicio;
+import utilidades.Utilidades;
 
 import java.io.IOException;
 
@@ -73,14 +74,23 @@ public class ModificarProductoControlador extends HttpServlet {
             // Llamar al servicio para realizar la modificación
             boolean resultado = productoServicio.modificarProducto(idProducto, nuevoNombre, nuevaDescripcion, nuevoPrecio, nuevoStock, nuevaImagenBytes);
 
+            // Log de la modificación
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "ModificarProductoControlador", "doPost", 
+                    "Producto con ID " + idProducto + " modificado con éxito.");
+
             // Redirigir dependiendo del resultado
             if (resultado) {
                 response.sendRedirect("admin");
             } else {
                 request.setAttribute("error", "No se encontró el producto o no se pudo modificar.");
+                Utilidades.escribirLog(request.getSession(), "[ERROR]", "ModificarProductoControlador", "doPost", 
+                        "No se pudo modificar el producto con ID " + idProducto);
                 request.getRequestDispatcher("error.jsp").forward(request, response);
             }
         } catch (Exception e) {
+            // Log del error
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "ModificarProductoControlador", "doPost", 
+                    "Error al intentar modificar el producto: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Ocurrió un error al intentar modificar el producto.");
             request.getRequestDispatcher("error.jsp").forward(request, response);

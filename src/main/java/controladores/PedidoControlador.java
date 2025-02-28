@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import utilidades.Utilidades;
 
 /**
  * Controlador que maneja la creación de pedidos de los usuarios.
@@ -126,8 +127,8 @@ public class PedidoControlador extends HttpServlet {
             // Llamar al servicio para crear el pedido
             mensaje = pedidoServicio.crearPedido(pedidoDto);
             
-            // Imprimir en consola el mensaje
-            System.out.println("Respuesta del servicio: " + mensaje);
+            // Log de la respuesta del servicio
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "PedidoControlador", "doPost", "Respuesta del servicio: " + mensaje);
             
             if (!mensaje.equals("Pedido creado correctamente")) {
                 tipoMensaje = "error";
@@ -140,6 +141,8 @@ public class PedidoControlador extends HttpServlet {
             tipoMensaje = "error";
             mensaje = "Error al crear el pedido: " + e.getMessage();
             e.printStackTrace(); // Mostrar en consola la traza de la excepción
+            // Log de error
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "PedidoControlador", "doPost", "Error al crear el pedido: " + e.getMessage());
         }
 
         // Agregar el mensaje y tipo de mensaje a la solicitud

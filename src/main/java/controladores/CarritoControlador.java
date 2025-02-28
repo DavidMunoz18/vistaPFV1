@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import utilidades.Utilidades; 
 
 /**
  * Controlador que maneja las operaciones del carrito de compras.
@@ -41,6 +42,9 @@ public class CarritoControlador extends HttpServlet {
         // Acción para agregar un producto al carrito
         if ("agregar".equals(action)) {
             try {
+                // Log: inicio acción agregar
+                Utilidades.escribirLog(request.getSession(), "[INFO]", "CarritoControlador", "doPost", "Inicio acción agregar producto");
+
                 // Obtener parámetros enviados en el request
                 long id = Long.parseLong(request.getParameter("id"));
                 int cantidad = Integer.parseInt(request.getParameter("cantidad"));
@@ -91,12 +95,19 @@ public class CarritoControlador extends HttpServlet {
                 // Llamada a la API para persistir el producto (sin validación interna)
                 carritoServicio.agregarProducto(carritoDto);
 
+                // Log: producto agregado con éxito
+                Utilidades.escribirLog(session, "[INFO]", "CarritoControlador", "doPost", "Producto agregado al carrito correctamente");
+
                 session.setAttribute("productoAgregado", true);
                 response.sendRedirect("productos");
 
             } catch (NumberFormatException e) {
+                // Log: error de conversión de datos
+                Utilidades.escribirLog(request.getSession(), "[ERROR]", "CarritoControlador", "doPost", "Error al convertir datos: " + e.getMessage());
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Datos inválidos");
             } catch (Exception e) {
+                // Log: error interno
+                Utilidades.escribirLog(request.getSession(), "[ERROR]", "CarritoControlador", "doPost", "Error interno del servidor: " + e.getMessage());
                 e.printStackTrace();
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error interno del servidor");
             }
@@ -105,6 +116,9 @@ public class CarritoControlador extends HttpServlet {
             String method = request.getParameter("_method");
             if ("DELETE".equals(method)) {
                 try {
+                    // Log: inicio acción eliminar
+                    Utilidades.escribirLog(request.getSession(), "[INFO]", "CarritoControlador", "doPost", "Inicio acción eliminar producto del carrito");
+
                     long id = Long.parseLong(request.getParameter("id"));
                     HttpSession session = request.getSession();
                     List<CarritoDto> carrito = (List<CarritoDto>) session.getAttribute("carrito");
@@ -113,18 +127,30 @@ public class CarritoControlador extends HttpServlet {
                         carrito.removeIf(producto -> producto.getId() == id);
                         session.setAttribute("carrito", carrito);
                         carritoServicio.eliminarProducto((int) id);
+
+                        // Log: producto eliminado con éxito
+                        Utilidades.escribirLog(session, "[INFO]", "CarritoControlador", "doPost", "Producto eliminado del carrito correctamente");
+
                         response.sendRedirect("carrito");
                     } else {
+                        // Log: carrito no encontrado
+                        Utilidades.escribirLog(request.getSession(), "[ERROR]", "CarritoControlador", "doPost", "Carrito no encontrado al intentar eliminar producto");
                         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Carrito no encontrado");
                     }
                 } catch (NumberFormatException e) {
+                    // Log: error en formato de ID
+                    Utilidades.escribirLog(request.getSession(), "[ERROR]", "CarritoControlador", "doPost", "ID inválido: " + e.getMessage());
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
                 } catch (Exception e) {
+                    // Log: error al eliminar producto
+                    Utilidades.escribirLog(request.getSession(), "[ERROR]", "CarritoControlador", "doPost", "Error al eliminar producto: " + e.getMessage());
                     e.printStackTrace();
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al eliminar producto");
                 }
             }
         } else {
+            // Log: acción no soportada
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "CarritoControlador", "doPost", "Acción no soportada: " + action);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Acción no soportada");
         }
     }
@@ -140,6 +166,9 @@ public class CarritoControlador extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        // Log: inicio acción doGet para mostrar carrito
+        Utilidades.escribirLog(session, "[INFO]", "CarritoControlador", "doGet", "Mostrando carrito de compras");
+
         List<CarritoDto> carrito = (List<CarritoDto>) session.getAttribute("carrito");
 
         if (carrito == null) {

@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import servicios.AutentificacionServicio;
 import dtos.UsuarioDto;
+import utilidades.Utilidades; 
 
 /**
  * Controlador para manejar el inicio de sesión de un usuario.
@@ -49,9 +50,9 @@ public class LoginUsuarioControlador extends HttpServlet {
         String correo = request.getParameter("email");
         String password = request.getParameter("password");
 
-        // Imprimir los valores para depuración (puede ser útil durante el desarrollo)
-        System.out.println("Correo recibido: " + correo);
-        System.out.println("Contraseña recibida: " + password);
+        // Log: Correo y contraseña recibidos
+        Utilidades.escribirLog(request.getSession(), "[INFO]", "LoginUsuarioControlador", "doPost", 
+                "Correo recibido: " + correo + ", Contraseña recibida: " + password);
 
         // Llamar al servicio para verificar el usuario con las credenciales proporcionadas
         UsuarioDto usuario = servicio.verificarUsuario(correo, password);
@@ -62,23 +63,35 @@ public class LoginUsuarioControlador extends HttpServlet {
             session.setAttribute("idUsuario", usuario.getIdUsuario());
             session.setAttribute("rol", usuario.getRol());
 
-            // Log para verificar que los datos se guardan correctamente en la sesión
-            System.out.println("idUsuario guardado en la sesión: " + usuario.getIdUsuario());
-            System.out.println("Rol del usuario: " + usuario.getRol());
+            // Log: Datos guardados correctamente en la sesión
+            Utilidades.escribirLog(session, "[INFO]", "LoginUsuarioControlador", "doPost", 
+                    "idUsuario guardado en la sesión: " + usuario.getIdUsuario() + ", Rol del usuario: " + usuario.getRol());
 
             // Redirigir según el rol del usuario
             if ("admin".equals(usuario.getRol())) {
-                // Si el usuario es un administrador, redirigir a la página de administración
+                // Log: Redirigiendo a la página de administración
+                Utilidades.escribirLog(session, "[INFO]", "LoginUsuarioControlador", "doPost", 
+                        "Redirigiendo a la página de administración.");
                 response.sendRedirect("admin");
             } else if ("usuario".equals(usuario.getRol())) {
-                // Si el usuario es un usuario normal, redirigir a la página de inicio
+                // Log: Redirigiendo a la página de inicio
+                Utilidades.escribirLog(session, "[INFO]", "LoginUsuarioControlador", "doPost", 
+                        "Redirigiendo a la página de inicio.");
                 response.sendRedirect("inicio");
             } else {
+                // Log: Rol desconocido
+                Utilidades.escribirLog(session, "[ERROR]", "LoginUsuarioControlador", "doPost", 
+                        "Rol desconocido.");
+
                 // Si el rol es desconocido, mostrar un error
                 request.setAttribute("errorMessage", "Rol desconocido.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
         } else {
+            // Log: Autenticación fallida
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "LoginUsuarioControlador", "doPost", 
+                    "Autenticación fallida para el correo: " + correo);
+
             // Si la autenticación falla, mostrar un mensaje de error
             request.setAttribute("errorMessage", "Email o contraseña incorrectos.");
             request.getRequestDispatcher("login.jsp").forward(request, response); // Redirigir de vuelta al formulario de login

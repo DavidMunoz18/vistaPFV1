@@ -7,7 +7,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import servicios.EliminarServicio;
+import utilidades.Utilidades; // Import para usar el método escribirLog
 
 /**
  * Controlador para manejar la eliminación de un usuario.
@@ -42,22 +44,35 @@ public class EliminarUsuarioControlador extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        // Log: Inicio del proceso de eliminación de usuario
+        Utilidades.escribirLog(session, "[INFO]", "EliminarUsuarioControlador", "doPost", "Inicio proceso de eliminación de usuario");
+
         try {
             // Recuperar el ID del usuario desde los parámetros del formulario
             long idUsuario = Long.parseLong(request.getParameter("idUsuario"));
+            // Log: Procesando eliminación del usuario
+            Utilidades.escribirLog(session, "[INFO]", "EliminarUsuarioControlador", "doPost", "Procesando eliminación del usuario con ID: " + idUsuario);
 
             // Llamar al servicio para eliminar el usuario
             String resultado = eliminarServicio.eliminarUsuario(idUsuario);
+
+            // Log: Resultado de la eliminación del usuario
+            Utilidades.escribirLog(session, "[INFO]", "EliminarUsuarioControlador", "doPost", "Resultado de la eliminación: " + resultado);
 
             // Redirigir con el resultado
             request.setAttribute("resultado", resultado);
             request.getRequestDispatcher("menuAdministrador.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
+            // Log: Error al convertir el ID a número
+            Utilidades.escribirLog(session, "[ERROR]", "EliminarUsuarioControlador", "doPost", "ID de usuario no válido: " + request.getParameter("idUsuario"));
             // Manejo de errores cuando el ID no es un número válido
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de usuario inválido.");
         } catch (Exception e) {
+            // Log: Error genérico durante la ejecución
+            Utilidades.escribirLog(session, "[ERROR]", "EliminarUsuarioControlador", "doPost", "Error al procesar la solicitud: " + e.getMessage());
             // Manejo de errores genéricos durante la ejecución
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 

@@ -11,7 +11,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import servicios.ProductoServicio;
-
+import utilidades.Utilidades;
+ 
 /**
  * Controlador que maneja la visualización de productos en el ecommerce.
  * <p>
@@ -38,22 +39,34 @@ public class ProductoControlador extends HttpServlet {
      * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Log: Inicio del procesamiento de la solicitud GET
+        Utilidades.escribirLog(request.getSession(), "[INFO]", "ProductoControlador", "doGet", "Inicio del procesamiento de la solicitud GET");
+
         String idProducto = request.getParameter("id");
 
         if (idProducto != null && !idProducto.isEmpty()) {
+            // Log: Se solicita el detalle del producto con el ID especificado
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "ProductoControlador", "doGet", "Procesando detalle de producto para ID: " + idProducto);
+
             // Si se pasa un ID de producto, obtener el detalle del producto
             ProductoServicio productoServicio = new ProductoServicio();
             ProductoDto producto = productoServicio.obtenerProductoPorId(Integer.parseInt(idProducto));
 
             if (producto != null) {
+                // Log: Producto encontrado
+                Utilidades.escribirLog(request.getSession(), "[INFO]", "ProductoControlador", "doGet", "Producto encontrado: " + producto.getNombre());
                 request.setAttribute("producto", producto);
                 request.getRequestDispatcher("/detallesProducto.jsp").forward(request, response);
             } else {
-                // Si no se encuentra el producto, mostrar un mensaje de error
+                // Log: Producto no encontrado
+                Utilidades.escribirLog(request.getSession(), "[ERROR]", "ProductoControlador", "doGet", "Producto no encontrado para ID: " + idProducto);
                 request.setAttribute("mensaje", "Producto no encontrado.");
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
             }
         } else {
+            // Log: Se solicita la lista de productos sin filtro de ID
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "ProductoControlador", "doGet", "Mostrando lista de productos");
+
             // Si no se pasa ID, mostrar la lista de productos
             String categoria = request.getParameter("categoria"); // Obtener el parámetro de categoría
             String minPriceParam = request.getParameter("minPrice"); // Obtener el parámetro de precio mínimo
@@ -65,6 +78,7 @@ public class ProductoControlador extends HttpServlet {
 
             // Filtrar los productos por categoría si se especificó una
             if (categoria != null && !categoria.isEmpty()) {
+                Utilidades.escribirLog(request.getSession(), "[INFO]", "ProductoControlador", "doGet", "Filtrando productos por categoría: " + categoria);
                 for (ProductoDto producto : productos) {
                     if (categoria.equals(producto.getCategoria())) {
                         productosFiltrados.add(producto);
@@ -78,6 +92,8 @@ public class ProductoControlador extends HttpServlet {
                 double minPrice = Double.parseDouble(minPriceParam);
                 double maxPrice = Double.parseDouble(maxPriceParam);
 
+                Utilidades.escribirLog(request.getSession(), "[INFO]", "ProductoControlador", "doGet", "Filtrando productos por precio: min=" + minPrice + ", max=" + maxPrice);
+
                 List<ProductoDto> productosPorPrecio = new ArrayList<>();
                 for (ProductoDto producto : productos) {
                     if (producto.getPrecio() >= minPrice && producto.getPrecio() <= maxPrice) {
@@ -89,9 +105,11 @@ public class ProductoControlador extends HttpServlet {
 
             // Verificar si hay productos disponibles después de los filtros
             if (productos != null && !productos.isEmpty()) {
+                Utilidades.escribirLog(request.getSession(), "[INFO]", "ProductoControlador", "doGet", "Cantidad de productos encontrados: " + productos.size());
                 request.setAttribute("productos", productos);
                 request.getRequestDispatcher("/productos.jsp").forward(request, response);
             } else {
+                Utilidades.escribirLog(request.getSession(), "[ERROR]", "ProductoControlador", "doGet", "No hay productos disponibles.");
                 request.setAttribute("mensaje", "No hay productos disponibles.");
                 request.getRequestDispatcher("/productos.jsp").forward(request, response);
             }

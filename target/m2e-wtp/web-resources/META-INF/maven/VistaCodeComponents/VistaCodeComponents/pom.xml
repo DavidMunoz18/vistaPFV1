@@ -15,6 +15,7 @@
 			<version>6.0.0</version>
 			<scope>provided</scope>
 		</dependency>
+		
 
 		<!-- Dependencia de Jersey (JAX-RS) -->
 		<dependency>
@@ -101,6 +102,11 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>com</groupId>
+			<artifactId>ecommerce</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 

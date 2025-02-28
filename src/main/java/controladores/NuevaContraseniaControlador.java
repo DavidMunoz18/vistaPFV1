@@ -9,6 +9,7 @@ import servicios.AutentificacionServicio;
 import java.io.IOException;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import utilidades.Utilidades;
 
 /**
  * Controlador para manejar el restablecimiento de la contraseña de un usuario.
@@ -49,15 +50,24 @@ public class NuevaContraseniaControlador extends HttpServlet {
 
         if (token != null) {
             Long fechaExpiracion = autentificacionServicio.obtenerFechaExpiracionDelToken(token);
-            
+
+            // Log de validación del token
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "NuevaContraseniaControlador", "doGet", "Recibido token: " + token);
+
             if (fechaExpiracion != null && System.currentTimeMillis() <= fechaExpiracion) {
+                // Log de token válido
+                Utilidades.escribirLog(request.getSession(), "[INFO]", "NuevaContraseniaControlador", "doGet", "Token válido, redirigiendo a restablecer.jsp");
                 request.setAttribute("token", token);
                 request.getRequestDispatcher("/restablecer.jsp").forward(request, response);
             } else {
+                // Log de token expirado o inválido
+                Utilidades.escribirLog(request.getSession(), "[ERROR]", "NuevaContraseniaControlador", "doGet", "El token ha expirado o es inválido.");
                 request.setAttribute("error", "El token ha expirado o es inválido.");
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
             }
         } else {
+            // Log de error por token no proporcionado
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "NuevaContraseniaControlador", "doGet", "Token no proporcionado.");
             request.setAttribute("error", "Token no proporcionado.");
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
@@ -79,7 +89,12 @@ public class NuevaContraseniaControlador extends HttpServlet {
         String confirmarContrasenia = request.getParameter("confirmarContrasenia");
         String token = request.getParameter("token");
 
+        // Log de las contraseñas recibidas
+        Utilidades.escribirLog(request.getSession(), "[INFO]", "NuevaContraseniaControlador", "doPost", "Recibidas contraseñas para cambio.");
+
         if (nuevaContrasenia == null || confirmarContrasenia == null || !nuevaContrasenia.equals(confirmarContrasenia)) {
+            // Log de error si las contraseñas no coinciden
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "NuevaContraseniaControlador", "doPost", "Las contraseñas no coinciden o están vacías.");
             request.setAttribute("error", "Las contraseñas no coinciden o están vacías.");
             request.getRequestDispatcher("/restablecer.jsp").forward(request, response);
             return;
@@ -88,12 +103,19 @@ public class NuevaContraseniaControlador extends HttpServlet {
         // Encriptar la nueva contraseña usando BCrypt
         String contraseniaEncriptada = BCrypt.hashpw(nuevaContrasenia, BCrypt.gensalt());
 
+        // Log de encriptación de la contraseña
+        Utilidades.escribirLog(request.getSession(), "[INFO]", "NuevaContraseniaControlador", "doPost", "Contraseña encriptada correctamente.");
+
         // Llamar al servicio para actualizar la contraseña
         boolean exito = autentificacionServicio.actualizarContrasenia(contraseniaEncriptada, token);
         if (exito) {
+            // Log de éxito en la actualización
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "NuevaContraseniaControlador", "doPost", "Contraseña actualizada exitosamente.");
             request.setAttribute("mensaje", "Contraseña actualizada exitosamente.");
             response.sendRedirect("login.jsp");
         } else {
+            // Log de fallo en la actualización
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "NuevaContraseniaControlador", "doPost", "Hubo un error al actualizar la contraseña.");
             request.setAttribute("error", "Hubo un error al actualizar la contraseña.");
             request.getRequestDispatcher("/restablecer.jsp").forward(request, response);
         }

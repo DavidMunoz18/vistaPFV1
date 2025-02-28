@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import servicios.RegistroServicio;
 import java.io.IOException;
+import utilidades.Utilidades;
 
 /**
  * Controlador para manejar el registro de usuarios y el envío de códigos de verificación.
@@ -32,6 +33,7 @@ public class RegistroUsuarioControlador extends HttpServlet {
     @Override
     public void init() throws ServletException {
         this.registroServicio = new RegistroServicio();
+        Utilidades.escribirLog(null, "[INFO]", "RegistroUsuarioControlador", "init", "Servicio de registro inicializado.");
     }
 
     /**
@@ -49,7 +51,7 @@ public class RegistroUsuarioControlador extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Se obtiene el path para diferenciar la acción según la URL utilizada
+        Utilidades.escribirLog(request.getSession(), "[INFO]", "RegistroUsuarioControlador", "doPost", "Procesando solicitud POST en path: " + request.getServletPath());
         String path = request.getServletPath();
         if ("/enviarCodigo".equals(path)) {
             enviarCodigo(request, response);
@@ -71,15 +73,18 @@ public class RegistroUsuarioControlador extends HttpServlet {
      */
     private void enviarCodigo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String correo = request.getParameter("emailUsuario");
+        Utilidades.escribirLog(request.getSession(), "[INFO]", "RegistroUsuarioControlador", "enviarCodigo", "Procesando envío de código de verificación para correo: " + correo);
         if (correo == null || correo.trim().isEmpty()) {
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "RegistroUsuarioControlador", "enviarCodigo", "Correo obligatorio no proporcionado.");
             response.getWriter().write("El correo es obligatorio.");
             return;
         }
-        // El Dynamic Web Project genera el código, envía el correo y luego lo manda a la API para almacenar
         boolean enviado = registroServicio.enviarCodigoVerificacion(correo);
         if (enviado) {
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "RegistroUsuarioControlador", "enviarCodigo", "Código de verificación enviado a: " + correo);
             response.getWriter().write("Se ha enviado un código de verificación a tu correo.");
         } else {
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "RegistroUsuarioControlador", "enviarCodigo", "Error al enviar el código a: " + correo);
             response.getWriter().write("No se pudo enviar el código. Verifica el correo ingresado.");
         }
     }
@@ -105,7 +110,9 @@ public class RegistroUsuarioControlador extends HttpServlet {
         String confirmPassword = request.getParameter("confirmPasswordUsuario");
         String codigoVerificacion = request.getParameter("codigoVerificacion");
 
+        Utilidades.escribirLog(request.getSession(), "[INFO]", "RegistroUsuarioControlador", "registrarUsuario", "Inicio proceso de registro para: " + correo);
         if (password == null || !password.equals(confirmPassword)) {
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "RegistroUsuarioControlador", "registrarUsuario", "Contraseñas no coinciden para: " + correo);
             request.setAttribute("mensaje", "Las contraseñas no coinciden.");
             request.getRequestDispatcher("registro.jsp").forward(request, response);
             return;
@@ -115,15 +122,15 @@ public class RegistroUsuarioControlador extends HttpServlet {
         registroDto.setNombreUsuario(nombre);
         registroDto.setTelefonoUsuario(telefono);
         registroDto.setEmailUsuario(correo);
-        // En este Dynamic Web Project se encriptará la contraseña antes de enviarla a la API.
         registroDto.setPasswordUsuario(password);
         registroDto.setCodigoVerificacion(codigoVerificacion);
 
-        // Se invoca la API para registrar el usuario.
         boolean registroExitoso = registroServicio.registrarUsuario(registroDto);
         if (registroExitoso) {
+            Utilidades.escribirLog(request.getSession(), "[INFO]", "RegistroUsuarioControlador", "registrarUsuario", "Registro exitoso para: " + correo);
             response.sendRedirect("login.jsp");
         } else {
+            Utilidades.escribirLog(request.getSession(), "[ERROR]", "RegistroUsuarioControlador", "registrarUsuario", "Error en registro para: " + correo);
             request.setAttribute("mensaje", "El código de verificación es incorrecto o el correo ya está registrado.");
             request.getRequestDispatcher("registro.jsp").forward(request, response);
         }

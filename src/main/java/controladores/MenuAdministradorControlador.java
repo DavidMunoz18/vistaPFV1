@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import servicios.AutentificacionServicio;
 import servicios.ProductoServicio;
+import utilidades.Utilidades; 
 
 /**
  * Controlador para manejar el menú principal del administrador.
@@ -40,9 +41,12 @@ public class MenuAdministradorControlador extends HttpServlet {
     protected void doGet(HttpServletRequest solicitud, HttpServletResponse respuesta) throws ServletException, IOException {
         // Verificar que el usuario esté autenticado y tenga rol de administrador
         HttpSession sesion = solicitud.getSession(false);
+        
         if (sesion == null || sesion.getAttribute("rol") == null || 
                 !sesion.getAttribute("rol").toString().equalsIgnoreCase("admin")) {
             // Si no está autenticado o no tiene rol "admin", redirigir al login
+            Utilidades.escribirLog(sesion, "[ERROR]", "MenuAdministradorControlador", "doGet", 
+                    "Acceso denegado: Usuario no autenticado o sin rol de administrador.");
             respuesta.sendRedirect(solicitud.getContextPath() + "/login.jsp");
             return;
         }
@@ -54,9 +58,11 @@ public class MenuAdministradorControlador extends HttpServlet {
         List<ProductoDto> listaProductos = servicioProducto.obtenerProductos();
         List<UsuarioDto> listaUsuarios = servicioUsuario.obtenerUsuarios();
 
-        // Depuración en consola, mostrando el tamaño de las listas obtenidas
-        System.out.println("Tamaño de la lista de productos: " + (listaProductos != null ? listaProductos.size() : "null"));
-        System.out.println("Tamaño de la lista de usuarios: " + (listaUsuarios != null ? listaUsuarios.size() : "null"));
+        // Log de las listas obtenidas
+        Utilidades.escribirLog(sesion, "[INFO]", "MenuAdministradorControlador", "doGet", 
+                "Tamaño de la lista de productos: " + (listaProductos != null ? listaProductos.size() : "null"));
+        Utilidades.escribirLog(sesion, "[INFO]", "MenuAdministradorControlador", "doGet", 
+                "Tamaño de la lista de usuarios: " + (listaUsuarios != null ? listaUsuarios.size() : "null"));
 
         // Enviar las listas de productos y usuarios al JSP
         solicitud.setAttribute("productos", listaProductos);

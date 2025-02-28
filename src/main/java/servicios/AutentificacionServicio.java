@@ -37,6 +37,7 @@ public class AutentificacionServicio {
      */
     public UsuarioDto verificarUsuario(String correo, String password) {
         UsuarioDto usuario = null;
+        Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "verificarUsuario", "Verificando usuario con correo: " + correo);
 
         try {
             System.out.println("Verificando usuario con correo: " + correo);
@@ -57,6 +58,7 @@ public class AutentificacionServicio {
             String jsonInput = mapper.writeValueAsString(loginRequest);
 
             System.out.println("Datos enviados a la API: " + jsonInput);
+            Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "verificarUsuario", "Datos enviados a la API: " + jsonInput);
 
             // Enviar la solicitud al servidor
             try (OutputStream ot = conexion.getOutputStream()) {
@@ -76,6 +78,7 @@ public class AutentificacionServicio {
 
                     String respuesta = response.toString();
                     System.out.println("Respuesta del servidor: " + respuesta);
+                    Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "verificarUsuario", "Respuesta del servidor: " + respuesta);
 
                     // Mapeamos la respuesta JSON al objeto UsuarioDto
                     usuario = mapper.readValue(respuesta, UsuarioDto.class);
@@ -86,67 +89,68 @@ public class AutentificacionServicio {
                         this.rol = usuario.getRol();
                         this.idUsuario = usuario.getIdUsuario();
                         System.out.println("Usuario verificado correctamente. Rol: " + this.rol + ", ID: " + this.idUsuario);
+                        Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "verificarUsuario", "Usuario verificado correctamente. Rol: " + this.rol + ", ID: " + this.idUsuario);
                     } else {
                         System.out.println("Contraseña incorrecta.");
+                        Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "verificarUsuario", "Contraseña incorrecta para el usuario con correo: " + correo);
                         usuario = null;  // Si no coincide, devolver null
                     }
                 }
             } else {
                 System.out.println("Error: Código de respuesta no OK. Código: " + responseCode);
+                Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "verificarUsuario", "Código de respuesta no OK: " + responseCode);
             }
 
         } catch (Exception e) {
             System.out.println("ERROR: " + e);
+            Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "verificarUsuario", "Excepción: " + e.getMessage());
             e.printStackTrace();
         }
 
         return usuario;  // Devuelve el usuario completo o null si no se verifica
     }
 
-   /**
-    * Solicita la recuperación de la contraseña del usuario enviando un token al correo electrónico.
-    * 
-    * @param correo          El correo electrónico del usuario.
-    * @param token           El token de recuperación de contraseña.
-    * @param fechaExpiracion La fecha de expiración del token en milisegundos.
-    * @return true si el correo se envió correctamente, false en caso contrario.
-    */
+    /**
+     * Solicita la recuperación de la contraseña del usuario enviando un token al correo electrónico.
+     * 
+     * @param correo          El correo electrónico del usuario.
+     * @param token           El token de recuperación de contraseña.
+     * @param fechaExpiracion La fecha de expiración del token en milisegundos.
+     * @return true si el correo se envió correctamente, false en caso contrario.
+     */
     public boolean recuperarContrasenia(String correo, String token, long fechaExpiracion) {
-        // Parametros para la API
+        Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "recuperarContrasenia", "Recuperando contraseña para correo: " + correo + ", token: " + token + ", fechaExpiracion: " + fechaExpiracion);
         Map<String, String> params = new HashMap<>();
         params.put("token", token);
         params.put("correo", correo);
         params.put("fechaExpiracion", String.valueOf(fechaExpiracion));  // Enviar la fecha de expiración
 
         try {
-            // URL de la API para guardar el token y enviar el correo
             URL url = new URL("http://localhost:8081/api/usuarios/recuperarContrasenia");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type", "application/json");
 
-            // Enviar parámetros de la solicitud como JSON
             String jsonInputString = new JSONObject(params).toString();
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
 
-            // Obtener código de respuesta
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                // Generar enlace de recuperación
                 String asunto = "Recuperación de contraseña";
                 String enlaceRecuperacion = "http://localhost:8080/VistaCodeComponents/NuevaContrasenia?token=" + token;
                 String contenido = "Has solicitado la recuperación de tu contraseña. Utiliza el siguiente enlace para continuar:\n\n" + enlaceRecuperacion;
-
-                // Enviar el correo al usuario
+                Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "recuperarContrasenia", "Enviando correo de recuperación a: " + correo);
                 return Utilidades.enviarCorreo(correo, asunto, contenido);
             } else {
+                Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "recuperarContrasenia", "Respuesta de la API no OK. Código: " + responseCode);
                 return false;
             }
         } catch (Exception e) {
+            Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "recuperarContrasenia", "Excepción: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -159,8 +163,8 @@ public class AutentificacionServicio {
      * @return La fecha de expiración del token en milisegundos, o null si ocurre un error.
      */
     public Long obtenerFechaExpiracionDelToken(String token) {
+        Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "obtenerFechaExpiracionDelToken", "Obteniendo fecha de expiración para token: " + token);
         try {
-            // Usar la nueva ruta que devuelve la fecha de expiración
             URL url = new URL("http://localhost:8081/api/usuarios/obtenerFechaExpiracionToken?token=" + token);
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.setRequestMethod("GET");
@@ -175,23 +179,22 @@ public class AutentificacionServicio {
                         response.append(inputLine);
                     }
 
-                    // Imprimir la respuesta para depuración
-                    System.out.println("Respuesta de la API: " + response.toString());
-
-                    // La respuesta es un número (marca de tiempo en milisegundos)
                     String responseString = response.toString().trim();
+                    Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "obtenerFechaExpiracionDelToken", "Respuesta de la API: " + responseString);
                     try {
-                        // Intentamos convertir el valor a un Long
                         return Long.parseLong(responseString);
                     } catch (NumberFormatException e) {
+                        Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "obtenerFechaExpiracionDelToken", "Error al parsear el valor: " + e.getMessage());
                         System.out.println("Error al parsear el valor: " + e.getMessage());
                         return null;
                     }
                 }
             } else {
+                Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "obtenerFechaExpiracionDelToken", "Código de respuesta no OK: " + responseCode);
                 System.out.println("Error: Código de respuesta no OK. Código: " + responseCode);
             }
         } catch (Exception e) {
+            Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "obtenerFechaExpiracionDelToken", "Excepción: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -205,30 +208,33 @@ public class AutentificacionServicio {
      * @return true si la actualización fue exitosa, false en caso contrario.
      */
     public boolean actualizarContrasenia(String nuevaContraseniaEncriptada, String token) {
+        Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "actualizarContrasenia", "Actualizando contraseña para token: " + token);
         try {
-            // Llamar a la API para actualizar la contraseña
             URL url = new URL("http://localhost:8081/api/usuarios/actualizarContrasenia");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
-            // Crear el objeto JSON con la nueva contraseña encriptada y el token
             JSONObject json = new JSONObject();
             json.put("nuevaContrasenia", nuevaContraseniaEncriptada);
             json.put("token", token);
 
-            // Enviar la solicitud a la API
             String jsonInput = json.toString();
             try (OutputStream os = connection.getOutputStream()) {
                 os.write(jsonInput.getBytes(StandardCharsets.UTF_8));
                 os.flush();
             }
 
-            // Verificar la respuesta de la API
             int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "actualizarContrasenia", "Contraseña actualizada correctamente.");
+            } else {
+                Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "actualizarContrasenia", "Código de respuesta no OK: " + responseCode);
+            }
             return responseCode == HttpURLConnection.HTTP_OK;
         } catch (Exception e) {
+            Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "actualizarContrasenia", "Excepción: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -240,6 +246,7 @@ public class AutentificacionServicio {
      * @return Una lista de objetos {@link UsuarioDto} con todos los usuarios.
      */
     public List<UsuarioDto> obtenerUsuarios() {
+        Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "obtenerUsuarios", "Obteniendo lista de usuarios");
         List<UsuarioDto> usuarios = new ArrayList<>();
         try {
             URL url = new URL("http://localhost:8081/api/usuarios/listar"); // Cambia el puerto y ruta según tu configuración
@@ -257,6 +264,7 @@ public class AutentificacionServicio {
                     }
 
                     System.out.println("Respuesta de la API: " + response.toString());
+                    Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "obtenerUsuarios", "Respuesta de la API: " + response.toString());
 
                     // Mapeamos el JSON a la lista de objetos UsuarioDto
                     ObjectMapper mapper = new ObjectMapper();
@@ -267,9 +275,11 @@ public class AutentificacionServicio {
                 }
             } else {
                 System.out.println("Error: Código de respuesta no OK. Código: " + responseCode);
+                Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "obtenerUsuarios", "Código de respuesta no OK: " + responseCode);
             }
         } catch (Exception e) {
             System.out.println("ERROR: " + e);
+            Utilidades.escribirLog(null, "[ERROR]", "AutentificacionServicio", "obtenerUsuarios", "Excepción: " + e.getMessage());
             e.printStackTrace();
         }
         return usuarios;

@@ -3,6 +3,7 @@ package servicios;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import utilidades.Utilidades;
 
 /**
  * Servicio para manejar la eliminación de usuarios y clubes.
@@ -26,7 +27,10 @@ public class EliminarServicio {
      */
     public String eliminarUsuario(long idUsuario) {
         HttpURLConnection connection = null;
-
+        
+        // Log de inicio de la operación
+        Utilidades.escribirLog(null, "[INFO]", "EliminarServicio", "eliminarUsuario", "Inicio de eliminación del usuario con ID: " + idUsuario);
+        
         try {
             // Construir la URL para la solicitud DELETE
             URL url = new URL("http://localhost:8081/api/eliminar/usuario/" + idUsuario);
@@ -40,15 +44,19 @@ public class EliminarServicio {
             // Verificar el código de respuesta
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) { // 204 No Content
+                Utilidades.escribirLog(null, "[INFO]", "EliminarServicio", "eliminarUsuario", "Usuario eliminado exitosamente con ID: " + idUsuario);
                 return "Usuario eliminado exitosamente.";
             } else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) { // 404 Not Found
+                Utilidades.escribirLog(null, "[ERROR]", "EliminarServicio", "eliminarUsuario", "Usuario no encontrado con ID: " + idUsuario);
                 return "Usuario no encontrado.";
             } else {
+                Utilidades.escribirLog(null, "[ERROR]", "EliminarServicio", "eliminarUsuario", "Error al eliminar el usuario con ID: " + idUsuario + ". Código de respuesta: " + responseCode);
                 return "Error al eliminar el usuario. Código de respuesta: " + responseCode;
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+            Utilidades.escribirLog(null, "[ERROR]", "EliminarServicio", "eliminarUsuario", "Error al conectar con la API: " + e.getMessage());
             return "Error al conectar con la API: " + e.getMessage();
         } finally {
             if (connection != null) {
@@ -56,6 +64,4 @@ public class EliminarServicio {
             }
         }
     }
-
-    
 }

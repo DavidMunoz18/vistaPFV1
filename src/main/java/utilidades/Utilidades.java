@@ -79,4 +79,58 @@ public class Utilidades {
 
         return correoEnviado;
     }
+    
+    /**
+     * Escribe un log en un fichero único por sesión.
+     * El nombre del fichero incluye el ID de la sesión y la fecha actual.
+     *
+     * @param session La sesión HTTP actual.
+     * @param nivel Nivel del log (por ejemplo, INFO, ERROR).
+     * @param clase Clase desde donde se llama el log.
+     * @param metodo Método desde donde se llama el log.
+     * @param mensaje Mensaje a registrar en el log.
+     */
+    /**
+     * Escribe un log en un fichero único por sesión.
+     * El nombre del fichero incluye el ID de la sesión y la fecha actual.
+     *
+     * @param session La sesión HTTP actual.
+     * @param nivel Nivel del log (por ejemplo, INFO, ERROR).
+     * @param clase Clase desde donde se llama el log.
+     * @param metodo Método desde donde se llama el log.
+     * @param mensaje Mensaje a registrar en el log.
+     */
+    public static void escribirLog(jakarta.servlet.http.HttpSession session, String nivel, String clase, String metodo, String mensaje) {
+        
+    	
+    	
+    	// Ruta absoluta hacia la carpeta "fichero"
+        final String RUTA_BASE = "C:" + java.io.File.separator + "Users" + java.io.File.separator + "david" 
+                + java.io.File.separator + "OneDrive" + java.io.File.separator + "Documentos" 
+                + java.io.File.separator + "vistaPFV1" + java.io.File.separator + "fichero" + java.io.File.separator;
+        
+        // Asegurarse de que el directorio existe, y si no, crearlo
+        java.io.File directorio = new java.io.File(RUTA_BASE);
+        if (!directorio.exists()) {
+            directorio.mkdirs();
+        }
+        
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        String fecha = sdf.format(new java.util.Date());
+        String sessionId = session.getId();
+        String rutaArchivo = RUTA_BASE + "session_" + sessionId + "_" + fecha + ".txt";
+
+        try (java.io.FileWriter fw = new java.io.FileWriter(rutaArchivo, true);
+             java.io.PrintWriter pw = new java.io.PrintWriter(fw)) {
+
+            String trazaError = new Throwable().getStackTrace()[1].toString();
+            pw.println(nivel + " - " + clase + " - " + metodo + " - " + mensaje + " - " + trazaError);
+        } catch (java.io.IOException e) {
+            System.err.println("No se pudo escribir en el archivo de log: " + e.getMessage());
+        }
+    }
+
+
+
+
 }

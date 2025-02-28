@@ -1,0 +1,6 @@
+[INFO] - CarritoControlador - doPost - Inicio acción agregar producto - controladores.CarritoControlador.doPost(CarritoControlador.java:46)
+[INFO] - CarritoControlador - doPost - Producto agregado al carrito correctamente - controladores.CarritoControlador.doPost(CarritoControlador.java:99)
+[INFO] - CarritoControlador - doGet - Mostrando carrito de compras - controladores.CarritoControlador.doGet(CarritoControlador.java:170)
+[INFO] - CarritoControlador - doPost - Inicio acción eliminar producto del carrito - controladores.CarritoControlador.doPost(CarritoControlador.java:120)
+[INFO] - CarritoControlador - doPost - Producto eliminado del carrito correctamente - controladores.CarritoControlador.doPost(CarritoControlador.java:132)
+[INFO] - CarritoControlador - doGet - Mostrando carrito de compras - controladores.CarritoControlador.doGet(CarritoControlador.java:170)

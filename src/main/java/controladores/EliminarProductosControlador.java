@@ -7,7 +7,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import servicios.ProductoServicio;
+import utilidades.Utilidades;
 
 /**
  * Controlador para gestionar la eliminación de productos del sistema.
@@ -40,6 +42,10 @@ public class EliminarProductosControlador extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        // Log: Inicio del proceso de eliminación
+        Utilidades.escribirLog(session, "[INFO]", "EliminarProductosControlador", "doPost", "Inicio proceso de eliminación de producto");
+
         // Obtener el ID del producto desde los parámetros de la solicitud
         String productoIdStr = request.getParameter("productoId");
 
@@ -47,19 +53,26 @@ public class EliminarProductosControlador extends HttpServlet {
             try {
                 // Convertir el ID del producto a tipo Long
                 Long productoId = Long.parseLong(productoIdStr);
+                // Log: Procesando eliminación del producto
+                Utilidades.escribirLog(session, "[INFO]", "EliminarProductosControlador", "doPost", "Procesando eliminación del producto con ID: " + productoId);
 
                 // Llamar al servicio para eliminar el producto por su ID
                 productoServicio.eliminarProducto(productoId);
+
+                // Log: Producto eliminado correctamente
+                Utilidades.escribirLog(session, "[INFO]", "EliminarProductosControlador", "doPost", "Producto eliminado correctamente");
 
                 // Redirigir a la página de administración después de eliminar el producto
                 response.sendRedirect("admin");
 
             } catch (NumberFormatException e) {
-                // Si el ID no es válido, enviar un error de solicitud
+                // Log: Error al convertir el ID a número
+                Utilidades.escribirLog(session, "[ERROR]", "EliminarProductosControlador", "doPost", "ID no válido: " + productoIdStr);
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "El ID del producto no es válido.");
             }
         } else {
-            // Si no se ha proporcionado un ID, enviar un error de solicitud
+            // Log: No se proporcionó un ID
+            Utilidades.escribirLog(session, "[ERROR]", "EliminarProductosControlador", "doPost", "ID del producto no proporcionado");
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID del producto no válido.");
         }
     }
