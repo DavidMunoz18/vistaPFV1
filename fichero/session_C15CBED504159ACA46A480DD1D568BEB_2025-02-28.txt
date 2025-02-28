@@ -1,0 +1,3 @@
+[INFO] - ProductoControlador - doGet - Inicio del procesamiento de la solicitud GET - controladores.ProductoControlador.doGet(ProductoControlador.java:43)
+[INFO] - ProductoControlador - doGet - Mostrando lista de productos - controladores.ProductoControlador.doGet(ProductoControlador.java:68)
+[INFO] - ProductoControlador - doGet - Cantidad de productos encontrados: 7 - controladores.ProductoControlador.doGet(ProductoControlador.java:108)

@@ -102,7 +102,12 @@ public class Utilidades {
      */
     public static void escribirLog(jakarta.servlet.http.HttpSession session, String nivel, String clase, String metodo, String mensaje) {
         
-    	
+    	if (session == null) {
+            System.out.println("Advertencia: La sesión es nula. No se puede registrar el log.");
+            System.out.println("Nivel: " + nivel + " - Clase: " + clase + " - Método: " + metodo + " - Mensaje: " + mensaje);
+            return; // Salir del método si la sesión es nula
+        }
+
     	
     	// Ruta absoluta hacia la carpeta "fichero"
         final String RUTA_BASE = "C:" + java.io.File.separator + "Users" + java.io.File.separator + "david" 
