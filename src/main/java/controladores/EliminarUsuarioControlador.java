@@ -1,7 +1,6 @@
 package controladores;
 
 import java.io.IOException;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,7 +20,7 @@ import utilidades.Utilidades; // Import para usar el método escribirLog
 @WebServlet("/eliminarUsuario")
 public class EliminarUsuarioControlador extends HttpServlet {
 
-    /**
+    /** 
      * Servicio encargado de manejar la lógica de eliminación de usuarios.
      */
     private EliminarServicio eliminarServicio = new EliminarServicio();
@@ -60,9 +59,9 @@ public class EliminarUsuarioControlador extends HttpServlet {
             // Log: Resultado de la eliminación del usuario
             Utilidades.escribirLog(session, "[INFO]", "EliminarUsuarioControlador", "doPost", "Resultado de la eliminación: " + resultado);
 
-            // Redirigir con el resultado
-            request.setAttribute("resultado", resultado);
-            request.getRequestDispatcher("menuAdministrador.jsp").forward(request, response);
+            // Redirigir con el resultado usando sendRedirect
+            // Aquí enviamos el parámetro 'usuarioEliminado=true' para mostrar el mensaje adecuado
+            response.sendRedirect("admin?usuarioEliminado=true");
 
         } catch (NumberFormatException e) {
             // Log: Error al convertir el ID a número

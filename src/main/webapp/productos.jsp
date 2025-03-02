@@ -114,7 +114,7 @@
 							<div class="p-3">
 								<h6 class="text-truncate"><%=producto.getNombre()%></h6>
 								<p class="mb-1">
-									<span class="price">$<%=producto.getPrecio()%></span>
+									<span class="price">€<%=producto.getPrecio()%></span>
 								</p>
 								<form action="<%=request.getContextPath()%>/carrito"
 									method="POST">

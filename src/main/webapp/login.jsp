@@ -1,4 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    // Se recuperan los mensajes de la sesión en caso de venir de una redirección (por ejemplo, nueva contraseña)
+    String mensajeSession = "";
+    String tipoMensajeSession = "error";
+    if(session.getAttribute("mensaje") != null) {
+        mensajeSession = session.getAttribute("mensaje").toString();
+        if(session.getAttribute("tipoMensaje") != null) {
+            tipoMensajeSession = session.getAttribute("tipoMensaje").toString();
+        }
+        session.removeAttribute("mensaje");
+        session.removeAttribute("tipoMensaje");
+    }
+%>
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -63,6 +76,8 @@
         <form id="loginForm" action="loginUsuario" method="post">
           <input type="email" name="email" id="email" placeholder="Email o número de teléfono" required>
           <input type="password" name="password" id="password" placeholder="Contraseña" required>
+          <!-- Campo oculto para enviar el parámetro returnURL -->
+          <input type="hidden" name="returnURL" value="${param.returnURL}">
           <div class="link">
             <button type="submit" class="login">Iniciar Sesión</button>
             <a href="#" class="forgot" id="forgotPasswordLink">¿Olvidaste la contraseña?</a>
@@ -88,49 +103,43 @@
     </div>
 
    <script>
-  // Mostrar modal de recuperación de contraseña al hacer clic en el enlace
-  document.getElementById("forgotPasswordLink").addEventListener("click", function(event) {
-    event.preventDefault();
-    document.getElementById("forgotPasswordModal").style.display = "flex";
-  });
+      // Mostrar modal de recuperación de contraseña al hacer clic en el enlace
+      document.getElementById("forgotPasswordLink").addEventListener("click", function(event) {
+        event.preventDefault();
+        document.getElementById("forgotPasswordModal").style.display = "flex";
+      });
 
-  // Función para cerrar el modal
-  function closeModal() {
-    document.getElementById("forgotPasswordModal").style.display = "none";
-  }
-
-  // Mostrar el Toast si hay mensaje enviado desde el servidor
-  window.addEventListener('load', function() {
-    // Se utiliza "errorMessage" enviado en caso de error; si no, se podría usar "mensaje"
-    var mensaje = '<%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : (request.getAttribute("mensaje") != null ? request.getAttribute("mensaje") : "") %>';
-    // Si se desea distinguir, se puede enviar "tipoMensaje" (por ejemplo, "exito" o "error") desde el Servlet
-    var tipoMensaje = '<%= request.getAttribute("tipoMensaje") != null ? request.getAttribute("tipoMensaje") : "error" %>';
-    
-    if (mensaje.trim().length > 0) {
-      var toastElement = document.getElementById('liveToast');
-      var toastMessage = document.getElementById('toastMessage');
-      var toastHeader = document.getElementById('toastHeader');
-
-      toastMessage.innerText = mensaje;
-
-      // Limpiar las clases anteriores
-      toastElement.classList.remove("bg-success", "bg-danger", "text-white");
-
-      if (tipoMensaje === "exito") {
-        // Asignar fondo verde para éxito
-        toastElement.classList.add("bg-success", "text-white");
-        toastHeader.innerText = "Éxito";
-      } else {
-        // Fondo rojo para error
-        toastElement.classList.add("bg-danger", "text-white");
-        toastHeader.innerText = "Error";
+      // Función para cerrar el modal
+      function closeModal() {
+        document.getElementById("forgotPasswordModal").style.display = "none";
       }
 
-      var toast = new bootstrap.Toast(toastElement);
-      toast.show();
-    }
-  });
-</script>
+      // Mostrar el Toast si hay mensaje enviado desde el servidor o desde la sesión
+      window.addEventListener('load', function() {
+        var mensaje = '<%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : ( request.getAttribute("mensaje") != null ? request.getAttribute("mensaje") : mensajeSession ) %>';
+        var tipoMensaje = '<%= request.getAttribute("tipoMensaje") != null ? request.getAttribute("tipoMensaje") : tipoMensajeSession %>';
+        
+        if (mensaje.trim().length > 0) {
+          var toastElement = document.getElementById('liveToast');
+          var toastMessage = document.getElementById('toastMessage');
+          var toastHeader = document.getElementById('toastHeader');
+
+          toastMessage.innerText = mensaje;
+          toastElement.classList.remove("bg-success", "bg-danger", "text-white");
+
+          if (tipoMensaje === "exito") {
+            toastElement.classList.add("bg-success", "text-white");
+            toastHeader.innerText = "Éxito";
+          } else {
+            toastElement.classList.add("bg-danger", "text-white");
+            toastHeader.innerText = "Error";
+          }
+
+          var toast = new bootstrap.Toast(toastElement);
+          toast.show();
+        }
+      });
+    </script>
 
   </body>
 </html>

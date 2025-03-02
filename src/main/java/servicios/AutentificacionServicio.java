@@ -58,6 +58,10 @@ public class AutentificacionServicio {
             String jsonInput = mapper.writeValueAsString(loginRequest);
 
             System.out.println("Datos enviados a la API: " + jsonInput);
+            
+            //los ficheros log de los servicios no le paso la sesion porque la sesion se controla en los controladores, 
+            //por lo tanto aqui lo unico que haría es mostrar los mensajes por la consola, que se controla en la clase utilidades
+            //para saber exactamente donde sería, pero directamente desde el controlador puedo saber donde ocurre el error, esto es un extra.
             Utilidades.escribirLog(null, "[INFO]", "AutentificacionServicio", "verificarUsuario", "Datos enviados a la API: " + jsonInput);
 
             // Enviar la solicitud al servidor

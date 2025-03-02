@@ -80,8 +80,9 @@ public class ModificarProductoControlador extends HttpServlet {
 
             // Redirigir dependiendo del resultado
             if (resultado) {
-                response.sendRedirect("admin");
+            	response.sendRedirect("admin?productoModificado=true");
             } else {
+            	response.sendRedirect("admin?productoModificado=false");
                 request.setAttribute("error", "No se encontró el producto o no se pudo modificar.");
                 Utilidades.escribirLog(request.getSession(), "[ERROR]", "ModificarProductoControlador", "doPost", 
                         "No se pudo modificar el producto con ID " + idProducto);

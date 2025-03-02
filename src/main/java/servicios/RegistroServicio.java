@@ -19,6 +19,8 @@ public class RegistroServicio {
      */
     public boolean enviarCodigoVerificacion(String correo) {
         try {
+            Utilidades.escribirLog(null, "[INFO]", "RegistroServicio", "enviarCodigoVerificacion", "Iniciando envío de código de verificación a: " + correo);
+
             // Generar código aleatorio de 6 dígitos
             String codigoVerificacion = String.valueOf(100000 + new Random().nextInt(900000));
 
@@ -27,9 +29,12 @@ public class RegistroServicio {
             String mensaje = "Tu código de verificación es: " + codigoVerificacion;
             boolean correoEnviado = Utilidades.enviarCorreo(correo, asunto, mensaje);
             if (!correoEnviado) {
+                Utilidades.escribirLog(null, "[ERROR]", "RegistroServicio", "enviarCodigoVerificacion", "Error al enviar el correo a: " + correo);
                 return false;
             }
             
+            Utilidades.escribirLog(null, "[INFO]", "RegistroServicio", "enviarCodigoVerificacion", "Correo enviado correctamente. Código generado: " + codigoVerificacion);
+
             // Enviar el código generado a la API para almacenarlo.
             URL url = new URL("http://localhost:8081/api/registro/almacenarCodigo");
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
@@ -46,9 +51,15 @@ public class RegistroServicio {
             }
             
             int responseCode = conexion.getResponseCode();
-            return responseCode == HttpURLConnection.HTTP_OK;
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                Utilidades.escribirLog(null, "[INFO]", "RegistroServicio", "enviarCodigoVerificacion", "Código de verificación almacenado en la API con éxito.");
+                return true;
+            } else {
+                Utilidades.escribirLog(null, "[ERROR]", "RegistroServicio", "enviarCodigoVerificacion", "Error al almacenar código en la API. Código de respuesta: " + responseCode);
+                return false;
+            }
         } catch (Exception e) {
-            System.out.println("Error en enviarCodigoVerificacion: " + e.getMessage());
+            Utilidades.escribirLog(null, "[ERROR]", "RegistroServicio", "enviarCodigoVerificacion", "Excepción: " + e.getMessage());
             return false;
         }
     }
@@ -60,13 +71,15 @@ public class RegistroServicio {
      * @return true si el registro fue exitoso; false en caso contrario.
      */
     public boolean registrarUsuario(RegistroUsuarioDto registroDto) {
-        // Validación: el email es obligatorio.
         if (registroDto.getEmailUsuario() == null || registroDto.getEmailUsuario().isEmpty()) {
+            Utilidades.escribirLog(null, "[ERROR]", "RegistroServicio", "registrarUsuario", "El email es obligatorio.");
             throw new IllegalArgumentException("El email es obligatorio.");
         }
         
         try {
-            // Encriptar la contraseña en el Dynamic Web Project
+            Utilidades.escribirLog(null, "[INFO]", "RegistroServicio", "registrarUsuario", "Iniciando registro para: " + registroDto.getEmailUsuario());
+            
+            // Encriptar la contraseña
             String passwordEncriptada = BCrypt.hashpw(registroDto.getPasswordUsuario(), BCrypt.gensalt());
             registroDto.setPasswordUsuario(passwordEncriptada);
 
@@ -85,9 +98,15 @@ public class RegistroServicio {
             }
 
             int responseCode = conexion.getResponseCode();
-            return responseCode == HttpURLConnection.HTTP_CREATED;
+            if (responseCode == HttpURLConnection.HTTP_CREATED) {
+                Utilidades.escribirLog(null, "[INFO]", "RegistroServicio", "registrarUsuario", "Usuario registrado exitosamente: " + registroDto.getEmailUsuario());
+                return true;
+            } else {
+                Utilidades.escribirLog(null, "[ERROR]", "RegistroServicio", "registrarUsuario", "Error al registrar usuario. Código de respuesta: " + responseCode);
+                return false;
+            }
         } catch (Exception e) {
-            System.out.println("Error al registrar usuario: " + e.getMessage());
+            Utilidades.escribirLog(null, "[ERROR]", "RegistroServicio", "registrarUsuario", "Excepción al registrar usuario: " + e.getMessage());
             return false;
         }
     }

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dtos.ProductoDto;
 import dtos.ReseniaDto;
+import utilidades.Utilidades; // Asegúrate de que este sea el paquete correcto para la utilidad
 
 /**
  * Servicio encargado de gestionar las operaciones relacionadas con las reseñas de productos.
@@ -29,6 +30,7 @@ public class ResenaServicio {
      * @return Lista de reseñas del producto.
      */
     public List<ReseniaDto> obtenerReseniasPorProducto(Long idProducto) {
+        Utilidades.escribirLog(null, "[INFO]", "ResenaServicio", "obtenerReseniasPorProducto", "Obteniendo reseñas para producto ID: " + idProducto);
         List<ReseniaDto> resenias = new ArrayList<>();
         try {
             URL url = new URL(API_URL_RESENIAS + "/producto/" + idProducto);
@@ -50,12 +52,15 @@ public class ResenaServicio {
                     for (ReseniaDto resenia : reseniasArray) {
                         resenias.add(resenia);
                     }
+                    Utilidades.escribirLog(null, "[INFO]", "ResenaServicio", "obtenerReseniasPorProducto", "Reseñas obtenidas: " + reseniasArray.length);
                 }
             } else {
-                throw new IOException("Error al obtener las reseñas, Código de respuesta: " + responseCode);
+                String errorMsg = "Error al obtener las reseñas, Código de respuesta: " + responseCode;
+                Utilidades.escribirLog(null, "[ERROR]", "ResenaServicio", "obtenerReseniasPorProducto", errorMsg);
+                throw new IOException(errorMsg);
             }
         } catch (Exception e) {
-            System.err.println("Error obteniendo reseñas: " + e.getMessage());
+            Utilidades.escribirLog(null, "[ERROR]", "ResenaServicio", "obtenerReseniasPorProducto", "Error obteniendo reseñas: " + e.getMessage());
             e.printStackTrace();
         }
         return resenias;
@@ -70,6 +75,7 @@ public class ResenaServicio {
      * @return true si la reseña fue agregada exitosamente, false en caso contrario.
      */
     public boolean agregarResenia(ReseniaDto reseniaDto, ProductoDto productoDto, Long idUsuario) {
+        Utilidades.escribirLog(null, "[INFO]", "ResenaServicio", "agregarResenia", "Iniciando agregar reseña para producto ID: " + productoDto.getId() + " y usuario ID: " + idUsuario);
         boolean resultado = false;
         try {
             // Establecer el ID del producto y el ID del usuario
@@ -92,11 +98,12 @@ public class ResenaServicio {
             int responseCode = conexion.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 resultado = true;
+                Utilidades.escribirLog(null, "[INFO]", "ResenaServicio", "agregarResenia", "Reseña agregada exitosamente para producto ID: " + productoDto.getId());
             } else {
-                System.err.println("Error al agregar la reseña. Código de respuesta: " + responseCode);
+                Utilidades.escribirLog(null, "[ERROR]", "ResenaServicio", "agregarResenia", "Error al agregar la reseña. Código de respuesta: " + responseCode);
             }
         } catch (Exception e) {
-            System.err.println("Error al agregar reseña: " + e.getMessage());
+            Utilidades.escribirLog(null, "[ERROR]", "ResenaServicio", "agregarResenia", "Error al agregar reseña: " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;

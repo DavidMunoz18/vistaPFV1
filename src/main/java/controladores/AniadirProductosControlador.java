@@ -73,7 +73,6 @@ public class AniadirProductosControlador extends HttpServlet {
             // Procesar archivo de imagen
             Part imagenPart = request.getPart("imagen");
             byte[] imagenBytes = null;
-
             if (imagenPart != null && imagenPart.getSize() > 0) {
                 try (InputStream inputStream = imagenPart.getInputStream()) {
                     imagenBytes = inputStream.readAllBytes();
@@ -86,22 +85,22 @@ public class AniadirProductosControlador extends HttpServlet {
             // Llamar al servicio para agregar el producto
             boolean exito = productoServicio.agregarProducto(producto);
 
-            // Redirigir con mensaje según el resultado y registrar log correspondiente
+            // Redirigir con parámetro para mostrar el toast y registrar log correspondiente
             if (exito) {
                 Utilidades.escribirLog(session, "[INFO]", "AniadirProductosControlador", "doPost", "Producto agregado exitosamente.");
-                response.sendRedirect("productos");
+                response.sendRedirect("admin?productoAgregado=true");
             } else {
                 Utilidades.escribirLog(session, "[INFO]", "AniadirProductosControlador", "doPost", "Fallo al agregar producto (resultado falso).");
-                response.sendRedirect("productos");
+                response.sendRedirect("admin?productoAgregado=false");
             }
         } catch (NumberFormatException e) {
             Utilidades.escribirLog(session, "[ERROR]", "AniadirProductosControlador", "doPost", "Error al convertir número: " + e.getMessage());
             e.printStackTrace();
-            response.sendRedirect("productos");
+            response.sendRedirect("admin?productoAgregado=false");
         } catch (Exception e) {
             Utilidades.escribirLog(session, "[ERROR]", "AniadirProductosControlador", "doPost", "Error general: " + e.getMessage());
             e.printStackTrace();
-            response.sendRedirect("productos");
+            response.sendRedirect("admin?productoAgregado=false");
         }
     }
 }

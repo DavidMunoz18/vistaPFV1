@@ -8,11 +8,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule; // Importar este módulo
+
 import dtos.PedidoDto;
-import dtos.PedidoProductoDto;
-import org.springframework.stereotype.Service;
+import utilidades.Utilidades; // Asegúrate de que este sea el paquete correcto de la utilidad
 
 /**
  * Servicio para gestionar pedidos en el sistema.
@@ -22,6 +24,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class PedidoServicio {
 
+    // No se utiliza la sesión en este caso, ya que se pasa null para que se imprima por pantalla
+    // según la lógica implementada en la utilidad.
+    // Si ya manejas el log en los controladores, podrías prescindir de estos logs aquí, 
+    // aunque tener trazabilidad en los servicios puede ser útil para el diagnóstico.
+    
     /**
      * URL de la API donde se persisten los pedidos.
      */
@@ -45,13 +52,15 @@ public class PedidoServicio {
      * @throws Exception Si ocurre un error durante la comunicación con la API.
      */
     public String crearPedido(PedidoDto pedidoDto) throws Exception {
+        // Log [INFO] al inicio del método
+        Utilidades.escribirLog(null, "[INFO]", "PedidoServicio", "crearPedido", "Inicio de creación de pedido");
+
         // Lógica de negocio: asignar fecha y estado, y calcular el total.
         pedidoDto.setFechaPedido(LocalDate.now());
         pedidoDto.setEstado("PENDIENTE");
         double totalCalculado = calcularTotalPedido(pedidoDto);
         pedidoDto.setTotal(totalCalculado);
 
-        // Convertir el objeto a JSON y enviar la solicitud a la API
         HttpURLConnection connection = null;
         try {
             URL url = new URL(API_URL);
@@ -73,6 +82,8 @@ public class PedidoServicio {
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_CREATED) {
+                // Log [INFO] de operación exitosa
+                Utilidades.escribirLog(null, "[INFO]", "PedidoServicio", "crearPedido", "Pedido creado correctamente");
                 return "Pedido creado correctamente";
             } else {
                 InputStream errorStream = connection.getErrorStream();
@@ -83,10 +94,15 @@ public class PedidoServicio {
                         response.append(line);
                     }
                 }
-                return "Error al crear el pedido, código de respuesta: " + responseCode + ", detalle: " + response.toString();
+                String errorMsg = "Error al crear el pedido, código de respuesta: " + responseCode + ", detalle: " + response.toString();
+                // Log [ERROR] en caso de error en la respuesta
+                Utilidades.escribirLog(null, "[ERROR]", "PedidoServicio", "crearPedido", errorMsg);
+                return errorMsg;
             }
 
         } catch (Exception e) {
+            // Log [ERROR] en caso de excepción
+            Utilidades.escribirLog(null, "[ERROR]", "PedidoServicio", "crearPedido", "Error al enviar la solicitud al servidor: " + e.getMessage());
             throw new Exception("Error al enviar la solicitud al servidor: " + e.getMessage(), e);
         } finally {
             if (connection != null) {

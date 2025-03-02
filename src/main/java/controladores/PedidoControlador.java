@@ -3,6 +3,7 @@ package controladores;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URLEncoder;
 
 import dtos.CarritoDto;
 import dtos.PedidoDto;
@@ -28,75 +29,88 @@ import utilidades.Utilidades;
 @WebServlet("/pedidos")
 public class PedidoControlador extends HttpServlet {
 
-    private PedidoServicio pedidoServicio = new PedidoServicio();  // Instancia del servicio
+    private PedidoServicio pedidoServicio = new PedidoServicio();
 
-    /**
-     * Método que maneja la solicitud POST para crear un nuevo pedido.
-     * Recibe los parámetros del formulario, valida los datos y crea un pedido en la base de datos.
-     * Si el pedido se crea correctamente, elimina el carrito de la sesión.
-     * Si ocurre un error, muestra un mensaje de error en la página del carrito.
-     * 
-     * @param request La solicitud HTTP recibida.
-     * @param response La respuesta HTTP que será enviada al cliente.
-     * @throws ServletException Si ocurre un error durante el procesamiento de la solicitud.
-     * @throws IOException Si ocurre un error de entrada/salida durante el procesamiento.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Obtener el idUsuario de la sesión
         HttpSession session = request.getSession();
+
+        String contacto       = request.getParameter("contacto");
+        String direccion      = request.getParameter("direccion");
+        String metodoPago     = request.getParameter("metodoPago");
+        String nombreTarjeta  = request.getParameter("nombreTarjeta");
+        String numeroTarjeta  = request.getParameter("numeroTarjeta");
+        String mesExpiracion  = request.getParameter("mesExpiracion");
+        String anioExpiracion = request.getParameter("anioExpiracion");
+        String fechaExpiracion = mesExpiracion + "/" + anioExpiracion;
+        String cvc            = request.getParameter("cvv");
+
         Long idUsuario = (Long) session.getAttribute("idUsuario");
-
-        // Verificar que el idUsuario está presente
         if (idUsuario == null) {
-            response.sendRedirect("login.jsp");  // Redirigir a login si no hay sesión
+            // Se guardan los datos para reestablecerlos luego en el login
+            session.setAttribute("pedidoContacto", contacto);
+            session.setAttribute("pedidoDireccion", direccion);
+            session.setAttribute("pedidoMetodoPago", metodoPago);
+            session.setAttribute("pedidoNombreTarjeta", nombreTarjeta);
+            session.setAttribute("pedidoNumeroTarjeta", numeroTarjeta);
+            session.setAttribute("pedidoMesExpiracion", mesExpiracion);
+            session.setAttribute("pedidoAnioExpiracion", anioExpiracion);
+            session.setAttribute("pedidoCvv", cvc);
+
+            String returnURL = "carrito"; // Se usa carrito.jsp para homogeneidad
+            response.sendRedirect("login.jsp?returnURL=" + URLEncoder.encode(returnURL, "UTF-8"));
             return;
         }
 
-        // Recoger los parámetros del pedido
-        String contacto = request.getParameter("contacto");
-        String direccion = request.getParameter("direccion");
-        String metodoPago = request.getParameter("metodoPago");
-        String nombreTarjeta = request.getParameter("nombreTarjeta");
-        String numeroTarjeta = request.getParameter("numeroTarjeta");
-        // Construir la fecha de expiración a partir de mes y año
-        String fechaExpiracion = request.getParameter("mesExpiracion") + "/" + request.getParameter("anioExpiracion");
-        String cvc = request.getParameter("cvv");
-
-        // Validar el número de tarjeta
+        // Validar número de tarjeta
         if (!validarNumeroTarjeta(numeroTarjeta)) {
-            request.setAttribute("mensaje", "El número de tarjeta no es válido. Debe contener entre 13 y 19 dígitos numéricos.");
-            request.setAttribute("tipoMensaje", "error");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
-            dispatcher.forward(request, response);
+            session.setAttribute("mensaje", "El número de tarjeta no es válido. Debe contener entre 13 y 19 dígitos numéricos.");
+            session.setAttribute("tipoMensaje", "error");
+            // Guardar datos del formulario para repoblar (si fuera necesario)
+            session.setAttribute("contacto", contacto);
+            session.setAttribute("direccion", direccion);
+            session.setAttribute("metodoPago", metodoPago);
+            session.setAttribute("nombreTarjeta", nombreTarjeta);
+            session.setAttribute("numeroTarjeta", numeroTarjeta);
+            session.setAttribute("mesExpiracion", mesExpiracion);
+            session.setAttribute("anioExpiracion", anioExpiracion);
+            session.setAttribute("cvv", cvc);
+            response.sendRedirect("carrito");
             return;
         }
 
-        // Validar el CVV
+        // Validar CVV
         if (!validarCvc(cvc)) {
-            request.setAttribute("mensaje", "El código de seguridad (CVV) no es válido. Debe contener 3 o 4 dígitos.");
-            request.setAttribute("tipoMensaje", "error");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
-            dispatcher.forward(request, response);
+            session.setAttribute("mensaje", "El código de seguridad (CVV) no es válido. Debe contener 3 o 4 dígitos.");
+            session.setAttribute("tipoMensaje", "error");
+            // Guardar datos del formulario para repoblar
+            session.setAttribute("contacto", contacto);
+            session.setAttribute("direccion", direccion);
+            session.setAttribute("metodoPago", metodoPago);
+            session.setAttribute("nombreTarjeta", nombreTarjeta);
+            session.setAttribute("numeroTarjeta", numeroTarjeta);
+            session.setAttribute("mesExpiracion", mesExpiracion);
+            session.setAttribute("anioExpiracion", anioExpiracion);
+            session.setAttribute("cvv", cvc);
+            response.sendRedirect("carrito");
             return;
         }
 
-        // Encriptar el número de tarjeta (opcional, según tu requerimiento)
+        // Encriptar el número de tarjeta
         numeroTarjeta = encriptarDatos(numeroTarjeta);
+        cvc = encriptarDatos(cvc);
 
-        // Obtener el carrito de la sesión (CarritoDto)
+        // Obtener el carrito de la sesión
         List<CarritoDto> carrito = (List<CarritoDto>) session.getAttribute("carrito");
-
-        // Verificar que el carrito no esté vacío
         if (carrito == null || carrito.isEmpty()) {
-            request.setAttribute("mensaje", "El carrito está vacío");
-            request.setAttribute("tipoMensaje", "error");
+            session.setAttribute("mensaje", "El carrito está vacío");
+            session.setAttribute("tipoMensaje", "error");
             RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
             dispatcher.forward(request, response);
             return;
         }
 
-        // Crear la lista de productos para el pedido (solo los campos necesarios)
+        // Construir lista de productos para el pedido
         List<PedidoProductoDto> productosPedido = new ArrayList<>();
         for (CarritoDto carritoDto : carrito) {
             PedidoProductoDto productoPedidoDto = new PedidoProductoDto(
@@ -108,7 +122,7 @@ public class PedidoControlador extends HttpServlet {
             productosPedido.add(productoPedidoDto);
         }
 
-        // Crear el objeto PedidoDto con los datos recibidos
+        // Crear objeto PedidoDto
         PedidoDto pedidoDto = new PedidoDto();
         pedidoDto.setContacto(contacto);
         pedidoDto.setDireccion(direccion);
@@ -124,71 +138,66 @@ public class PedidoControlador extends HttpServlet {
         String tipoMensaje = "success";
 
         try {
-            // Llamar al servicio para crear el pedido
             mensaje = pedidoServicio.crearPedido(pedidoDto);
-            
-            // Log de la respuesta del servicio
-            Utilidades.escribirLog(request.getSession(), "[INFO]", "PedidoControlador", "doPost", "Respuesta del servicio: " + mensaje);
-            
-            if (!mensaje.equals("Pedido creado correctamente")) {
+            Utilidades.escribirLog(session, "[INFO]", "PedidoControlador", "doPost", "Respuesta del servicio: " + mensaje);
+
+            if (!"Pedido creado correctamente".equals(mensaje)) {
                 tipoMensaje = "error";
+                // Conservar datos del formulario
+                session.setAttribute("contacto", contacto);
+                session.setAttribute("direccion", direccion);
+                session.setAttribute("metodoPago", metodoPago);
+                session.setAttribute("nombreTarjeta", nombreTarjeta);
+                session.setAttribute("numeroTarjeta", numeroTarjeta);
+                session.setAttribute("mesExpiracion", mesExpiracion);
+                session.setAttribute("anioExpiracion", anioExpiracion);
+                session.setAttribute("cvv", cvc);
             } else {
-                // Eliminar el carrito de la sesión solo cuando el pedido se haya creado correctamente
+                // Eliminar el carrito de la sesión en caso de éxito
                 session.removeAttribute("carrito");
             }
 
         } catch (Exception e) {
             tipoMensaje = "error";
             mensaje = "Error al crear el pedido: " + e.getMessage();
-            e.printStackTrace(); // Mostrar en consola la traza de la excepción
-            // Log de error
-            Utilidades.escribirLog(request.getSession(), "[ERROR]", "PedidoControlador", "doPost", "Error al crear el pedido: " + e.getMessage());
+            e.printStackTrace();
+            Utilidades.escribirLog(session, "[ERROR]", "PedidoControlador", "doPost", "Error al crear el pedido: " + e.getMessage());
+            // Conservar datos en caso de excepción
+            session.setAttribute("contacto", contacto);
+            session.setAttribute("direccion", direccion);
+            session.setAttribute("metodoPago", metodoPago);
+            session.setAttribute("nombreTarjeta", nombreTarjeta);
+            session.setAttribute("numeroTarjeta", numeroTarjeta);
+            session.setAttribute("mesExpiracion", mesExpiracion);
+            session.setAttribute("anioExpiracion", anioExpiracion);
+            session.setAttribute("cvv", cvc);
         }
 
-        // Agregar el mensaje y tipo de mensaje a la solicitud
-        request.setAttribute("mensaje", mensaje);
-        request.setAttribute("tipoMensaje", tipoMensaje);
+        // Guardar el mensaje y el tipo en la sesión para que el JSP lo muestre
+        session.setAttribute("mensaje", mensaje);
+        session.setAttribute("tipoMensaje", tipoMensaje);
 
-        // Redirigir a la página del carrito con el mensaje en la solicitud
-        RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
-        dispatcher.forward(request, response);
+        if ("Pedido creado correctamente".equals(mensaje)) {
+            // Redirigir directamente a la página de confirmación o al inicio, en lugar del carrito
+            response.sendRedirect("carrito.jsp?pedidoExitoso=true");
+         // Eliminar el carrito de la sesión en caso de éxito
+            session.removeAttribute("carrito");
+        } else {
+            RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");
+            dispatcher.forward(request, response);
+        }
+
     }
 
-    /**
-     * Método para validar el número de tarjeta de crédito.
-     * 
-     * @param numeroTarjeta El número de tarjeta a validar.
-     * @return {@code true} si el número de tarjeta es válido (13 a 19 dígitos numéricos), 
-     *         {@code false} en caso contrario.
-     */
     private boolean validarNumeroTarjeta(String numeroTarjeta) {
-        // Validar que el número de tarjeta tenga entre 13 y 19 dígitos numéricos
         return numeroTarjeta != null && numeroTarjeta.matches("\\d{13,19}");
     }
 
-    /**
-     * Método para validar el código de seguridad (CVV) de la tarjeta de crédito.
-     * 
-     * @param cvc El código de seguridad (CVV) a validar.
-     * @return {@code true} si el CVV es válido (3 o 4 dígitos numéricos), 
-     *         {@code false} en caso contrario.
-     */
     private boolean validarCvc(String cvc) {
-        // Validar que el CVV tenga 3 o 4 dígitos numéricos
         return cvc != null && cvc.matches("\\d{3,4}");
     }
 
-    /**
-     * Método para encriptar los datos de la tarjeta (en este caso, el número de tarjeta).
-     * <p>
-     * Este método es solo un ejemplo y puede ser modificado según el tipo de encriptación que se requiera.
-     * </p>
-     * 
-     * @param datos Los datos a encriptar (en este caso, el número de tarjeta).
-     * @return El dato encriptado.
-     */
     private String encriptarDatos(String datos) {
-        // Ejemplo de encriptación simplificada usando Base64
         return new String(java.util.Base64.getEncoder().encode(datos.getBytes()));
     }
 }

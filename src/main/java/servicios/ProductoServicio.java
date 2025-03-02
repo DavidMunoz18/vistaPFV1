@@ -12,11 +12,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import dtos.ProductoDto;
 import dtos.ReseniaDto;
+import utilidades.Utilidades; // Asegúrate de que este sea el paquete correcto para la utilidad
 
 /**
  * Servicio que contiene la lógica de negocio para la gestión de productos.
  * Se conecta a la API (que es solo de persistencia) y aplica validaciones,
- * comprobaciones y logging (vía consola) antes y después de invocar los endpoints.
+ * comprobaciones y logging (escribiendo en fichero si se pasa null) antes y después de invocar los endpoints.
  */
 public class ProductoServicio {
 
@@ -26,7 +27,7 @@ public class ProductoServicio {
      * Obtiene la lista completa de productos desde la API y realiza validaciones.
      */
     public List<ProductoDto> obtenerProductos() {
-        System.out.println("[INFO] Iniciando obtención de productos...");
+        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "obtenerProductos", "Iniciando obtención de productos...");
         List<ProductoDto> productos = new ArrayList<>();
         try {
             URL url = new URL(API_BASE_URL + "productos");
@@ -44,23 +45,23 @@ public class ProductoServicio {
                     ObjectMapper mapper = new ObjectMapper();
                     ProductoDto[] productosArray = mapper.readValue(response.toString(), ProductoDto[].class);
                     if (productosArray == null || productosArray.length == 0) {
-                        System.out.println("[INFO] No se encontraron productos en la API.");
+                        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "obtenerProductos", "No se encontraron productos en la API.");
                     } else {
                         for (ProductoDto producto : productosArray) {
                             if (producto.getNombre() == null || producto.getNombre().isBlank()) {
-                                System.out.println("[WARN] Producto sin nombre encontrado.");
+                                Utilidades.escribirLog(null, "[WARN]", "ProductoServicio", "obtenerProductos", "Producto sin nombre encontrado.");
                             } else {
-                                System.out.println("[INFO] Producto obtenido: " + producto.getNombre());
+                                Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "obtenerProductos", "Producto obtenido: " + producto.getNombre());
                             }
                             productos.add(producto);
                         }
                     }
                 }
             } else {
-                System.out.println("[ERROR] obtenerProductos - Código de respuesta: " + responseCode);
+                Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "obtenerProductos", "Código de respuesta: " + responseCode);
             }
         } catch (Exception e) {
-            System.out.println("[ERROR] obtenerProductos - Excepción: " + e);
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "obtenerProductos", "Excepción: " + e);
             e.printStackTrace();
         }
         return productos;
@@ -70,7 +71,7 @@ public class ProductoServicio {
      * Obtiene un producto específico desde la API, dado su ID, y realiza validaciones.
      */
     public ProductoDto obtenerProductoPorId(int id) {
-        System.out.println("[INFO] Buscando producto con ID: " + id);
+        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "obtenerProductoPorId", "Buscando producto con ID: " + id);
         ProductoDto producto = null;
         try {
             URL url = new URL(API_BASE_URL + "productos/" + id);
@@ -88,16 +89,16 @@ public class ProductoServicio {
                     ObjectMapper mapper = new ObjectMapper();
                     producto = mapper.readValue(response.toString(), ProductoDto.class);
                     if (producto != null) {
-                        System.out.println("[INFO] Producto encontrado: " + producto.getNombre());
+                        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "obtenerProductoPorId", "Producto encontrado: " + producto.getNombre());
                     } else {
-                        System.out.println("[WARN] Producto no encontrado con ID: " + id);
+                        Utilidades.escribirLog(null, "[WARN]", "ProductoServicio", "obtenerProductoPorId", "Producto no encontrado con ID: " + id);
                     }
                 }
             } else {
-                System.out.println("[ERROR] obtenerProductoPorId - Código de respuesta: " + responseCode);
+                Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "obtenerProductoPorId", "Código de respuesta: " + responseCode);
             }
         } catch (Exception e) {
-            System.out.println("[ERROR] obtenerProductoPorId - Excepción: " + e);
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "obtenerProductoPorId", "Excepción: " + e);
             e.printStackTrace();
         }
         return producto;
@@ -108,10 +109,10 @@ public class ProductoServicio {
      */
     public boolean agregarProducto(ProductoDto producto) {
         if (producto == null || producto.getNombre() == null || producto.getNombre().isBlank()) {
-            System.out.println("[ERROR] agregarProducto - Producto inválido: se requiere un nombre.");
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "agregarProducto", "Producto inválido: se requiere un nombre.");
             return false;
         }
-        System.out.println("[INFO] Agregando producto: " + producto.getNombre());
+        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "agregarProducto", "Agregando producto: " + producto.getNombre());
         boolean resultado = false;
         try {
             URL url = new URL(API_BASE_URL + "productos");
@@ -122,18 +123,18 @@ public class ProductoServicio {
             ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String jsonProducto = writer.writeValueAsString(producto);
             try (OutputStream os = conexion.getOutputStream()) {
-                os.write(jsonProducto.getBytes());
+                os.write(jsonProducto.getBytes(StandardCharsets.UTF_8));
                 os.flush();
             }
             int responseCode = conexion.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_CREATED) {
-                System.out.println("[INFO] Producto añadido exitosamente: " + producto.getNombre());
+                Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "agregarProducto", "Producto añadido exitosamente: " + producto.getNombre());
                 resultado = true;
             } else {
-                System.out.println("[ERROR] agregarProducto - Código de respuesta: " + responseCode);
+                Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "agregarProducto", "Código de respuesta: " + responseCode);
             }
         } catch (Exception e) {
-            System.out.println("[ERROR] agregarProducto - Excepción: " + e);
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "agregarProducto", "Excepción: " + e);
             e.printStackTrace();
         }
         return resultado;
@@ -143,13 +144,13 @@ public class ProductoServicio {
      * Modifica un producto existente a través de la API tras realizar validaciones.
      */
     public boolean modificarProducto(Long id, String nombre, String descripcion, Double precio, Integer stock, byte[] imagen) {
-        System.out.println("[INFO] Iniciando modificación del producto con ID: " + id);
+        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "modificarProducto", "Iniciando modificación del producto con ID: " + id);
         if (id == null || id <= 0) {
-            System.out.println("[ERROR] modificarProducto - ID inválido.");
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "modificarProducto", "ID inválido.");
             return false;
         }
         if (nombre == null || nombre.isBlank()) {
-            System.out.println("[ERROR] modificarProducto - El nombre del producto es obligatorio.");
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "modificarProducto", "El nombre del producto es obligatorio.");
             return false;
         }
         String API_URL_MODIFICAR = API_BASE_URL + "modificar/modificarProducto/";
@@ -201,14 +202,14 @@ public class ProductoServicio {
             }
             int status = connection.getResponseCode();
             if (status == HttpURLConnection.HTTP_OK) {
-                System.out.println("[INFO] Producto modificado exitosamente con ID: " + id);
+                Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "modificarProducto", "Producto modificado exitosamente con ID: " + id);
                 return true;
             } else {
-                System.out.println("[ERROR] modificarProducto - Código de respuesta: " + status);
+                Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "modificarProducto", "Código de respuesta: " + status);
                 return false;
             }
         } catch (Exception e) {
-            System.out.println("[ERROR] modificarProducto - Excepción: " + e);
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "modificarProducto", "Excepción: " + e);
             e.printStackTrace();
             return false;
         }
@@ -218,9 +219,9 @@ public class ProductoServicio {
      * Elimina un producto a través de la API tras validar el ID.
      */
     public boolean eliminarProducto(Long productoId) {
-        System.out.println("[INFO] Iniciando eliminación del producto con ID: " + productoId);
+        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "eliminarProducto", "Iniciando eliminación del producto con ID: " + productoId);
         if (productoId == null || productoId <= 0) {
-            System.out.println("[ERROR] eliminarProducto - ID inválido.");
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "eliminarProducto", "ID inválido.");
             return false;
         }
         boolean resultado = false;
@@ -231,13 +232,13 @@ public class ProductoServicio {
             conexion.setRequestProperty("Content-Type", "application/json");
             int responseCode = conexion.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                System.out.println("[INFO] Producto eliminado exitosamente con ID: " + productoId);
+                Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "eliminarProducto", "Producto eliminado exitosamente con ID: " + productoId);
                 resultado = true;
             } else {
-                System.out.println("[ERROR] eliminarProducto - Código de respuesta: " + responseCode);
+                Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "eliminarProducto", "Código de respuesta: " + responseCode);
             }
         } catch (Exception e) {
-            System.out.println("[ERROR] eliminarProducto - Excepción: " + e);
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "eliminarProducto", "Excepción: " + e);
             e.printStackTrace();
         }
         return resultado;
@@ -247,7 +248,7 @@ public class ProductoServicio {
      * Obtiene las reseñas de un producto específico desde la API y aplica lógica de negocio.
      */
     public List<ReseniaDto> obtenerReseniasPorProducto(int productoId) {
-        System.out.println("[INFO] Obteniendo reseñas para el producto con ID: " + productoId);
+        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "obtenerReseniasPorProducto", "Obteniendo reseñas para el producto con ID: " + productoId);
         List<ReseniaDto> resenias = new ArrayList<>();
         try {
             URL url = new URL(API_BASE_URL + "productos/" + productoId + "/resenias");
@@ -268,16 +269,16 @@ public class ProductoServicio {
                         for (ReseniaDto resenia : reseniasArray) {
                             resenias.add(resenia);
                         }
-                        System.out.println("[INFO] Se obtuvieron " + reseniasArray.length + " reseñas.");
+                        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "obtenerReseniasPorProducto", "Se obtuvieron " + reseniasArray.length + " reseñas.");
                     } else {
-                        System.out.println("[INFO] No se encontraron reseñas para el producto con ID: " + productoId);
+                        Utilidades.escribirLog(null, "[INFO]", "ProductoServicio", "obtenerReseniasPorProducto", "No se encontraron reseñas para el producto con ID: " + productoId);
                     }
                 }
             } else {
-                System.out.println("[ERROR] obtenerReseniasPorProducto - Código de respuesta: " + responseCode);
+                Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "obtenerReseniasPorProducto", "Código de respuesta: " + responseCode);
             }
         } catch (Exception e) {
-            System.out.println("[ERROR] obtenerReseniasPorProducto - Excepción: " + e);
+            Utilidades.escribirLog(null, "[ERROR]", "ProductoServicio", "obtenerReseniasPorProducto", "Excepción: " + e);
             e.printStackTrace();
         }
         return resenias;

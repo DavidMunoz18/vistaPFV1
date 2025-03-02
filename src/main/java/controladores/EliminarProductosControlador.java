@@ -29,7 +29,7 @@ public class EliminarProductosControlador extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         // Inicializar el servicio de productos
-        productoServicio = new ProductoServicio(); // Se puede cambiar por inyección manual o usar Spring si es posible
+        productoServicio = new ProductoServicio(); 
     }
 
     /**
@@ -63,12 +63,13 @@ public class EliminarProductosControlador extends HttpServlet {
                 Utilidades.escribirLog(session, "[INFO]", "EliminarProductosControlador", "doPost", "Producto eliminado correctamente");
 
                 // Redirigir a la página de administración después de eliminar el producto
-                response.sendRedirect("admin");
+                response.sendRedirect("admin?productoEliminado=true");
 
             } catch (NumberFormatException e) {
                 // Log: Error al convertir el ID a número
                 Utilidades.escribirLog(session, "[ERROR]", "EliminarProductosControlador", "doPost", "ID no válido: " + productoIdStr);
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "El ID del producto no es válido.");
+                response.sendRedirect("admin?productoEliminado=false");
             }
         } else {
             // Log: No se proporcionó un ID

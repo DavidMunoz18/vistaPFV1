@@ -360,36 +360,92 @@
 </div>
 
 <script>
-  function mostrarToast(mensaje, tipo) {
+function mostrarToast(mensaje, tipo) {
     const toastEl = document.getElementById('liveToast');
     const toastBody = toastEl.querySelector('.toast-body');
     toastBody.innerText = mensaje;
-    
+
     // Ajustar el color según el tipo
     toastEl.classList.remove('bg-success', 'bg-danger');
     if (tipo === 'exito') {
-      toastEl.classList.add('bg-success');
+        toastEl.classList.add('bg-success');
     } else {
-      toastEl.classList.add('bg-danger');
+        toastEl.classList.add('bg-danger');
     }
-    
+
+    // Mostrar el toast
     const toast = new bootstrap.Toast(toastEl);
     toast.show();
-  }
+}
 
-  document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
+    <% if(request.getAttribute("mensaje") != null) { %>
+         mostrarToast('<%= request.getAttribute("mensaje") %>', '<%= request.getAttribute("tipoMensaje") != null ? request.getAttribute("tipoMensaje") : "error" %>');
+    <% } %>
+    
     const urlParams = new URLSearchParams(window.location.search);
+
+    // Toast para actualización de usuario
     if (urlParams.has('modificado')) {
-      // Elimina espacios y fuerza minúsculas para evitar discrepancias
-      const modificado = urlParams.get('modificado').trim().toLowerCase();
-      if (modificado === 'true') {
-        mostrarToast('Usuario actualizado con éxito', 'exito');
-      } else {
-        mostrarToast('Error al actualizar el usuario', 'error');
-      }
+        const modificado = urlParams.get('modificado').trim().toLowerCase();
+        if (modificado === 'true') {
+            mostrarToast('Usuario actualizado con éxito', 'exito');
+        } else {
+            mostrarToast('Error al actualizar el usuario', 'error');
+        }
     }
-  });
+
+    // Toast para agregar producto
+    if (urlParams.has('productoAgregado')) {
+        const agregado = urlParams.get('productoAgregado').trim().toLowerCase();
+        if (agregado === 'true') {
+            mostrarToast('Producto agregado con éxito', 'exito');
+        } else {
+            mostrarToast('Error al agregar producto', 'error');
+        }
+    }
+
+    // Toast para eliminar producto
+    if (urlParams.has('productoEliminado')) {
+        const eliminado = urlParams.get('productoEliminado').trim().toLowerCase();
+        if (eliminado === 'true') {
+            mostrarToast('Producto eliminado con éxito', 'exito');
+        } else {
+            mostrarToast('Error al eliminar producto', 'error');
+        }
+    }
+
+    // Toast para eliminar usuario
+    if (urlParams.has('usuarioEliminado')) {
+        const usuarioEliminado = urlParams.get('usuarioEliminado').trim().toLowerCase();
+        if (usuarioEliminado === 'true') {
+            mostrarToast('Usuario eliminado con éxito', 'exito');
+        } else {
+            mostrarToast('Error al eliminar usuario', 'error');
+        }
+    }
+    
+    if (urlParams.has('usuarioModificado')) {
+        const usuarioModificado = urlParams.get('usuarioModificado').trim().toLowerCase();
+        if (usuarioModificado === 'true') {
+            mostrarToast('Usuario actualizado con éxito', 'exito');
+        } else {
+            mostrarToast('Error al actualizar el usuario', 'error');
+        }
+    }
+    
+    // Toast para modificar producto
+    if (urlParams.has('productoModificado')) {
+        const modificado = urlParams.get('productoModificado').trim().toLowerCase();
+        if (modificado === 'true') {
+            mostrarToast('Producto modificado con éxito', 'exito');
+        } else {
+            mostrarToast('Error al modificar producto', 'error');
+        }
+    }
+});
 </script>
+
 
 
 

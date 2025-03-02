@@ -1,4 +1,0 @@
-[INFO] - CarritoControlador - doPost - Inicio acción agregar producto - controladores.CarritoControlador.doPost(CarritoControlador.java:46)
-[ERROR] - CarritoControlador - doPost - Error interno del servidor: Cannot invoke "jakarta.servlet.http.HttpSession.getId()" because "session" is null - controladores.CarritoControlador.doPost(CarritoControlador.java:110)
-[INFO] - CarritoControlador - doPost - Inicio acción agregar producto - controladores.CarritoControlador.doPost(CarritoControlador.java:46)
-[ERROR] - CarritoControlador - doPost - Error interno del servidor: Cannot invoke "jakarta.servlet.http.HttpSession.getId()" because "session" is null - controladores.CarritoControlador.doPost(CarritoControlador.java:110)

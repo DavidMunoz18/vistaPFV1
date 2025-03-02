@@ -20,7 +20,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="css/estilo.css">
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 
 <body>
@@ -136,8 +138,31 @@
         <% } %>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+   
+   <% 
+    // Obtener el mensaje y tipo de mensaje desde la sesión
+    String mensaje = (String) session.getAttribute("mensaje");
+    String tipoMensaje = (String) session.getAttribute("tipoMensaje");
+    if(mensaje != null && tipoMensaje != null) {
+%>
+<script type="text/javascript">
+    Toastify({
+        text: "<%= mensaje %>",
+        duration: 3000, 
+        gravity: "bottom", 
+        position: "right", 
+        backgroundColor: "<%= tipoMensaje.equals("success") ? "#4CAF50" : "#FF5733" %>",
+        close: true
+    }).showToast();
+</script>
+<%
+    // Eliminar los atributos para que no se muestren en futuras solicitudes
+    session.removeAttribute("mensaje");
+    session.removeAttribute("tipoMensaje");
+    }
+%>
+
+    
 </body>
 
 </html>

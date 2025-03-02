@@ -13,6 +13,7 @@ import servicios.ResenaServicio;
 import java.io.IOException;
 import java.util.List;
 import utilidades.Utilidades;
+import java.net.URLEncoder;
 
 /**
  * Controlador para gestionar las reseñas de productos.
@@ -35,9 +36,14 @@ public class ResenaControlador extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         
+        // Si el usuario no está logueado, redirigir al login pasando la URL de retorno
         if (session.getAttribute("idUsuario") == null) {
             Utilidades.escribirLog(session, "[ERROR]", "ResenaControlador", "doGet", "Usuario no logueado. Redirigiendo al login.");
-            response.sendRedirect("login.jsp");
+            String returnURL = "vistas.jsp";
+            if (request.getParameter("id") != null && !request.getParameter("id").isEmpty()){
+                returnURL += "?id=" + request.getParameter("id");
+            }
+            response.sendRedirect("login.jsp?returnURL=" + URLEncoder.encode(returnURL, "UTF-8"));
             return;
         }
 
@@ -70,9 +76,14 @@ public class ResenaControlador extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         
+        // Si el usuario no está logueado, redirigir al login pasando la URL de retorno
         if (session.getAttribute("idUsuario") == null) {
             Utilidades.escribirLog(session, "[ERROR]", "ResenaControlador", "doPost", "Usuario no logueado. Redirigiendo al login.");
-            response.sendRedirect("login.jsp");
+            String returnURL = "vistas.jsp";
+            if (request.getParameter("idProducto") != null && !request.getParameter("idProducto").isEmpty()){
+                returnURL += "?id=" + request.getParameter("idProducto");
+            }
+            response.sendRedirect("login.jsp?returnURL=" + URLEncoder.encode(returnURL, "UTF-8"));
             return;
         }
 
@@ -82,7 +93,10 @@ public class ResenaControlador extends HttpServlet {
         String contenidoResena = request.getParameter("contenidoResena");
         String calificacion = request.getParameter("calificacion");
 
-        if (idProducto != null && !idProducto.isEmpty() && contenidoResena != null && !contenidoResena.isEmpty() && calificacion != null) {
+        if (idProducto != null && !idProducto.isEmpty() &&
+            contenidoResena != null && !contenidoResena.isEmpty() &&
+            calificacion != null) {
+
             ReseniaDto reseniaDto = new ReseniaDto();
             reseniaDto.setContenidoResena(contenidoResena);
             reseniaDto.setCalificacion(Integer.parseInt(calificacion));
@@ -96,21 +110,27 @@ public class ResenaControlador extends HttpServlet {
 
                 if (exito) {
                     Utilidades.escribirLog(session, "[INFO]", "ResenaControlador", "doPost", "Reseña agregada exitosamente para producto id: " + idProducto);
+                    session.setAttribute("mensaje", "Reseña agregada exitosamente.");
+                    session.setAttribute("tipoMensaje", "success");
                     response.sendRedirect("vistas.jsp?id=" + idProducto);
                 } else {
                     Utilidades.escribirLog(session, "[ERROR]", "ResenaControlador", "doPost", "Error al agregar la reseña para producto id: " + idProducto);
-                    request.setAttribute("error", "Hubo un problema al agregar la reseña.");
-                    request.getRequestDispatcher("/vistas.jsp").forward(request, response);
+                    session.setAttribute("mensaje", "Hubo un problema al agregar la reseña.");
+                    session.setAttribute("tipoMensaje", "error");
+                    response.sendRedirect("vistas.jsp?id=" + idProducto);
                 }
             } else {
                 Utilidades.escribirLog(session, "[ERROR]", "ResenaControlador", "doPost", "Producto no encontrado para id: " + idProducto);
-                request.setAttribute("error", "Producto no encontrado.");
-                request.getRequestDispatcher("/vistas.jsp").forward(request, response);
+                session.setAttribute("mensaje", "Producto no encontrado.");
+                session.setAttribute("tipoMensaje", "error");
+                response.sendRedirect("vistas.jsp");
             }
         } else {
             Utilidades.escribirLog(session, "[ERROR]", "ResenaControlador", "doPost", "Campos obligatorios faltantes para agregar reseña.");
-            request.setAttribute("error", "Todos los campos son obligatorios.");
-            request.getRequestDispatcher("/vistas.jsp").forward(request, response);
+            session.setAttribute("mensaje", "Todos los campos son obligatorios.");
+            session.setAttribute("tipoMensaje", "error");
+            // Se redirige a la vista con el id del producto (si se dispone) para que se repopule la información
+            response.sendRedirect("vistas.jsp?id=" + (idProducto != null ? idProducto : ""));
         }
     }
 }

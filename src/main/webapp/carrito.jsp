@@ -42,25 +42,29 @@
         </ul>
     </nav>
 
-    <% 
-        // Obtener el mensaje y el tipo de mensaje desde la solicitud
-        String mensaje = (String) request.getAttribute("mensaje");
-        String tipoMensaje = (String) request.getAttribute("tipoMensaje");
-        if(mensaje != null && tipoMensaje != null) {
-    %>
-    <script type="text/javascript">
-        Toastify({
-            text: "<%= mensaje %>",
-            duration: 3000, // Duración en milisegundos
-            gravity: "top", // "top" o "bottom"
-            position: "right", // "left", "center" o "right"
-            backgroundColor: "<%= tipoMensaje.equals("success") ? "#4CAF50" : "#FF5733" %>",
-            close: true
-        }).showToast();
-    </script>
-    <% 
-        }
-    %>
+    <%
+    // Obtener el mensaje y tipo de mensaje desde la sesión
+    String mensaje = (String) session.getAttribute("mensaje");
+    String tipoMensaje = (String) session.getAttribute("tipoMensaje");
+    if(mensaje != null && tipoMensaje != null) {
+%>
+<script type="text/javascript">
+    Toastify({
+        text: "<%= mensaje %>",
+        duration: 3000, 
+        gravity: "top", 
+        position: "right", 
+        backgroundColor: "<%= tipoMensaje.equals("success") ? "#4CAF50" : "#FF5733" %>",
+        close: true
+    }).showToast();
+</script>
+<%
+    // Eliminar los atributos para que no se muestren en futuras solicitudes
+    session.removeAttribute("mensaje");
+    session.removeAttribute("tipoMensaje");
+    }
+%>
+
 
     <!-- Resto del contenido de la página de carrito -->
     <div class="min-w-screen min-h-screen bg-gray-50 py-5">
@@ -95,7 +99,7 @@
                                     <p class="text-gray-400">x <%=producto.getCantidad()%></p>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <span class="font-semibold text-gray-600 text-xl"><%="$" + producto.getPrecio()%></span>
+                                    <span class="font-semibold text-gray-600 text-xl"><%="€" + producto.getPrecio()%></span>
                                     <!-- Botón para eliminar producto -->
                                     <form action="carrito" method="POST">
                                         <input type="hidden" name="_method" value="DELETE">
@@ -130,7 +134,7 @@
                                                 subtotal += producto.getPrecio() * producto.getCantidad();
                                             }
                                         }
-                                        out.print("$" + subtotal);
+                                        out.print("€" + subtotal);
                                         %>
                                     </span>
                                 </div>
@@ -143,7 +147,7 @@
                                     <span class="font-semibold">
                                         <%
                                         double impuestos = subtotal * 0.21; // Ejemplo de IVA del 21%
-                                        out.print("$" + impuestos);
+                                        out.print("€" + impuestos);
                                         %>
                                     </span>
                                 </div>
@@ -160,7 +164,7 @@
                                     <span class="font-semibold">
                                         <%
                                         double total = subtotal + impuestos;
-                                        out.print("$" + total);
+                                        out.print("€" + total);
                                         %>
                                     </span>
                                 </div>

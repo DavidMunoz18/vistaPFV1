@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import servicios.AutentificacionServicio;
 import java.io.IOException;
-
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import utilidades.Utilidades;
 
@@ -111,7 +110,9 @@ public class NuevaContraseniaControlador extends HttpServlet {
         if (exito) {
             // Log de éxito en la actualización
             Utilidades.escribirLog(request.getSession(), "[INFO]", "NuevaContraseniaControlador", "doPost", "Contraseña actualizada exitosamente.");
-            request.setAttribute("mensaje", "Contraseña actualizada exitosamente.");
+            // Guardar el mensaje en sesión para que persista en el redirect
+            request.getSession().setAttribute("mensaje", "Contraseña actualizada exitosamente.");
+            request.getSession().setAttribute("tipoMensaje", "exito");
             response.sendRedirect("login.jsp");
         } else {
             // Log de fallo en la actualización

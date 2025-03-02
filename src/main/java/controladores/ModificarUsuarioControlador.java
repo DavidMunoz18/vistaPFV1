@@ -74,11 +74,11 @@ public class ModificarUsuarioControlador extends HttpServlet {
             if (resultado != null && resultado.toLowerCase().contains("actualizado")) {
                 // Log de éxito
                 Utilidades.escribirLog(request.getSession(), "[INFO]", "ModificarUsuarioControlador", "doPost", "Usuario con ID " + idUsuario + " modificado con éxito.");
-                response.sendRedirect("admin?modificado=true");
+                response.sendRedirect("admin?usuarioModificado=true");
             } else {
                 // Log de fallo
                 Utilidades.escribirLog(request.getSession(), "[ERROR]", "ModificarUsuarioControlador", "doPost", "No se pudo modificar el usuario con ID " + idUsuario);
-                response.sendRedirect("admin?modificado=false");
+                response.sendRedirect("admin?usuarioModificado=false");
             }
 
 
