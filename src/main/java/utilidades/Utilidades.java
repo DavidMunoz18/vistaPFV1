@@ -109,9 +109,8 @@ public class Utilidades {
 
     	
     	// Ruta absoluta hacia la carpeta "fichero"
-        final String RUTA_BASE = "C:" + java.io.File.separator + "Users" + java.io.File.separator + "david" 
-                + java.io.File.separator + "OneDrive" + java.io.File.separator + "Documentos" 
-                + java.io.File.separator + "vistaPFV1" + java.io.File.separator + "fichero" + java.io.File.separator;
+        final String RUTA_BASE = "C:" + java.io.File.separator + "Users" + java.io.File.separator + "dmunnoz" 
+                 + java.io.File.separator + "Documents"+ java.io.File.separator + "vistaPFV1" + java.io.File.separator + "fichero" + java.io.File.separator;
         
         // Asegurarse de que el directorio existe, y si no, crearlo
         java.io.File directorio = new java.io.File(RUTA_BASE);

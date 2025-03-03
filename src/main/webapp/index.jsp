@@ -23,51 +23,45 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img src="imagenes/Code components-Photoroom.png" alt="Logo">
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/inicio">Inicio</a></li>
-            <li class="nav-item"><a class="nav-link" href="nosotros.jsp">Nosotros</a></li>
-           <li class="nav-item"><a href="<%= request.getContextPath() %>/productos">Productos</a></li>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="imagenes/Code components-Photoroom.png" alt="Logo">
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/inicio">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="nosotros.jsp">Nosotros</a></li>
+        <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/productos">Productos</a></li>
+        <li class="nav-item"><a class="nav-link" href="login.jsp">Iniciar Sesión</a></li>
+        <li class="nav-item"><a class="nav-link" href="registro.jsp">Registrarse</a></li>
 
-            <li class="nav-item"><a class="nav-link" href="login.jsp">Iniciar Sesión</a></li>
-            <li class="nav-item"><a class="nav-link" href="registro.jsp">Registrarse</a></li>
-            <li class="nav-item cart-container">
-       <% 
-  // Verificar que la sesión exista y que el atributo "idUsuario" no sea nulo
-  if (session != null && session.getAttribute("idUsuario") != null) { 
-%>
-  <li class="nav-item">
-    <a class="nav-link" href="<%= request.getContextPath() %>/cerrarSesion">Cerrar sesión</a>
-  </li>
-<% 
-  } 
-%>
+        <% if (session != null && session.getAttribute("idUsuario") != null) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= request.getContextPath() %>/cerrarSesion">Cerrar sesión</a>
+          </li>
+        <% } %>
 
-            
-              <a href="<%= request.getContextPath() %>/carrito">
-                <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
-                 
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+        <li class="nav-item cart-container">
+          <a class="nav-link" href="<%= request.getContextPath() %>/carrito">
+            <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
     <div
       id="carouselExampleAutoplaying"
       class="carousel slide"
