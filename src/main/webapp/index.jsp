@@ -47,6 +47,18 @@
             <li class="nav-item"><a class="nav-link" href="login.jsp">Iniciar Sesión</a></li>
             <li class="nav-item"><a class="nav-link" href="registro.jsp">Registrarse</a></li>
             <li class="nav-item cart-container">
+       <% 
+  // Verificar que la sesión exista y que el atributo "idUsuario" no sea nulo
+  if (session != null && session.getAttribute("idUsuario") != null) { 
+%>
+  <li class="nav-item">
+    <a class="nav-link" href="<%= request.getContextPath() %>/cerrarSesion">Cerrar sesión</a>
+  </li>
+<% 
+  } 
+%>
+
+            
               <a href="<%= request.getContextPath() %>/carrito">
                 <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
                  
