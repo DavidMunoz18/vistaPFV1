@@ -193,4 +193,34 @@ public class CarritoServicio {
         }
         return false;
     }
+    /**
+     * Limpia el carrito de compras.
+     * Realiza una petición HTTP DELETE a la API para limpiar el carrito.
+     *
+     * @return true si el carrito se limpió correctamente, false en caso contrario.
+     */
+    public boolean limpiarCarrito() {
+        Utilidades.escribirLog(null, "[INFO]", "CarritoServicio", "limpiarCarrito", "Inicio de limpieza del carrito");
+        try {
+            URL url = new URL(API_URL + "/limpiar");
+            HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
+            conexion.setRequestMethod("DELETE");
+            conexion.setRequestProperty("Content-Type", "application/json");
+
+            int responseCode = conexion.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                System.out.println("Carrito limpiado correctamente.");
+                Utilidades.escribirLog(null, "[INFO]", "CarritoServicio", "limpiarCarrito", "Carrito limpiado correctamente.");
+            } else {
+                System.out.println("Error al limpiar carrito, código de respuesta: " + responseCode);
+                Utilidades.escribirLog(null, "[ERROR]", "CarritoServicio", "limpiarCarrito", "Error al limpiar carrito, código de respuesta: " + responseCode);
+            }
+            return responseCode == HttpURLConnection.HTTP_OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Utilidades.escribirLog(null, "[ERROR]", "CarritoServicio", "limpiarCarrito", "Excepción: " + e.getMessage());
+        }
+        return false;
+    }
+
 }

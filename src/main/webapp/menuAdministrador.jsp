@@ -13,7 +13,8 @@
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
 	rel="stylesheet" />
-<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -41,19 +42,23 @@
 
 
    function eliminarProducto(id) {
-       if (confirm('¿Estás seguro de eliminar este producto?')) {
-           var form = document.createElement('form');
-           form.action = 'eliminarProducto';
-           form.method = 'post';
-           var input = document.createElement('input');
-           input.type = 'hidden';
-           input.name = 'productoId';
-           input.value = id;
-           form.appendChild(input);
-           document.body.appendChild(form);
-           form.submit();
-       }
-   }
+	    var confirmacion = prompt("Para confirmar la eliminación, por favor escriba 'ELIMINACION'");
+	    if (confirmacion === "ELIMINACION") {
+	        var form = document.createElement('form');
+	        form.action = 'eliminarProducto';
+	        form.method = 'post';
+	        var input = document.createElement('input');
+	        input.type = 'hidden';
+	        input.name = 'productoId';
+	        input.value = id;
+	        form.appendChild(input);
+	        document.body.appendChild(form);
+	        form.submit();
+	    } else {
+	        alert("Texto incorrecto. La eliminación ha sido cancelada.");
+	    }
+	}
+
 
    // Funciones para Usuarios
    function editarUsuario(id, nombre, telefono, rol) {
@@ -64,20 +69,31 @@
        document.getElementById('nuevoRol').value = rol;
    }
 
-   function eliminarUsuario(id) {
-       if (confirm('¿Estás seguro de eliminar este usuario?')) {
-           var form = document.createElement('form');
-           form.action = 'eliminarUsuario';
-           form.method = 'post';
-           var input = document.createElement('input');
-           input.type = 'hidden';
-           input.name = 'idUsuario';
-           input.value = id;
-           form.appendChild(input);
-           document.body.appendChild(form);
-           form.submit();
-       }
-   }
+   function eliminarUsuario(id, email) {
+	    // Validación: no permitir eliminar al administrador principal
+	    if (email === "davidmpm05@gmail.com") {
+	        alert("No se puede eliminar el administrador principal.");
+	        return;
+	    }
+	    
+	    var confirmacion = prompt("Para confirmar la eliminación, por favor escriba 'ELIMINACION'");
+	    if (confirmacion === "ELIMINACION") {
+	        var form = document.createElement('form');
+	        form.action = 'eliminarUsuario';
+	        form.method = 'post';
+	        var input = document.createElement('input');
+	        input.type = 'hidden';
+	        input.name = 'idUsuario';
+	        input.value = id;
+	        form.appendChild(input);
+	        document.body.appendChild(form);
+	        form.submit();
+	    } else {
+	        alert("Texto incorrecto. La eliminación ha sido cancelada.");
+	    }
+	}
+
+
 </script>
 </head>
 <body>
@@ -104,7 +120,7 @@
 					<li class="nav-item"><a class="nav-link" href="registro.jsp">Registrarse</a></li>
 					<li class="nav-item cart-container"><a
 						href="<%=request.getContextPath()%>/carrito"> <i
-							class="bi bi-cart"></i> <span class="cart-count">0</span>
+							class="bi bi-cart"></i>
 					</a></li>
 				</ul>
 			</div>
@@ -144,17 +160,13 @@
 							id="idUsuario" name="idUsuario" required> <label
 							for="nuevoNombre">Nuevo Nombre:</label> <input type="text"
 							id="nuevoNombre" name="nuevoNombre"> <label
-							for="nuevoDni">Nuevo DNI:</label>
-						<!-- Agregamos el campo de DNI -->
-						<input type="text" id="nuevoDni" name="nuevoDni">
-						<!-- Agregamos el campo de DNI -->
-
-						<label for="nuevoTelefono">Nuevo Teléfono:</label> <input
-							type="text" id="nuevoTelefono" name="nuevoTelefono"> <label
-							for="nuevoRol">Nuevo Rol:</label> <input type="text"
-							id="nuevoRol" name="nuevoRol"> <label for="nuevaFoto">Nueva
-							Foto:</label> <input type="file" id="nuevaFoto" name="nuevaFoto"
-							accept="image/*">
+							for="nuevoDni">Nuevo DNI:</label> <input type="text"
+							id="nuevoDni" name="nuevoDni"> <label for="nuevoTelefono">Nuevo
+							Teléfono:</label> <input type="text" id="nuevoTelefono"
+							name="nuevoTelefono"> <label for="nuevoRol">Nuevo
+							Rol:</label> <input type="text" id="nuevoRol" name="nuevoRol"> <label
+							for="nuevaFoto">Nueva Foto:</label> <input type="file"
+							id="nuevaFoto" name="nuevaFoto" accept="image/*">
 
 						<button type="submit" class="btn btn-primary mt-3">Modificar
 							Usuario</button>
@@ -330,9 +342,8 @@
 								<td><i class="fas fa-edit"
 									style="cursor: pointer; color: blue;"
 									onclick="editarUsuario('<%=usuario.getIdUsuario()%>', '<%=usuario.getNombreUsuario()%>', '<%=usuario.getTelefonoUsuario()%>', '<%=usuario.getRol()%>')"></i>
-									<i class="fas fa-trash-alt"
-									style="cursor: pointer; color: red;"
-									onclick="eliminarUsuario('<%=usuario.getIdUsuario()%>')"></i></td>
+									<i class="fas fa-trash-alt" style="cursor: pointer; color: red;" onclick="eliminarUsuario('<%=usuario.getIdUsuario()%>', '<%=usuario.getEmailUsuario()%>')"></i>
+</td>
 							</tr>
 							<%
 							}
@@ -343,23 +354,24 @@
 						</tbody>
 					</table>
 				</div>
-				<!-- Otras secciones según se requiera -->
+
 			</div>
 		</div>
 	</div>
 
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-  <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body">
-        Mensaje
-      </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-  </div>
-</div>
+	<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+		<div id="liveToast"
+			class="toast align-items-center text-white bg-success border-0"
+			role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">Mensaje</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto"
+					data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
 
-<script>
+	<script>
 function mostrarToast(mensaje, tipo) {
     const toastEl = document.getElementById('liveToast');
     const toastBody = toastEl.querySelector('.toast-body');
@@ -379,9 +391,9 @@ function mostrarToast(mensaje, tipo) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    <% if(request.getAttribute("mensaje") != null) { %>
-         mostrarToast('<%= request.getAttribute("mensaje") %>', '<%= request.getAttribute("tipoMensaje") != null ? request.getAttribute("tipoMensaje") : "error" %>');
-    <% } %>
+    <%if (request.getAttribute("mensaje") != null) {%>
+         mostrarToast('<%=request.getAttribute("mensaje")%>', '<%=request.getAttribute("tipoMensaje") != null ? request.getAttribute("tipoMensaje") : "error"%>');
+    <%}%>
     
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -445,11 +457,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
-
-
-
-
-
-
 </body>
 </html>

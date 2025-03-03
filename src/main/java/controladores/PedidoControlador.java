@@ -3,6 +3,9 @@ package controladores;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import servicios.CarritoServicio;
+
 import java.net.URLEncoder;
 
 import dtos.CarritoDto;
@@ -30,7 +33,8 @@ import utilidades.Utilidades;
 public class PedidoControlador extends HttpServlet {
 
     private PedidoServicio pedidoServicio = new PedidoServicio();
-
+    
+    private CarritoServicio carritoServicio = new CarritoServicio();
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -154,7 +158,7 @@ public class PedidoControlador extends HttpServlet {
                 session.setAttribute("cvv", cvc);
             } else {
                 // Eliminar el carrito de la sesión en caso de éxito
-                session.removeAttribute("carrito");
+            	carritoServicio.limpiarCarrito();
             }
 
         } catch (Exception e) {
@@ -179,8 +183,9 @@ public class PedidoControlador extends HttpServlet {
 
         if ("Pedido creado correctamente".equals(mensaje)) {
             // Redirigir directamente a la página de confirmación o al inicio, en lugar del carrito
-            response.sendRedirect("carrito.jsp?pedidoExitoso=true");
+            response.sendRedirect("carrito?pedidoExitoso=true");
          // Eliminar el carrito de la sesión en caso de éxito
+            carritoServicio.limpiarCarrito();
             session.removeAttribute("carrito");
         } else {
             RequestDispatcher dispatcher = request.getRequestDispatcher("carrito.jsp");

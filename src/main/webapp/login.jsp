@@ -22,31 +22,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-      }
-      .modal-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        width: 300px;
-      }
-      .close {
-        cursor: pointer;
-        float: right;
-        font-size: 20px;
-        font-weight: bold;
-      }
-    </style>
+    
   </head>
   <body>
     <div class="container flex">
@@ -80,7 +56,7 @@
           <input type="hidden" name="returnURL" value="${param.returnURL}">
           <div class="link">
             <button type="submit" class="login">Iniciar Sesión</button>
-            <a href="#" class="forgot" id="forgotPasswordLink">¿Olvidaste la contraseña?</a>
+            <a href="#" class="forgot" id="olvidarContraLink">¿Olvidaste la contraseña?</a>
           </div>
           <hr>
           <div class="button">
@@ -89,7 +65,7 @@
         </form>
 
         <!-- Formulario para recuperación de contraseña -->
-        <div id="forgotPasswordModal" class="modal">
+        <div id="olvidarContraModal" class="modal">
           <form id="forgotPasswordForm" action="recuperar-contrasenia" method="post">
             <div class="modal-content">
               <span class="close" onclick="closeModal()">&times;</span>
@@ -104,14 +80,14 @@
 
    <script>
       // Mostrar modal de recuperación de contraseña al hacer clic en el enlace
-      document.getElementById("forgotPasswordLink").addEventListener("click", function(event) {
+      document.getElementById("olvidarContraLink").addEventListener("click", function(event) {
         event.preventDefault();
-        document.getElementById("forgotPasswordModal").style.display = "flex";
+        document.getElementById("olvidarContraModal").style.display = "flex";
       });
 
       // Función para cerrar el modal
       function closeModal() {
-        document.getElementById("forgotPasswordModal").style.display = "none";
+        document.getElementById("olvidarContraModal").style.display = "none";
       }
 
       // Mostrar el Toast si hay mensaje enviado desde el servidor o desde la sesión
