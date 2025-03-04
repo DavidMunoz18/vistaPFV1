@@ -19,28 +19,38 @@
 <body>
     <!-- Barra de navegación -->
     <nav class="navbar">
-        <a class="navbar-brand" href="#">
-            <img src="imagenes/Code components-Photoroom.png" alt="Logo Code">
-        </a>
-        <ul>
-            <li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/inicio">Inicio</a></li>
-            <li><a href="nosotros.jsp">Nosotros</a></li>
-            <li class="nav-item"><a href="<%=request.getContextPath()%>/productos">Productos</a></li>
+    <a class="navbar-brand" href="#">
+        <img src="imagenes/Code components-Photoroom.png" alt="Logo Code">
+    </a>
+    <ul>
+        <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/inicio">Inicio</a></li>
+        <li><a href="nosotros.jsp">Nosotros</a></li>
+        <li class="nav-item"><a href="<%= request.getContextPath() %>/productos">Productos</a></li>
+        
+        <% if (session != null && session.getAttribute("idUsuario") != null) { %>
+            <% if ("admin".equals(session.getAttribute("rol"))) { %>
+                <li><a href="<%= request.getContextPath() %>/admin">Admin</a></li>
+            <% } %>
+            <li><a href="<%= request.getContextPath() %>/cerrarSesion">Cerrar sesión</a></li>
+        <% } else { %>
             <li><a href="login.jsp">Iniciar Sesión</a></li>
             <li><a href="registro.jsp">Registrarse</a></li>
-            <li class="cart-container">
-                <a href="<%=request.getContextPath()%>/carrito">
-                    <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
-                    <span class="cart-count">
-                        <%
+        <% } %>
+        
+        <li class="cart-container">
+            <a href="<%= request.getContextPath() %>/carrito">
+                <i class="bi bi-cart"></i> <!-- Ícono de carrito -->
+                <span class="cart-count">
+                    <%
                         List<CarritoDto> carrito = (List<CarritoDto>) request.getAttribute("carrito");
                         out.print(carrito != null ? carrito.size() : 0);
-                        %>
-                    </span> <!-- Número de productos en el carrito -->
-                </a>
-            </li>
-        </ul>
-    </nav>
+                    %>
+                </span> <!-- Número de productos en el carrito -->
+            </a>
+        </li>
+    </ul>
+</nav>
+
 
     <%
     // Obtener el mensaje y tipo de mensaje desde la sesión
