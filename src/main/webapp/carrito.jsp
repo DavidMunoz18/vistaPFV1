@@ -193,7 +193,7 @@
                                 </div>
                                 <div class="flex-grow pl-3">
                                     <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
-                                        placeholder="Contacto" name="contacto" required>
+                                        placeholder="Contacto" name="contacto" maxlength="19"  required>
                                 </div>
                             </div>
                             <div class="w-full flex items-center">
@@ -202,7 +202,7 @@
                                 </div>
                                 <div class="flex-grow pl-3">
                                     <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
-                                        placeholder="Dirección facturación" name="direccion" required>
+                                        placeholder="Dirección facturación" name="direccion" maxlength="19"  required>
                                 </div>
                             </div>
                         </div>
@@ -221,14 +221,14 @@
                                         <label class="text-gray-600 font-semibold text-sm mb-2 ml-1">Nombre en la tarjeta</label>
                                         <div>
                                             <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
-                                                placeholder="Nombre" type="text" name="nombreTarjeta" required>
+                                                placeholder="Nombre" type="text" name="nombreTarjeta" maxlength="19" required>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="text-gray-600 font-semibold text-sm mb-2 ml-1">Número de tarjeta</label>
                                         <div>
                                             <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
-                                                placeholder="0000 0000 0000 0000" type="text" id="numeroTarjeta" name="numeroTarjeta" required>
+                                                placeholder="0000 0000 0000 0000" type="text" id="numeroTarjeta"  maxlength="19"  name="numeroTarjeta" required>
                                         </div>
                                     </div>
                                     <div class="mb-3 -mx-2 flex items-end">
@@ -258,13 +258,14 @@
                                                 <option value="2027">2027</option>
                                                 <option value="2028">2028</option>
                                                 <option value="2029">2029</option>
+                                                <option value="2030">2030</option>
                                             </select>
                                         </div>
                                         <div class="px-2 w-1/4">
                                             <label class="text-gray-600 font-semibold text-sm mb-2 ml-1">CVV</label>
                                             <div>
                                                 <input class="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
-                                                    placeholder="000" type="text" id="cvv" name="cvv" required>
+                                                    placeholder="000" type="text" id="cvv"  maxlength="3"  name="cvv" required>
                                             </div>
                                         </div>
                                     </div>

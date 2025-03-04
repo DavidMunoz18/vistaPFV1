@@ -1,0 +1,5 @@
+[INFO] - NuevaContraseniaControlador - doGet - Recibido token: 07e74007-6610-43c0-8495-bc4590b5b7af - controladores.NuevaContraseniaControlador.doGet(NuevaContraseniaControlador.java:54)
+[INFO] - NuevaContraseniaControlador - doGet - Token válido, redirigiendo a restablecer.jsp - controladores.NuevaContraseniaControlador.doGet(NuevaContraseniaControlador.java:58)
+[INFO] - NuevaContraseniaControlador - doPost - Recibidas contraseñas para cambio. - controladores.NuevaContraseniaControlador.doPost(NuevaContraseniaControlador.java:92)
+[INFO] - NuevaContraseniaControlador - doPost - Contraseña encriptada correctamente. - controladores.NuevaContraseniaControlador.doPost(NuevaContraseniaControlador.java:106)
+[INFO] - NuevaContraseniaControlador - doPost - Contraseña actualizada exitosamente. - controladores.NuevaContraseniaControlador.doPost(NuevaContraseniaControlador.java:112)
